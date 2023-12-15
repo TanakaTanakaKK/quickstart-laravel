@@ -28,7 +28,7 @@
                         {{ csrf_field() }}
                         {{-- Task Name --}}
                         {{-- rowを追加 Taskとフォームが横並びに--}}
-                        <div class="form-group row mt-0">
+                        <div class="form-group row mt-0 mx-0">
                             {{-- col-sm-3からcol-md-3へ ここの数値をいじればフォームの位置を調整できる
                             control-labelからcol-form-labelへ 
                             text-sm-leftを追加 576px以下の際、文字が左に移動
