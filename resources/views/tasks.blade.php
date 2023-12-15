@@ -5,7 +5,7 @@
     <div class="container mt-4">
         <div class="col-sm-offset-2 col-sm-8 mx-auto">
             <div class="card border rounded">
-                <div class="card-header pt-2 pb-2">
+                <div class="card-header py-2">
                 New Task
                 </div>
 
