@@ -44,8 +44,7 @@
                         </div>
 
                         {{-- Add Task Button --}}
-                        {{-- rowを追加 --}}
-                        <div class="form-group row ">
+                        <div class="form-group">
                             <div class="rounded col-md-3 offset-md-3">
                                 {{-- text-nowrapを追加 テキストを折り返さないように固定 --}}
                                 <button type="submit" class="btn btn-default border text-nowrap">
