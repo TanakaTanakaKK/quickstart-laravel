@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/tasks');
 });
 // タスク一覧
 Route::get('/tasks', [TaskController::class, 'index']);
