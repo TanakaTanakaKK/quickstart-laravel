@@ -16,6 +16,9 @@ class RegisterController extends Controller
     {
         $this->validate($request,[
             'email' => 'email:filter,d'
+            // テーブル作成後に追加 
+            // 'usedEmail' => 'unique:users,email-address'
+
         ]);
         
         $email = $request->email;

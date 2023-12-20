@@ -12,8 +12,4 @@
             @endforeach
         </ul>
     </div>
-@elseif(isset($flagUsedAddres))
-    <div class="alert alert-danger">
-        <p>このメールアドレスは登録済みです</p>
-    </div>
 @endif
