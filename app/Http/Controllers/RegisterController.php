@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
-    public function store(Request $request)
+    public function index(Request $request)
+    {
+        return view('register');
+    }
+
+    public function setToken(Request $request)
     {
         $this->validate($request,[
             'email' => 'email:filter,d'
@@ -15,13 +20,29 @@ class RegisterController extends Controller
         
         $email = $request->email;
 
-        return view('register',[
-            'email' => $email
-        ]);
+        // emailが既に登録済みか調べる
+        return view('register',['flagUsedAddres' => true]);
+
+        // Token発行
+
+
+        // テスト用処理
+        // return view('register',[
+        //     'email' => $email
+        // ]);
+        
     }
 
-    public function register(Request $request)
+    public function checkToken(Request $request,$token)
     {
-        return view('/register');
+        //DBのトークンと一致しているか確認
+        
+        // 一致していなかったらエラー画面
+
+        // 一致していたら登録画面
+
+        return view('signup',[
+            'test' => "test"
+        ]);
     }
 }

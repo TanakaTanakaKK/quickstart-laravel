@@ -28,10 +28,12 @@ Route::get('/tasks', [TaskController::class, 'index']);
 Route::post('/task',[TaskController::class,'store']);
 // タスクの削除     Controllerのclass,Controllerの中にあるメソッドを指定する
 Route::delete('/task/{task}',[TaskController::class,'destroy']);
-// 入力フォーム
-Route::get('/register',[RegisterController::class,'register']);
+// メールアドレス入力フォーム
+Route::get('/register',[RegisterController::class,'index']);
 // メールアドレス登録
-Route::post('/register',[RegisterController::class,'store']);
+Route::post('/register',[RegisterController::class,'setToken']);
+// 会員登録画面
+Route::get('/register/{token}',[RegisterController::class,'checkToken']);
 
 
 

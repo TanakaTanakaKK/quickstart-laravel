@@ -11,7 +11,7 @@
                     <div class="form-group">
                     @include('common.errors')
                     @empty($email)
-                        <label for="email-form">入力フォーム</label>
+                        <label for="email-form">Eメールアドレス</label>
                         <div>
                             <input type="text" name="email" class="form-control">
                         </div>
