@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Token;
 use Illuminate\Http\Request;
 #use App\Models\Task;
 
@@ -16,15 +17,16 @@ class RegisterController extends Controller
     {
         $this->validate($request,[
             'email' => 'email:filter,d'
-            // テーブル作成後に追加 
-            // 'usedEmail' => 'unique:users,email-address'
-
+            //usersテーブルから重複がないかバリデーション 
+            ,'email２' => 'unique:users,email'
         ]);
-        
+        $tokentable = new Token();
         $email = $request->email;
+        $token = null;
+
 
         // emailが既に登録済みか調べる
-        return view('register',['flagUsedAddres' => true]);
+        return view('register');
 
         // Token発行
 
