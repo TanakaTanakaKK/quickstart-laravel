@@ -6,6 +6,7 @@ use App\Models\Token;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 #use App\Models\Task;
 
 class RegisterController extends Controller
@@ -17,25 +18,28 @@ class RegisterController extends Controller
 
     public function sendMail(Request $request)
     {
+        $email = $request->email;
         $this->validate($request,[
-            'email' => 'email:filter,d'
-            //usersテーブルから重複がないかバリデーション 
-            ,'email２' => 'unique:users,email'
+            'email' => 'email:filter,d|unique:users,email|unique:tokens,email' 
         ]);
 
         $tokentable = new Token();
-        $email = $request->email;
+
         $url = 'http://quickstart-laravel.local/register/';
-        $token = 'dadawawda';
         $msgTitle = "仮登録完了メッセージ";
         $msgTemplate = "下記URLへ進んでください";
 
-
-        // emailが既に登録済みか調べる
         //return view('register');
 
         // Token発行
-    
+        $token = Str::random(rand(10,30));
+
+        //DB登録
+        $tokentable->fill([
+            'token' => $token
+            ,'email' => $email
+        ]);
+        $tokentable->save();
 
         //メール送信
         
@@ -49,12 +53,17 @@ class RegisterController extends Controller
         
 
         // テスト用処理
-        return view('register');
-        // return view('register',[
-        //     'email' => $email
-        // ]);
+        return view('register',[
+            'email' => $email
+        ]);
         
     }
+
+    public function resetMail(Request $request)
+    {
+
+    }
+    
 
     public function checkToken(Request $request,$token)
     {
