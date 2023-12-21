@@ -67,9 +67,9 @@ class RegisterController extends Controller
             }
         }
         // 存在しなければトップページへ
-        if($flagExists === false){
-            return redirect('/');
-        }
+        // if($flagExists === false){
+        //     return redirect('/');
+        // }
         
         //メールアドレスの取得
         $email = $tokensTable->where('token',$token)->value('email');
@@ -87,4 +87,6 @@ class RegisterController extends Controller
     {
 
     }
+
+    
 }
