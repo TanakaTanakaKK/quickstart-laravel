@@ -32,7 +32,7 @@ Route::delete('/task/{task}',[TaskController::class,'destroy']);
 // メールアドレス入力フォーム
 Route::get('/register',[RegisterController::class,'index']);
 // メールアドレス登録
-Route::post('/register',[RegisterController::class,'setToken']);
+Route::post('/register',[RegisterController::class,'sendMail']);
 // 会員登録画面
 Route::get('/register/{token}',[RegisterController::class,'checkToken']);
 
