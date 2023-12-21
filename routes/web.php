@@ -34,7 +34,7 @@ Route::get('/register',[RegisterController::class,'index']);
 // メールアドレス登録
 Route::post('/register',[RegisterController::class,'sendMail']);
 // 会員登録画面
-Route::get('/register/{token}',[RegisterController::class,'checkToken']);
+Route::get('/create_user/{token}',[RegisterController::class,'checkToken']);
 
 
 
