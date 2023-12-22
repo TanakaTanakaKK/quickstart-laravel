@@ -1,7 +1,7 @@
 @extends('layouts.app')
 <script src="{{ asset('/functions.js') }}" defer></script>
 @section('content')
-    <form action="{{ url("createuser") }}" method="POST">
+    <form action="{{ url("create_user") }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="container">
             <div class="panel panel-default px-4">
@@ -9,6 +9,13 @@
                     会員登録ページ
                 </div>
                 <div class="panel-body">
+                    @include('common.errors')
+                    <div class="input-group col-sm-6">
+                        <label for="user-img" class="input-group-btn">画像</label>
+                        <div class="btn">
+                            <input type="file" name="user_img" class="form-control">
+                        </div>
+                    </div>
                     <div class="form-group col-sm-6">
                         <label for="name">氏名</label>
                         <div>
@@ -16,9 +23,9 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label for="kana-name">カナ</label>
+                        <label for="kana-name">氏名(カナ)</label>
                         <div>
-                            <input type="text" name="kana-name" class="form-control">
+                            <input type="text" name="kana_name" class="form-control">
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
@@ -37,15 +44,15 @@
                         </div>
                     </div>
                     <div class="form-group form-inline col-sm-3">
-                        <label type="barthday">生年月日</label>
+                        <label type="birthday">生年月日</label>
                         <div>
-                            <input type="date" name="barthday" value="">
+                            <input type="date" name="birthday" value="">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label for="tel">電話番号</label>
+                        <label for="phone-number">電話番号</label>
                         <div>
-                            <input type="text" name="tel" class="form-control" value="">
+                            <input type="tel" name="phone_number" class="form-control" value="">
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
@@ -61,13 +68,19 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label for="city">市区町村</label>
+                        <label for="city">市</label>
                         <div>
                             <input type="text" name="city" class="form-control" value="" id="city">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
-                        <label for="block">住所</label>
+                        <label for="town">区町村</label>
+                        <div>
+                            <input type="text" name="town" class="form-control" value="" id="town">
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="block">番地</label>
                         <div>
                             <input type="text" name="block" class="form-control" value="" id="block">
                         </div>

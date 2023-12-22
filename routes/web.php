@@ -33,10 +33,11 @@ Route::delete('/task/{task}',[TaskController::class,'destroy']);
 Route::get('/register',[RegisterController::class,'index']);
 // メールアドレス登録
 Route::post('/register',[RegisterController::class,'sendMail']);
+// 会員登録用の処理
+Route::post('/create_user',[RegisterController::class,'register']);
 // 会員登録画面
 Route::get('/create_user/{token}',[RegisterController::class,'checkToken']);
-// 会員登録用の処理
-Route::post('/create_user',[RegisterController::class,'']);
+
 
 
 

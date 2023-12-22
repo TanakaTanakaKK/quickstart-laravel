@@ -7,17 +7,16 @@ const searchPostal = () =>{
     if(postalCode.length != 7){
         return;
     }
-
     let url = 'https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + postalCode;
     let prefecture = document.getElementById('prefecture');
     let city = document.getElementById('city');
-    let block = document.getElementById('block');
-    
+    let town = document.getElementById('town');
+
     list = fetch(url).then(response => response.json())
     .then(data => {
     prefecture.value = data.results[0].address1;
     city.value = data.results[0].address2;
-    block.value = data.results[0].address3;
+    town.value = data.results[0].address3;
         });
     
 }
