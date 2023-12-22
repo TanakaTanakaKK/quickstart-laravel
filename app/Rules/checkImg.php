@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class checkImg implements ValidationRule
+class CheckImg implements ValidationRule
 {
     /**
      * Run the validation rule.

@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class checkPhoneNumber implements ValidationRule
+class CheckPhoneNumber implements ValidationRule
 {
     /**
      * Run the validation rule.
