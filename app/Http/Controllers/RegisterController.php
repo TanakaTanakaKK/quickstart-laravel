@@ -6,10 +6,13 @@ use App\Models\Address;
 use App\Models\Name;
 use App\Models\Token;
 use App\Models\User;
-use Exception;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+
+
 #use App\Models\Task;
 use App\Rules\CheckImg;
 use App\Rules\CheckName;
@@ -81,17 +84,13 @@ class RegisterController extends Controller
         }
         //存在しなければトップページへ
         if($flagExists === false){
-            return redirect('/');
+            return back()->withInput()->withErrors(array('tokenError' => 'トークンが無効です。'));
         }
         // 一致していたら登録画面
         return view('create_user');
-    }
-
-
-    public function resetMail(Request $request)
-    {
 
     }
+
     public function register(Request $request)
     {
         //tokenの取得
@@ -107,16 +106,10 @@ class RegisterController extends Controller
             }
         }
         if($flagExists === false){
-            return redirect('/');
+            return back()->withInput()->withErrors(array('tokenError' => 'トークンが無効です。'));
         }
 
         $this->validate($request,[
-            // "user_img" => [
-            //     'required',
-            //     'file',
-            //     'mimes:jpeg,jpg,png',
-            //     'dimensions:min_width=100,min_height=100,max_width=500,max_height=500',
-            // ]//,new CheckImg()]
             "name" => ["required",new CheckName()]
             ,"kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"]
             ,"nickname" => "required"
@@ -129,48 +122,57 @@ class RegisterController extends Controller
             ,"block" => ["required",new CheckBlock()]
             ,"building" => ''
         ]);
-        // $imgFile = $request->file('user_img');
-        // Storage::putFileAs('storage/images/',$imgFile,'public/imgs');
-        // dd($imgFile);
 
         //usersテーブルに入れる変数の定義
         $usersTable = new User();
         $email = $tokensTable->where('token',$token)->value('email');
         $name = $request->name;
-        $gender = $request->gender;
-        $birthday = $request->birthday;
-        $phoneNumber = $request->phone_number;
-        $imgPath = 'test';
-        //namesテーブル
-        $namesTable = new Name();
         $kanaName = $request->kana_name;
         $nickName = $request->nickname;
+        $gender = $request->gender;
+        $birthday = $request->birthday;
+         //電話番号修正
+        $phoneNumber = $request->phone_number;
+        $phoneNumber = mb_ereg_replace("ー","",$phoneNumber);
+        $phoneNumber = mb_ereg_replace("－","",$phoneNumber);
+        $phoneNumber = mb_ereg_replace("-","",$phoneNumber);
+        $phoneNumber = mb_convert_kana($phoneNumber,'a','UTF-8');
+        $phoneNumber = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $phoneNumber);
+
         //addressテーブル
         $addressesTable = new Address();
         $postalCode = $request->postalcode;
+        $postalCode = mb_ereg_replace("ー","",$postalCode);
+        $postalCode = mb_ereg_replace("－","",$postalCode);
+        $postalCode = mb_ereg_replace("-","",$postalCode);
+        $postalCode = mb_convert_kana($postalCode,'a','UTF-8');
+        $postalCode = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $postalCode);
         $prefecture = $request->prefecture;
         $city = $request->city;
         $town = $request->town;
         $block = $request->block;
+        $FirstReplaceList = array("丁目","丁","ー","－");
+        $SecondReplaceList = array("番地","番");
+        $block = str_replace($FirstReplaceList,'-',$block);
+        $block = str_replace($SecondReplaceList,'',$block);
+        $block = mb_convert_kana($block,'a','UTF-8');
         $building = $request->building;
-
+        if(isset($building)){
+            $building = mb_convert_kana($building,'a','UTF-8');
+        }
         $usersTable->fill([
             'name' => $name
             ,'email' => $email
             ,'gender' => $gender
             ,'birthday' => $birthday
             ,'phone_number' => $phoneNumber
-            //,'img_path' => $imgPath
-            ,'img_path' => 'test'
-        ]);
-        $usersTable->save();
-        $userId = $usersTable->id;
-        $namesTable->fill([
-            'user_id'=>$userId
             ,'kana_name'=>$kanaName
             ,'nickname'=>$nickName
         ]);
-        $namesTable->save();
+        $usersTable->save();
+
+        $userId = $usersTable->id;
+
         $addressesTable->fill([
             'user_id'=> $userId
             ,'postal_code' => $postalCode
@@ -180,13 +182,13 @@ class RegisterController extends Controller
             ,'block'=>$block
             ,'building'=>$building
         ]);
-        $addressesTable->save();
-
+        $addressesTable->save();               
+        
         //Tokenレコードの削除
         $tokensTable->where('email',$email)->delete();
 
 
-        return redirect('/');
+        return redirect('/',["successful" => "ユーザー登録が完了しました。"]);
 
     }
 

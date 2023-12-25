@@ -16,8 +16,9 @@ class CheckPostalCode implements ValidationRule
     {
         $postalCode = mb_convert_kana($value, "a");
         $postalCode = str_replace("-","",$postalCode);
+        $postalCode = str_replace("ー","",$postalCode);
+        $postalCode = str_replace("－","",$postalCode);
         $postalCodeLength = strlen($postalCode);
-
         if($postalCodeLength != 7 ){
             $fail("郵便番号に7桁以外は登録できません。");
         }elseif(preg_match('/[^\p{N}]/u',$postalCode)){

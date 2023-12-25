@@ -11,6 +11,16 @@
                     {{-- Display Validation Errors --}}
                     {{-- resources/views/common/errors.blade.phpをロード --}}
                     @include('common.errors')
+                    
+                    @if(isset($successful))
+                    <div class="alert alert-success">
+                        <strong>お知らせ</strong>
+                        <br><br>
+                        <ul>
+                                <li>{{ $successful }}</li>
+                        </ul>
+                    </div>
+                    @endif
 
                     {{-- New Task Form --}}
                     <form action="{{ url('task') }}" method="POST" class="form-horizontal">

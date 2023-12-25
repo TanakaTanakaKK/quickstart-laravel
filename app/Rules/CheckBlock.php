@@ -16,8 +16,8 @@ class CheckBlock implements ValidationRule
     {
         if(preg_match("/[a-zA-Zａ-ｚＡ-Ｚ]/u",$value)){
             $fail('番地に英語は使用できません。');
-        }elseif(preg_match("/^([0-9０-９]+丁目[0-9０-９]+番地|[0-9０-９]+番地|[0-9０-９]+-[0-9０-９]+|[0-9０-９]+ー[0-9０-９]+)$/",$value)){
-            $fail('番地の書き方が正しくありません。');
+        }elseif(preg_match("/[[:space:]]/u",$value)){
+            $fail('番地にスペースを入力しないでください。');
         }
     }
 }

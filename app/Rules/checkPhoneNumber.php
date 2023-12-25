@@ -16,10 +16,12 @@ class CheckPhoneNumber implements ValidationRule
     {
         $phoneNumber = mb_convert_kana($value, "a");
         $phoneNumber = str_replace("-","",$phoneNumber);
+        $phoneNumber = str_replace("ー","",$phoneNumber);
+        $phoneNumber = str_replace("－","",$phoneNumber);
         $phoneNumberLength = strlen($phoneNumber);
         if($phoneNumberLength ==12 || $phoneNumberLength == 13){
             $fail("電話番号が無効な桁数です。");
-        }elseif(preg_match('/[^\p{N}]/u',$phoneNumber)){
+        }elseif(preg_match('/[^\p{N}\x{30FC}-\x{30FE}ー-]/u',$phoneNumber)){
             $fail("電話番号に ー - 以外の記号は使用できません。");
         }
 
