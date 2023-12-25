@@ -14,8 +14,12 @@ use Illuminate\Support\Str;
 use App\Rules\CheckImg;
 use App\Rules\CheckName;
 use App\Rules\CheckBirthday;
+use App\Rules\CheckBlock;
+use App\Rules\CheckCity;
 use App\Rules\CheckPhoneNumber;
 use App\Rules\CheckKanaName;
+use App\Rules\checkPostalCode;
+use App\Rules\CheckPrefecture;
 use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
@@ -113,17 +117,17 @@ class RegisterController extends Controller
             //     'mimes:jpeg,jpg,png',
             //     'dimensions:min_width=100,min_height=100,max_width=500,max_height=500',
             // ]//,new CheckImg()]
-            "name" => "required"
-            ,"kana_name" => "required"
+            "name" => ["required",new CheckName()]
+            ,"kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"]
             ,"nickname" => "required"
             ,"gender" => "required"
-            ,"birthday" => "required"
-            ,"phone_number" => "required"
-            ,"postalcode" => "required"
-            ,"prefecture" => "required"
-            ,"city" => "required"
-            ,"block" => "required"
-            ,"building" => ""
+            ,"birthday" => ["required",new CheckBirthday()]
+            ,"phone_number" => ["required",new CheckPhoneNumber()]
+            ,"postalcode" => ["required",new CheckPostalCode()]
+            ,"prefecture" => ["required",new CheckPrefecture()]
+            ,"city" => ["required",new CheckCity()]
+            ,"block" => ["required",new CheckBlock()]
+            ,"building" => ''
         ]);
         // $imgFile = $request->file('user_img');
         // Storage::putFileAs('storage/images/',$imgFile,'public/imgs');

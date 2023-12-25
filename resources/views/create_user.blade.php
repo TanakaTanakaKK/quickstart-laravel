@@ -19,13 +19,13 @@
                     <div class="form-group col-sm-6">
                         <label for="name">氏名</label>
                         <div>
-                            <input type="text" name="name" class="form-control">
+                            <input type="text" name="name" class="form-control" >
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="kana-name">氏名(カナ)</label>
                         <div>
-                            <input type="text" name="kana_name" class="form-control">
+                            <input type="text" name="kana_name" class="form-control" >
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
@@ -46,49 +46,49 @@
                     <div class="form-group form-inline col-sm-3">
                         <label type="birthday">生年月日</label>
                         <div>
-                            <input type="date" name="birthday" value="">
+                            <input type="date" name="birthday">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="phone-number">電話番号</label>
                         <div>
-                            <input type="tel" name="phone_number" class="form-control" value="">
+                            <input type="tel" name="phone_number" class="form-control" >
                         </div>
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="postal-code">郵便番号</label>
                         <div>
-                            <input type="text" name="postalcode" class="form-control" id="postalcode" oninput="searchPostal()">
+                            <input type="tel" name="postalcode" class="form-control" id="postalcode" oninput="searchPostal()" >
                         </div>
                     </div>                    
                     <div class="form-group col-sm-6">
                         <label for="prefecture">都道府県</label>
                         <div>
-                            <input type="text" name="prefecture" class="form-control" value="" id="prefecture">
+                            <input type="text" name="prefecture" class="form-control" id="prefecture">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="city">市</label>
                         <div>
-                            <input type="text" name="city" class="form-control" value="" id="city">
+                            <input type="text" name="city" class="form-control" id="city">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="town">区町村</label>
                         <div>
-                            <input type="text" name="town" class="form-control" value="" id="town">
+                            <input type="text" name="town" class="form-control" id="town">
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="block">番地</label>
                         <div>
-                            <input type="text" name="block" class="form-control" value="" id="block">
+                            <input type="text" name="block" class="form-control" id="block" >
                         </div>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="building">建物</label>
                         <div>
-                            <input type="text" name="building" class="form-control" value="" id="building">
+                            <input type="text" name="building" class="form-control" id="building" >
                         </div>
                     </div>
 

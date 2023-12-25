@@ -48,7 +48,7 @@ return [
     'distinct' => 'The :attribute field has a duplicate value.',
     'doesnt_end_with' => 'The :attribute field must not end with one of the following: :values.',
     'doesnt_start_with' => 'The :attribute field must not start with one of the following: :values.',
-    'email' => 'その :attribute は有効なメールアドレスではありません',
+    'email' => ' :attribute は有効ではありません',
     'ends_with' => 'The :attribute field must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
     'exists' => 'The selected :attribute is invalid.',
@@ -132,7 +132,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute field format is invalid.',
-    'required' => 'The :attribute は必須項目です。',
+    'required' => ':attribute は必須項目です。',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',
@@ -151,7 +151,7 @@ return [
     'starts_with' => 'The :attribute field must start with one of the following: :values.',
     'string' => 'The :attribute field must be a string.',
     'timezone' => 'The :attribute field must be a valid timezone.',
-    'unique' => 'その :attribute 既に登録済みです',
+    'unique' => ' :attribute は既に登録済みです',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute field must be uppercase.',
     'url' => 'The :attribute field must be a valid URL.',
@@ -190,16 +190,17 @@ return [
         "email" => "メールアドレス"
         ,"user-img" => "画像"
         ,"name" => "氏名"
-        ,"kana-name" => "氏名(カナ)"
+        ,"kana_name" => "氏名(カナ)"
         ,"nickname" => "ニックネーム"
         ,"gender" => "性別"
         ,"birthday" => "生年月日"
         ,"tel" => "電話番号"
-        ,"postal-code" => "郵便番号"
+        ,"postalcode" => "郵便番号"
         ,"prefecture" => "都道府県"
         ,"city" => "市区町村"
         ,"block" => "番地"
         ,"building" => "建物"
+        ,"phone_number" => "電話番号"
     ],
 
 ];

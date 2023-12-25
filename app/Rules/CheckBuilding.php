@@ -3,11 +3,9 @@
 namespace App\Rules;
 
 use Closure;
-use DateTime;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Facades\Date;
 
-class CheckBirthday implements ValidationRule
+class CheckBuilding implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -16,12 +14,6 @@ class CheckBirthday implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $thisYear = date("Y");
-        $userBirthYear = explode("-", $value)[0];
         
-        if($thisYear-$userBirthYear<=12){
-            $fail("生年月日が無効な値です。");
-        }
-
     }
 }
