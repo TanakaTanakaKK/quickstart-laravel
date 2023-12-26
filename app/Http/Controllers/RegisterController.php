@@ -61,14 +61,14 @@ class RegisterController extends Controller
         
     }
 
-    public function checkToken(Request $request,$token)
+    public function checkToken(Request $request)
     {
         //DBのトークンと一致しているか確認
         $tokensTable = new Token();
         $existsTokensList = $tokensTable->pluck('token');
         $flagExists = false;
         foreach($existsTokensList as $existsToken){
-            if($existsToken === $token){
+            if($existsToken === $request->token){
                 $flagExists = true;
             }
         }
