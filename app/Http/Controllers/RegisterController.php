@@ -39,15 +39,11 @@ class RegisterController extends Controller
         $url = 'http://quickstart-laravel.local/create_user/';
         $msgTitle = "仮登録完了メッセージ";
         $msgTemplate = "下記URLへ進んでください";
-
-        //DB登録
         $tokentable->fill([
             'token' => $token,
             'email' => $email
         ]);
         $tokentable->save();
-
-        //メール送信
         Mail::send('welcome',[], function($message)
         use($email,$token,$url,$msgTitle,$msgTemplate) {
             $message->to($email)
@@ -63,7 +59,6 @@ class RegisterController extends Controller
 
     public function checkToken(Request $request)
     {
-        //DBのトークンと一致しているか確認
         $tokensTable = new Token();
         $existsTokensList = $tokensTable->pluck('token');
         $flagExists = false;
@@ -72,21 +67,17 @@ class RegisterController extends Controller
                 $flagExists = true;
             }
         }
-        //存在しなければトップページへ
         if($flagExists === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
-        // 一致していたら登録画面
         return view('create_user');
 
     }
 
     public function register(Request $request)
     {
-        //tokenの取得
         $url = url()->previous();
         $token = explode("/",$url)[4];
-        //tokenのチェック
         $flagExists = false;
         $tokensTable = new Token();
 
@@ -98,7 +89,6 @@ class RegisterController extends Controller
                 $flagExists = true;
             }
         }
-        //存在しなければトップページへ
         if($flagExists === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
@@ -116,7 +106,7 @@ class RegisterController extends Controller
             "block" => ["required",new CheckBlock()],
         ]);
 
-        //usersテーブルに入れる変数の定義
+
         $usersTable = new User();
         $email = $tokensTable->where('token',$token)->value('email');
         $name = $request->name;
@@ -124,15 +114,12 @@ class RegisterController extends Controller
         $nickName = $request->nickname;
         $gender = $request->gender;
         $birthday = $request->birthday;
-         //電話番号修正
         $phoneNumber = $request->phone_number;
         $phoneNumber = mb_ereg_replace("ー","",$phoneNumber);
         $phoneNumber = mb_ereg_replace("－","",$phoneNumber);
         $phoneNumber = mb_ereg_replace("-","",$phoneNumber);
         $phoneNumber = mb_convert_kana($phoneNumber,'a','UTF-8');
         $phoneNumber = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $phoneNumber);
-
-        //addressテーブル
         $addressesTable = new Address();
         $postalCode = $request->postalcode;
         $postalCode = mb_ereg_replace("ー","",$postalCode);
@@ -143,7 +130,6 @@ class RegisterController extends Controller
         $prefecture = $request->prefecture;
         $city = $request->city;
         $town = $request->town;
-        //番地修正
         $block = $request->block;
         $FirstReplaceList = array("丁目","丁","ー","－");
         $SecondReplaceList = array("番地","番");
@@ -191,10 +177,7 @@ class RegisterController extends Controller
             return redirect('/tasks')->withErrors(['registerError' => $errorMessage])->withInput();
         }
         
-        //Tokenレコードの削除
         $tokensTable->where('email',$email)->delete();
-
-
         return view('/tasks',[
             'successful' => '会員登録が完了しました。'
         ]);
