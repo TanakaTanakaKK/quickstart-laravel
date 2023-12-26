@@ -62,13 +62,13 @@ class RegisterController extends Controller
     {
         $tokensTable = new Token();
         $existsTokensList = $tokensTable->pluck('token');
-        $flagExists = false;
+        $canAddUser = false;
         foreach($existsTokensList as $existsToken){
             if($existsToken === $request->token){
-                $flagExists = true;
+                $canAddUser = true;
             }
         }
-        if($flagExists === false){
+        if($canAddUser === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
         return view('create_user');
@@ -76,17 +76,17 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $token = explode('/',$request->headers->get("referer"))[4];
-        $flagExists = false;
+        $canAddUser = false;
         $tokensTable = new Token();
 
         $existsTokensList = $tokensTable->pluck('token');
-        $flagExists = false;
+        $canAddUser = false;
         foreach($existsTokensList as $existsToken){
             if($existsToken === $token){
-                $flagExists = true;
+                $canAddUser = true;
             }
         }
-        if($flagExists === false){
+        if($canAddUser === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
         $this->validate($request,[
