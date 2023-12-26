@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\{
-    Address,
     Token,
     User
 };
 use Illuminate\{
     Http\Request,
-    Support\Facades\Mail,
-    Support\Str
 };
 use App\Rules\{
     CheckName,
@@ -19,66 +16,18 @@ use App\Rules\{
     CheckCity,
     CheckPhoneNumber,
     CheckKanaName,
-    checkPostalCode,
+    CheckPostalCode,
     CheckPrefecture
 };
 use Exception;
 
 class RegisterController extends Controller
 {
-    public function index(Request $request)
-    {
-        return view('register');
-    }
-
-    public function sendMail(Request $request)
-    {
-        $email = $request->email;
-        $this->validate($request,[
-            'email' => 'email:filter,d|unique:users,email'
-        ]);
-
-        $tokentable = new Token();
-        $token = Str::random(rand(30,50));
-        $url = 'http://quickstart-laravel.local/create_user/';
-        $msgTitle = "仮登録完了メッセージ";
-        $msgTemplate = "下記URLへ進んでください";
-        $tokentable->fill([
-            'token' => $token,
-            'email' => $email
-        ]);
-        $tokentable->save();
-        Mail::send('welcome',[], function($message)
-        use($email,$token,$url,$msgTitle,$msgTemplate) {
-            $message->to($email)
-            ->subject($msgTitle)
-            ->text("{$msgTemplate}\n{$url}{$token}");
-        });
-        return view('register',[
-            'email' => $email
-        ]);
-    }
-    public function checkToken(Request $request)
-    {
-        $tokensTable = new Token();
-        $existsTokensList = $tokensTable->pluck('token');
-        $canAddUser = false;
-        foreach($existsTokensList as $existsToken){
-            if($existsToken === $request->token){
-                $canAddUser = true;
-            }
-        }
-        if($canAddUser === false){
-            return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
-        }
-        return view('create_user');
-    }
     public function register(Request $request)
     {
         $token = explode('/',$request->headers->get("referer"))[4];
         $canAddUser = false;
         $tokensTable = new Token();
-
         $existsTokensList = $tokensTable->pluck('token');
         $canAddUser = false;
         foreach($existsTokensList as $existsToken){
@@ -114,7 +63,6 @@ class RegisterController extends Controller
         $phoneNumber = mb_ereg_replace("-","",$phoneNumber);
         $phoneNumber = mb_convert_kana($phoneNumber,'a','UTF-8');
         $phoneNumber = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $phoneNumber);
-        $addressesTable = new Address();
         $postalCode = $request->postalcode;
         $postalCode = mb_ereg_replace("ー","",$postalCode);
         $postalCode = mb_ereg_replace("－","",$postalCode);
@@ -142,12 +90,7 @@ class RegisterController extends Controller
                 'nickname'=>$nickName,
                 'gender' => $gender,
                 'birthday' => $birthday,
-                'phone_number' => $phoneNumber
-            ]);
-            $usersTable->save();
-            $userId = $usersTable->id;
-            $addressesTable->fill([
-                'user_id'=> $userId,
+                'phone_number' => $phoneNumber,
                 'postal_code' => $postalCode,
                 'prefecture'=>$prefecture,
                 'city'=>$city,
@@ -155,7 +98,7 @@ class RegisterController extends Controller
                 'block'=>$block,
                 'building'=>$building
             ]);
-            $addressesTable->save();
+            $usersTable->save();
         }catch(Exception $e){
             $error = $e->errorInfo[2];
             $errorMessage = "会員登録に失敗しました。";

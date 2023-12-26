@@ -21,6 +21,12 @@ return new class extends Migration
             $table->date('birthday')->nullable(false);
             $table->string('phone_number')->unique();
             $table->string('img_path')->nullable();
+            $table->string('postal_code');
+            $table->string('prefecture');
+            $table->string('city');
+            $table->string('town');
+            $table->string('block');
+            $table->string('building')->nullable();
             $table->timestamps();
         });
     }
