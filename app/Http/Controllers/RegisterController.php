@@ -42,8 +42,8 @@ class RegisterController extends Controller
 
         //DB登録
         $tokentable->fill([
-            'token' => $token
-            ,'email' => $email
+            'token' => $token,
+            'email' => $email
         ]);
         $tokentable->save();
 
@@ -104,17 +104,16 @@ class RegisterController extends Controller
         }
 
         $this->validate($request,[
-            "name" => ["required",new CheckName()]
-            ,"kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"]
-            ,"nickname" => "required"
-            ,"gender" => "required"
-            ,"birthday" => ["required",new CheckBirthday()]
-            ,"phone_number" => ["required",new CheckPhoneNumber()]
-            ,"postalcode" => ["required",new CheckPostalCode()]
-            ,"prefecture" => ["required",new CheckPrefecture()]
-            ,"city" => ["required",new CheckCity()]
-            ,"block" => ["required",new CheckBlock()]
-            ,"building" => ''
+            "name" => ["required",new CheckName()],
+            "kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"],
+            "nickname" => "required",
+            "gender" => "required",
+            "birthday" => ["required",new CheckBirthday()],
+            "phone_number" => ["required",new CheckPhoneNumber()],
+            "postalcode" => ["required",new CheckPostalCode()],
+            "prefecture" => ["required",new CheckPrefecture()],
+            "city" => ["required",new CheckCity()],
+            "block" => ["required",new CheckBlock()],
         ]);
 
         //usersテーブルに入れる変数の定義
@@ -158,13 +157,13 @@ class RegisterController extends Controller
 
         try{
             $usersTable->fill([
-                'name' => $name
-                ,'email' => $email
-                ,'kana_name'=>$kanaName
-                ,'nickname'=>$nickName
-                ,'gender' => $gender
-                ,'birthday' => $birthday
-                ,'phone_number' => $phoneNumber
+                'name' => $name,
+                'email' => $email,
+                'kana_name'=>$kanaName,
+                'nickname'=>$nickName,
+                'gender' => $gender,
+                'birthday' => $birthday,
+                'phone_number' => $phoneNumber
 
             ]);
             $usersTable->save();
@@ -172,13 +171,13 @@ class RegisterController extends Controller
             $userId = $usersTable->id;
 
             $addressesTable->fill([
-                'user_id'=> $userId
-                ,'postal_code' => $postalCode
-                ,'prefecture'=>$prefecture
-                ,'city'=>$city
-                ,'town'=>$town
-                ,'block'=>$block
-                ,'building'=>$building
+                'user_id'=> $userId,
+                'postal_code' => $postalCode,
+                'prefecture'=>$prefecture,
+                'city'=>$city,
+                'town'=>$town,
+                'block'=>$block,
+                'building'=>$building
             ]);
             $addressesTable->save();
         }catch(Exception $e){
