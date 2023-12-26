@@ -20,7 +20,6 @@ use App\Rules\{
     CheckPrefecture
 };
 use Exception;
-
 class RegisterController extends Controller
 {
     public function register(Request $request)

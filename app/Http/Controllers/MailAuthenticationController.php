@@ -10,8 +10,6 @@ use Illuminate\{
 use App\Models\{
     Token,
 };
-
-
 class MailAuthenticationController extends Controller
 {
     public function index(Request $request)
@@ -24,7 +22,6 @@ class MailAuthenticationController extends Controller
         $this->validate($request,[
             'email' => 'email:filter,d|unique:users,email'
         ]);
-
         $tokentable = new Token();
         $token = Str::random(rand(30,50));
         $url = 'http://quickstart-laravel.local/create_user/';
