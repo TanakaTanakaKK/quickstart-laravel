@@ -3,11 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\RegisterController;
-//hascコード作成
-use Illuminate\Support\Facades\Hash;
-use App\Models\Task;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------

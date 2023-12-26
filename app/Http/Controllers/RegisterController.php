@@ -3,17 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
-use App\Models\Name;
 use App\Models\Token;
 use App\Models\User;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-
-
-#use App\Models\Task;
 use App\Rules\CheckImg;
 use App\Rules\CheckName;
 use App\Rules\CheckBirthday;
@@ -35,9 +29,6 @@ class RegisterController extends Controller
 
     public function sendMail(Request $request)
     {
-        // if($request->has('reset')){
-        //     dd($request);
-        // }
         $email = $request->email;
         $this->validate($request,[
             'email' => 'email:filter,d|unique:users,email'
@@ -64,7 +55,6 @@ class RegisterController extends Controller
             ->text("{$msgTemplate}\n{$url}{$token}");
         });
 
-        // テスト用処理
         return view('register',[
             'email' => $email
         ]);
@@ -77,7 +67,6 @@ class RegisterController extends Controller
         $tokensTable = new Token();
         $existsTokensList = $tokensTable->pluck('token');
         $flagExists = false;
-        
         foreach($existsTokensList as $existsToken){
             if($existsToken === $token){
                 $flagExists = true;

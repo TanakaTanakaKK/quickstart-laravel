@@ -4,10 +4,6 @@ const searchPostal = () =>{
         return String.fromCharCode(postalCode.charCodeAt(0)-0xFEE0);
     });
     postalCode = postalCode.replace(/[ー－-]/g,'');
-    // if(postalCode.length != 7){
-    //     console.log(postalCode);
-    //     return;
-    // }
 
     let prefecture = document.getElementById('prefecture');
     let city = document.getElementById('city');
