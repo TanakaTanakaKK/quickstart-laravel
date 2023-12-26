@@ -90,6 +90,19 @@ class RegisterController extends Controller
         $flagExists = false;
         $tokensTable = new Token();
 
+
+        $existsTokensList = $tokensTable->pluck('token');
+        $flagExists = false;
+        foreach($existsTokensList as $existsToken){
+            if($existsToken === $token){
+                $flagExists = true;
+            }
+        }
+        //存在しなければトップページへ
+        if($flagExists === false){
+            return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
+        }
+
         $this->validate($request,[
             "name" => ["required",new CheckName()]
             ,"kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"]
