@@ -76,11 +76,9 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $url = url()->previous();
-        $token = explode("/",$url)[4];
+        $token = explode('/',$request->headers->get("referer"))[4];
         $flagExists = false;
         $tokensTable = new Token();
-
 
         $existsTokensList = $tokensTable->pluck('token');
         $flagExists = false;
