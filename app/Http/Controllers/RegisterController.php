@@ -153,7 +153,7 @@ class RegisterController extends Controller
         if(isset($building)){
             $building = mb_convert_kana($building,'a','UTF-8');
         }
-        
+
         try{
             $usersTable->fill([
                 'name' => $name
@@ -163,7 +163,7 @@ class RegisterController extends Controller
                 ,'gender' => $gender
                 ,'birthday' => $birthday
                 ,'phone_number' => $phoneNumber
-                ,'img_path' => '仮'
+
             ]);
             $usersTable->save();
 
