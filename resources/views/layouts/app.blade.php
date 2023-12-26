@@ -22,9 +22,7 @@
             </div>
         </div>
     </nav>
-    {{--　子が自由に書ける場所 --}}
     @yield('content')
-    {{-- JavaScripts --}}
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>

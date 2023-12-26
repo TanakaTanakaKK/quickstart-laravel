@@ -5,117 +5,115 @@
         @csrf
         <div class="container">
             <div class="col-sm-offset-2 col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    会員登録ページ
-                </div>
-                <div class="panel-body">
-                    @include('common.info')
-                    <div class="form-group  ">
-                        <label for="user-img" class="col-sm-4 control-label">画像</label>
-                        <div class="col-sm-8">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <label class="btn btn-default">
-                                        ファイルを選択<input type="file" name="user_img" style="display: none;">
-                                    </label>
-                                </span>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        会員登録ページ
                     </div>
-                    <div class="form-group ">
-                        <label for="name" class="col-sm-4 control-label">氏名</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="name" class="form-control" >
-                        </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="kana-name" class="col-sm-4 control-label">氏名(カナ)</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="kana_name" class="form-control" >
-                        </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="nickname" class="col-sm-4 control-label">ニックネーム</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="nickname" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="gender" class="col-sm-4 control-label">性別</label>
-                        <div class="col-sm-8">
-                            <div class="form-control">
-                                <div class="form-check-inline radio-inline">
-                                    <input class="form-check-input" type="radio" name="gender" value="男">
-                                    <label class="form-check-label ">男</label>
-                                </div>
-                                <div class="form-check-inline radio-inline">
-                                    <input class="form-check-input" type="radio" name="gender" value="女">
-                                    <label class="form-check-label ">女</label>
+                    <div class="panel-body">
+                        @include('common.info')
+                        <div class="form-group  ">
+                            <label for="user-img" class="col-sm-4 control-label">画像</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <label class="btn btn-default">
+                                            ファイルを選択<input type="file" name="user_img" style="display: none;">
+                                        </label>
+                                    </span>
+                                    <input type="text" class="form-control" readonly>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group ">
-                        <label for="birthday" class="col-sm-4 control-label">生年月日</label>
-                        <div class="col-sm-8">
-                            <input type="date" name="birthday" class="form-control">
+                        <div class="form-group ">
+                            <label for="name" class="col-sm-4 control-label">氏名</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" class="form-control" >
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="phonenumber" class="col-sm-4 control-label">電話番号</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="phone_number" class="form-control">
+                        <div class="form-group ">
+                            <label for="kana-name" class="col-sm-4 control-label">氏名(カナ)</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="kana_name" class="form-control" >
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="postalcode" class="col-sm-4 control-label">郵便番号</label>
-                        <div class="col-sm-8">
-                            <input type="tel" name="postalcode" class="form-control" id="postalcode" oninput="searchPostal()">
+                        <div class="form-group ">
+                            <label for="nickname" class="col-sm-4 control-label">ニックネーム</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="nickname" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="prefecture" class="col-sm-4 control-label">都道府県</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="prefecture" class="form-control" id="prefecture">
+                        <div class="form-group ">
+                            <label for="gender" class="col-sm-4 control-label">性別</label>
+                            <div class="col-sm-8">
+                                <div class="form-control">
+                                    <div class="form-check-inline radio-inline">
+                                        <input class="form-check-input" type="radio" name="gender" value="男">
+                                        <label class="form-check-label ">男</label>
+                                    </div>
+                                    <div class="form-check-inline radio-inline">
+                                        <input class="form-check-input" type="radio" name="gender" value="女">
+                                        <label class="form-check-label ">女</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="city" class="col-sm-4 control-label">市</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="city" class="form-control" id="city">
+                        <div class="form-group ">
+                            <label for="birthday" class="col-sm-4 control-label">生年月日</label>
+                            <div class="col-sm-8">
+                                <input type="date" name="birthday" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="town" class="col-sm-4 control-label">区町村</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="town" class="form-control" id="town">
+                        <div class="form-group ">
+                            <label for="phonenumber" class="col-sm-4 control-label">電話番号</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="phone_number" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="block" class="col-sm-4 control-label">番地</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="block" class="form-control" id="block" >
+                        <div class="form-group ">
+                            <label for="postalcode" class="col-sm-4 control-label">郵便番号</label>
+                            <div class="col-sm-8">
+                                <input type="tel" name="postalcode" class="form-control" id="postalcode" oninput="searchPostal()">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group ">
-                        <label for="building" class="col-sm-4 control-label">建物</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="building" class="form-control" id="building" >
+                        <div class="form-group ">
+                            <label for="prefecture" class="col-sm-4 control-label">都道府県</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="prefecture" class="form-control" id="prefecture">
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-6 col-sm-6">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fa fa-btn fa-plus"></i>会員登録
-                            </button>
+                        <div class="form-group ">
+                            <label for="city" class="col-sm-4 control-label">市</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="city" class="form-control" id="city">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="town" class="col-sm-4 control-label">区町村</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="town" class="form-control" id="town">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="block" class="col-sm-4 control-label">番地</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="block" class="form-control" id="block" >
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="building" class="col-sm-4 control-label">建物</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="building" class="form-control" id="building" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-6 col-sm-6">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-btn fa-plus"></i>会員登録
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </form>

@@ -54,13 +54,10 @@ class RegisterController extends Controller
             ->subject($msgTitle)
             ->text("{$msgTemplate}\n{$url}{$token}");
         });
-
         return view('register',[
             'email' => $email
         ]);
-        
     }
-
     public function checkToken(Request $request)
     {
         $tokensTable = new Token();
@@ -75,9 +72,7 @@ class RegisterController extends Controller
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
         return view('create_user');
-
     }
-
     public function register(Request $request)
     {
         $token = explode('/',$request->headers->get("referer"))[4];
@@ -94,7 +89,6 @@ class RegisterController extends Controller
         if($flagExists === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
-
         $this->validate($request,[
             "name" => ["required",new CheckName()],
             "kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"],
@@ -107,8 +101,6 @@ class RegisterController extends Controller
             "city" => ["required",new CheckCity()],
             "block" => ["required",new CheckBlock()],
         ]);
-
-
         $usersTable = new User();
         $email = $tokensTable->where('token',$token)->value('email');
         $name = $request->name;
@@ -142,7 +134,6 @@ class RegisterController extends Controller
         if(isset($building)){
             $building = mb_convert_kana($building,'a','UTF-8');
         }
-
         try{
             $usersTable->fill([
                 'name' => $name,
@@ -152,12 +143,9 @@ class RegisterController extends Controller
                 'gender' => $gender,
                 'birthday' => $birthday,
                 'phone_number' => $phoneNumber
-
             ]);
             $usersTable->save();
-
             $userId = $usersTable->id;
-
             $addressesTable->fill([
                 'user_id'=> $userId,
                 'postal_code' => $postalCode,
@@ -178,12 +166,9 @@ class RegisterController extends Controller
             }
             return redirect('/tasks')->withErrors(['registerError' => $errorMessage])->withInput();
         }
-        
         $tokensTable->where('email',$email)->delete();
         return view('/tasks',[
             'successful' => '会員登録が完了しました。'
         ]);
-    }
-
-    
+    }    
 }
