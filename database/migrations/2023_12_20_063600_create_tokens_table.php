@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->string('token')->unique();
             $table->string('email');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
