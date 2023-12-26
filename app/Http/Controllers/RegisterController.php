@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
-use App\Models\Token;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use App\Rules\CheckImg;
-use App\Rules\CheckName;
-use App\Rules\CheckBirthday;
-use App\Rules\CheckBlock;
-use App\Rules\CheckCity;
-use App\Rules\CheckPhoneNumber;
-use App\Rules\CheckKanaName;
-use App\Rules\checkPostalCode;
-use App\Rules\CheckPrefecture;
+use App\Models\{
+    Address,
+    Token,
+    User
+};
+use Illuminate\{
+    Http\Request,
+    Support\Facades\Mail,
+    Support\Str
+};
+use App\Rules\{
+    CheckName,
+    CheckBirthday,
+    CheckBlock,
+    CheckCity,
+    CheckPhoneNumber,
+    CheckKanaName,
+    checkPostalCode,
+    CheckPrefecture
+};
 use Exception;
-use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
