@@ -13,4 +13,14 @@
         </ul>
         
     </div>
+
+@endif
+@if(isset($successful))
+<div class="alert alert-success">
+    <strong>お知らせ</strong>
+    <br><br>
+    <ul>
+            <li>{{ $successful }}</li>
+    </ul>
+</div>
 @endif

@@ -16,9 +16,11 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->string('email')->unique();
             $table->string('gender')->nullable(false);
+            $table->string('kana_name')->nullable(false);
+            $table->string('nickname')->nullable(false);
             $table->date('birthday')->nullable(false);
             $table->string('phone_number')->unique();
-            $table->string('img_path');
+            $table->string('img_path')->nullable();
             $table->timestamps();
         });
     }

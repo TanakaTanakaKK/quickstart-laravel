@@ -23,6 +23,7 @@ use App\Rules\CheckPhoneNumber;
 use App\Rules\CheckKanaName;
 use App\Rules\checkPostalCode;
 use App\Rules\CheckPrefecture;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
@@ -84,7 +85,7 @@ class RegisterController extends Controller
         }
         //存在しなければトップページへ
         if($flagExists === false){
-            return back()->withInput()->withErrors(array('tokenError' => 'トークンが無効です。'));
+            return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
         // 一致していたら登録画面
         return view('create_user');
@@ -99,15 +100,6 @@ class RegisterController extends Controller
         //tokenのチェック
         $flagExists = false;
         $tokensTable = new Token();
-        $existsTokensList = $tokensTable->pluck('token');
-        foreach($existsTokensList as $existsToken){
-            if($existsToken === $token){
-                $flagExists = true;
-            }
-        }
-        if($flagExists === false){
-            return back()->withInput()->withErrors(array('tokenError' => 'トークンが無効です。'));
-        }
 
         $this->validate($request,[
             "name" => ["required",new CheckName()]
@@ -150,6 +142,7 @@ class RegisterController extends Controller
         $prefecture = $request->prefecture;
         $city = $request->city;
         $town = $request->town;
+        //番地修正
         $block = $request->block;
         $FirstReplaceList = array("丁目","丁","ー","－");
         $SecondReplaceList = array("番地","番");
@@ -160,36 +153,50 @@ class RegisterController extends Controller
         if(isset($building)){
             $building = mb_convert_kana($building,'a','UTF-8');
         }
-        $usersTable->fill([
-            'name' => $name
-            ,'email' => $email
-            ,'gender' => $gender
-            ,'birthday' => $birthday
-            ,'phone_number' => $phoneNumber
-            ,'kana_name'=>$kanaName
-            ,'nickname'=>$nickName
-        ]);
-        $usersTable->save();
+        
+        try{
+            $usersTable->fill([
+                'name' => $name
+                ,'email' => $email
+                ,'kana_name'=>$kanaName
+                ,'nickname'=>$nickName
+                ,'gender' => $gender
+                ,'birthday' => $birthday
+                ,'phone_number' => $phoneNumber
+                ,'img_path' => '仮'
+            ]);
+            $usersTable->save();
 
-        $userId = $usersTable->id;
+            $userId = $usersTable->id;
 
-        $addressesTable->fill([
-            'user_id'=> $userId
-            ,'postal_code' => $postalCode
-            ,'prefecture'=>$prefecture
-            ,'city'=>$city
-            ,'town'=>$town
-            ,'block'=>$block
-            ,'building'=>$building
-        ]);
-        $addressesTable->save();               
+            $addressesTable->fill([
+                'user_id'=> $userId
+                ,'postal_code' => $postalCode
+                ,'prefecture'=>$prefecture
+                ,'city'=>$city
+                ,'town'=>$town
+                ,'block'=>$block
+                ,'building'=>$building
+            ]);
+            $addressesTable->save();
+        }catch(Exception $e){
+            $error = $e->errorInfo[2];
+            $errorMessage = "会員登録に失敗しました。";
+            if(str_contains($error,"email")){
+                $errorMessage = "そのメールアドレスは既に使用されています。";
+            }elseif(str_contains($error,"phone")){
+                $errorMessage = "その電話番号は既に使用されています。";
+            }
+            return redirect('/tasks')->withErrors(['registerError' => $errorMessage])->withInput();
+        }
         
         //Tokenレコードの削除
         $tokensTable->where('email',$email)->delete();
 
 
-        return redirect('/',["successful" => "ユーザー登録が完了しました。"]);
-
+        return view('/tasks',[
+            'successful' => '会員登録が完了しました。'
+        ]);
     }
 
     

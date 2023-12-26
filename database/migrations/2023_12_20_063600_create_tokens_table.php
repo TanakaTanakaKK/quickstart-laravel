@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->string('token')->unique();
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamps();
         });
     }

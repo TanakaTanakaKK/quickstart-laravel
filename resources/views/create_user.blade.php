@@ -10,7 +10,7 @@
                     会員登録ページ
                 </div>
                 <div class="panel-body">
-                    @include('common.errors')
+                    @include('common.info')
                     <div class="form-group  ">
                         <label for="user-img" class="col-sm-4 control-label">画像</label>
                         <div class="col-sm-8">

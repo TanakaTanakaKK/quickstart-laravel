@@ -9,7 +9,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                    @include('common.errors')
+                    @include('common.info')
                     @empty($email)
                         <label for="email-form">Eメールアドレス</label>
                         <div>
