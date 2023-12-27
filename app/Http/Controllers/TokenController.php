@@ -10,7 +10,8 @@ use Illuminate\{
 use App\{
     Models\Token,
     Enums\Prefectures,
-    Enums\Gender
+    Enums\Gender,
+    Mail\SendTokenMail
 };
 
 class TokenController extends Controller
@@ -21,7 +22,6 @@ class TokenController extends Controller
     }
     public function sendMail(Request $request)
     {
-        $email = $request->email;
         $this->validate($request,[
             'email' => 'email:filter,d|unique:users,email'
         ]);
@@ -32,18 +32,13 @@ class TokenController extends Controller
         $msgTemplate = "下記URLへ進んでください";
         $tokens->fill([
             'token' => $token,
-            'email' => $email,
+            'email' => $request->email,
             'status' => 'メール送信完了'
         ]);
         $tokens->save();
-        Mail::send('welcome',[], function($message)
-        use($email,$token,$url,$msgTitle,$msgTemplate) {
-            $message->to($email)
-            ->subject($msgTitle)
-            ->text("{$msgTemplate}\n{$url}{$token}");
-        });
+        Mail::to($request->email)->send(new SendTokenMail("{$msgTemplate}\n{$url}{$token}"));
         return view('register',[
-            'email' => $email
+            'email' => $request->email
         ]);
     }
     public function checkToken(Request $request)
