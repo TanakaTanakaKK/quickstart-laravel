@@ -7,8 +7,10 @@ use Illuminate\{
     Support\Facades\Mail,
     Support\Str
 };
-use App\Models\{
-    Token,
+use App\{
+    Models\Token,
+    Enums\Prefectures,
+    Enums\Gender
 };
 
 class TokenController extends Controller
@@ -57,6 +59,9 @@ class TokenController extends Controller
         if($canAddUser === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
-        return view('create_user');
+
+        $prefectures = Prefectures::getValues();
+        $genders = Gender::getValues();
+        return view('create_user',compact('prefectures'),compact('genders'));
     }
 }

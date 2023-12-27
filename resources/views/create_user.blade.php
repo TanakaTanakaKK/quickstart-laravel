@@ -45,16 +45,12 @@
                         <div class="form-group">
                             <label for="gender" class="col-sm-4 control-label">性別</label>
                             <div class="col-sm-8">
-                                <div class="form-control">
-                                    <div class="form-check-inline radio-inline">
-                                        <input class="form-check-input" type="radio" name="gender" value="男">
-                                        <label class="form-check-label">男</label>
-                                    </div>
-                                    <div class="form-check-inline radio-inline">
-                                        <input class="form-check-input" type="radio" name="gender" value="女">
-                                        <label class="form-check-label">女</label>
-                                    </div>
-                                </div>
+                                <select name="gender" class="form-control">
+                                    <option value="" selected hidden>選択してください</option>
+                                    @foreach($genders as $gender)
+                                        <option value="{{ $gender }}" class="text-center">{{$gender}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -78,7 +74,12 @@
                         <div class="form-group">
                             <label for="prefecture" class="col-sm-4 control-label">都道府県</label>
                             <div class="col-sm-8">
-                                <input type="text" name="prefecture" class="form-control" id="prefecture">
+                                <select name="prefecture" class="form-control">
+                                    <option value="" selected hidden>選択してください</option>
+                                    @foreach($prefectures as $prefecture)
+                                        <option value="{{ $prefecture }}" class="text-center">{{$prefecture}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
