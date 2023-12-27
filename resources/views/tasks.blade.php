@@ -1,14 +1,11 @@
 @extends('layouts.app')
 @section('content')
-
-
     <div class="container mt-4">
         <div class="col-sm-offset-2 col-sm-8 mx-auto">
             <div class="card border rounded">
                 <div class="card-header py-2">
                 New Task
                 </div>
-
                 <div class="card-body">
                     @include('common.info')
                     <form action="{{ url('task') }}" method="POST">

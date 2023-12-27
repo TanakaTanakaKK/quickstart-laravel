@@ -20,7 +20,7 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ url('/') }}">
                 Task List
                 </a>
-                <a class="navbar-brand" href="{{ url('/register') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ url('/register') }}">
                 会員登録
                 </a>
             </div>

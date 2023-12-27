@@ -13,7 +13,7 @@
     </div>
 @endif
 @if(isset($successful))
-<div class="alert alert-success">
+<div class="alert alert-success small pb-0">
     <strong>お知らせ</strong>
     <br><br>
     <ul>
