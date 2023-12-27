@@ -25,7 +25,7 @@
                     </div>
                     @endempty
                     @isset($email)
-                    <p>{{$email}}宛にメールを送信しました。</p>
+                    <p>{{ $email }}宛にメールを送信しました。</p>
                     @endisset
                 </div>
             </div>
