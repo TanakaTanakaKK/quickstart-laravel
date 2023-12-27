@@ -26,8 +26,8 @@ class RegisterController extends Controller
     {
         $token = explode('/',$request->headers->get("referer"))[4];
         $canAddUser = false;
-        $tokensTable = new Token();
-        $existsTokensList = $tokensTable->pluck('token');
+        $tokens = new Token();
+        $existsTokensList = $tokens->pluck('token');
         $canAddUser = false;
         foreach($existsTokensList as $existsToken){
             if($existsToken === $token){
@@ -49,13 +49,8 @@ class RegisterController extends Controller
             "city" => ["required",new CheckCity()],
             "block" => ["required",new CheckBlock()],
         ]);
-        $usersTable = new User();
-        $email = $tokensTable->where('token',$token)->value('email');
-        $name = $request->name;
-        $kanaName = $request->kana_name;
-        $nickName = $request->nickname;
-        $gender = $request->gender;
-        $birthday = $request->birthday;
+        $users = new User();
+        $email = $tokens->where('token',$token)->value('email');
         $phoneNumber = $request->phone_number;
         $phoneNumber = mb_ereg_replace("ー","",$phoneNumber);
         $phoneNumber = mb_ereg_replace("－","",$phoneNumber);
@@ -68,9 +63,6 @@ class RegisterController extends Controller
         $postalCode = mb_ereg_replace("-","",$postalCode);
         $postalCode = mb_convert_kana($postalCode,'a','UTF-8');
         $postalCode = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $postalCode);
-        $prefecture = $request->prefecture;
-        $city = $request->city;
-        $town = $request->town;
         $block = $request->block;
         $FirstReplaceList = array("丁目","丁","ー","－");
         $SecondReplaceList = array("番地","番");
@@ -82,22 +74,22 @@ class RegisterController extends Controller
             $building = mb_convert_kana($building,'a','UTF-8');
         }
         try{
-            $usersTable->fill([
-                'name' => $name,
+            $users->fill([
+                'name' => $request->name,
                 'email' => $email,
-                'kana_name'=>$kanaName,
-                'nickname'=>$nickName,
-                'gender' => $gender,
-                'birthday' => $birthday,
+                'kana_name'=>$request->kana_name,
+                'nickname'=>$request->nickname,
+                'gender' => $request->gender,
+                'birthday' => $request->birthday,
                 'phone_number' => $phoneNumber,
                 'postal_code' => $postalCode,
-                'prefecture'=>$prefecture,
-                'city'=>$city,
-                'town'=>$town,
+                'prefecture'=>$request->prefecture,
+                'city'=>$request->city,
+                'town'=>$request->town,
                 'block'=>$block,
                 'building'=>$building
             ]);
-            $usersTable->save();
+            $users->save();
         }catch(Exception $e){
             $error = $e->errorInfo[2];
             $errorMessage = "会員登録に失敗しました。";
@@ -108,7 +100,7 @@ class RegisterController extends Controller
             }
             return redirect('/tasks')->withErrors(['registerError' => $errorMessage])->withInput();
         }
-        $tokensTable->where('email',$email)->delete();
+        $tokens->where('email',$email)->delete();
         return view('/tasks',[
             'successful' => '会員登録が完了しました。'
         ]);

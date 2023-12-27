@@ -10,7 +10,8 @@ use Illuminate\{
 use App\Models\{
     Token,
 };
-class MailAuthenticationController extends Controller
+
+class TokenController extends Controller
 {
     public function index(Request $request)
     {
@@ -22,16 +23,17 @@ class MailAuthenticationController extends Controller
         $this->validate($request,[
             'email' => 'email:filter,d|unique:users,email'
         ]);
-        $tokentable = new Token();
+        $tokens = new Token();
         $token = Str::random(rand(30,50));
         $url = 'http://quickstart-laravel.local/create_user/';
         $msgTitle = "仮登録完了メッセージ";
         $msgTemplate = "下記URLへ進んでください";
-        $tokentable->fill([
+        $tokens->fill([
             'token' => $token,
-            'email' => $email
+            'email' => $email,
+            'status' => 'メール送信完了'
         ]);
-        $tokentable->save();
+        $tokens->save();
         Mail::send('welcome',[], function($message)
         use($email,$token,$url,$msgTitle,$msgTemplate) {
             $message->to($email)
