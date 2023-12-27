@@ -59,9 +59,6 @@ class TokenController extends Controller
         if($canAddUser === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
-
-        $prefectures = Prefectures::getValues();
-        $genders = Gender::getValues();
-        return view('create_user',compact('prefectures'),compact('genders'));
+        return view('create_user');
     }
 }

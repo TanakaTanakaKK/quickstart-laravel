@@ -47,8 +47,8 @@
                             <div class="col-sm-8">
                                 <select name="gender" class="form-control">
                                     <option value="" selected hidden>選択してください</option>
-                                    @foreach($genders as $gender)
-                                        <option value="{{ $gender }}" class="text-center">{{$gender}}</option>
+                                    @foreach(\App\Enums\Gender::getValues() as $gender)
+                                        <option value="{{ $gender }}">{{$gender}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -74,10 +74,10 @@
                         <div class="form-group">
                             <label for="prefecture" class="col-sm-4 control-label">都道府県</label>
                             <div class="col-sm-8">
-                                <select name="prefecture" class="form-control">
+                                <select name="prefecture" class="form-control" id="prefecture" size='1'>
                                     <option value="" selected hidden>選択してください</option>
-                                    @foreach($prefectures as $prefecture)
-                                        <option value="{{ $prefecture }}" class="text-center">{{$prefecture}}</option>
+                                    @foreach(\App\Enums\Prefectures::getValues() as $prefecture)
+                                        <option value="{{ $prefecture }}">{{$prefecture}}</option>
                                     @endforeach
                                 </select>
                             </div>
