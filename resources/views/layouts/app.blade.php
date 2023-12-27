@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Laravel Quickstart - Basic</title>
     {{-- Fonts --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"
     type="text/css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    {{-- CSS bootstrap4 --}}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
 </head>
 <body>
-    <nav class="navbar navbar-default">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted">
         <div class="container">
             {{-- navbar --}}
             <div class="navbar-header">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ url('/') }}">
                 Task List
                 </a>
             </div>
         </div>
     </nav>
-    {{--　子が自由に書ける場所 --}}
+
     @yield('content')
     {{-- JavaScripts --}}
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
