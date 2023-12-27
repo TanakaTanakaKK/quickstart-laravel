@@ -17,7 +17,7 @@
     <strong>お知らせ</strong>
     <br><br>
     <ul>
-            <li>{{ $successful }}</li>
+        <li>{{ $successful }}</li>
     </ul>
 </div>
 @endif

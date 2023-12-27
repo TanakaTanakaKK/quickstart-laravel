@@ -25,7 +25,7 @@
                         </div>
                     </form>
                 </div>
-                @if(isset($tasks)&&count($tasks) > 0)
+                @if(isset($tasks) && count($tasks) > 0)
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         現在のタスク
