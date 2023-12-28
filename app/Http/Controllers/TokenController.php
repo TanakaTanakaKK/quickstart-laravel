@@ -27,16 +27,13 @@ class TokenController extends Controller
         ]);
         $tokens = new Token();
         $token = Str::random(rand(30,50));
-        $url = 'http://quickstart-laravel.local/create_user/';
-        $msgTitle = "仮登録完了メッセージ";
-        $msgTemplate = "下記URLへ進んでください";
         $tokens->fill([
             'token' => $token,
             'email' => $request->email,
             'status' => 'メール送信完了'
         ]);
         $tokens->save();
-        Mail::to($request->email)->send(new SendTokenMail("{$msgTemplate}\n{$url}{$token}"));
+        Mail::to($request->email)->send(new SendTokenMail(route('create.user')."/".$token));
         return view('register',[
             'email' => $request->email
         ]);

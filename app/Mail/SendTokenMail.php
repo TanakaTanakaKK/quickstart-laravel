@@ -15,12 +15,10 @@ use Illuminate\Queue\SerializesModels;
 class SendTokenMail extends Mailable
 {
     use Queueable, SerializesModels;
-    private $url;
 
-    public function __construct(string $url)
+    public function __construct(public string $create_users_url)
     {
-        $this->url = $url;
-
+    
     }
 
     /**
@@ -29,8 +27,8 @@ class SendTokenMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('quickstart@example.com','KentaTanaka'),
-            subject: 'Send Token Mail',
+            from: new Address('quickstart@example.com','Kenta Tanaka'),
+            subject: '仮登録完了メール',
         );
     }
 
@@ -40,7 +38,7 @@ class SendTokenMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            text: $this->url,
+            view: 'emails.mailable',
         );
     }
 

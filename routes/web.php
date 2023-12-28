@@ -16,7 +16,7 @@ Route::post('/task',[TaskController::class,'store']);
 Route::delete('/task/{task}',[TaskController::class,'destroy']);
 Route::get('/register',[TokenController::class,'index']);
 Route::post('/register',[TokenController::class,'sendMail']);
-Route::post('/create_user',[RegisterController::class,'register']);
+Route::post('/create_user',[RegisterController::class,'register'])->name('create.user');
 Route::get('/create_user/{token}',[TokenController::class,'checkToken']);
 
 
