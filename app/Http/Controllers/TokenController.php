@@ -9,8 +9,6 @@ use Illuminate\{
 };
 use App\{
     Models\Token,
-    Enums\Prefectures,
-    Enums\Gender,
     Mail\SendTokenMail
 };
 
@@ -23,7 +21,7 @@ class TokenController extends Controller
     public function sendMail(Request $request)
     {
         $this->validate($request,[
-            'email' => 'email:filter,d|unique:users,email'
+            'email' => 'email:filter|unique:users,email'
         ]);
         $tokens = new Token();
         $token = Str::random(rand(30,50));

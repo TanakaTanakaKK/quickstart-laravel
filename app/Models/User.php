@@ -20,7 +20,6 @@ class User extends Model
         'postal_code',
         'prefecture',
         'city',
-        'town',
         'block',
         'building'
     ];

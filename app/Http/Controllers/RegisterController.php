@@ -9,70 +9,47 @@ use App\Models\{
 use Illuminate\{
     Http\Request,
 };
-use App\Rules\{
-    CheckName,
-    CheckBirthday,
-    CheckBlock,
-    CheckCity,
-    CheckPhoneNumber,
-    CheckKanaName,
-    CheckPostalCode,
-    CheckPrefecture
-};
+
 use Exception;
 class RegisterController extends Controller
 {
     public function register(Request $request)
     {
-        $token = explode('/',$request->headers->get("referer"))[4];
+        $user_token = explode('/',$request->headers->get('referer'))[4];
         $canAddUser = false;
-        $tokens = new Token();
-        $existsTokensList = $tokens->pluck('token');
+        $token = new Token();
+        $exists_token_list = $token->pluck('token');
         $canAddUser = false;
-        foreach($existsTokensList as $existsToken){
-            if($existsToken === $token){
+        foreach($exists_token_list as $exists_token){
+            if($exists_token === $user_token){
                 $canAddUser = true;
             }
         }
         if($canAddUser === false){
             return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
         }
-        $this->validate($request,[
-            "name" => ["required",new CheckName()],
-            "kana_name" => ["required",new CheckKanaName(),"regex:/^[^#<>^;_]*$/"],
+        $request->validate([
+            "name" => ["required","regex:/^[ぁ-んァ-ヶ一-龠]+$/u"],
+            "kana_name" => ["required","regex:/^[ァ-ヶ]+$/u"],
             "nickname" => "required",
             "gender" => "required",
-            "birthday" => ["required",new CheckBirthday()],
-            "phone_number" => ["required",new CheckPhoneNumber()],
-            "postalcode" => ["required",new CheckPostalCode()],
-            "prefecture" => ["required",new CheckPrefecture()],
-            "city" => ["required",new CheckCity()],
-            "block" => ["required",new CheckBlock()],
+            "birthday" => ["required","before:".date('Y-m-d')],
+            "phone_number" => [
+                "required",
+                "regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/",
+                "unique:users,phone_number"
+            ],
+            "postalcode" => ["required","regex:/^[0-9]{3}-?[0-9]{4}$/"],
+            "prefecture" => ["required","regex:/^[一-龠]+[都|道|府|県]$/u"],
+            "city" => ["required","regex:/^[ぁ-んァ-ヶ一-龠]+$/u"],
+            "block" => ["required","regex:/^[0-9]+-?[0-9]+?-?[0-9]+?$/"],
+            "building" => ['nullable','regex:/^[ぁ-んァ-ヶ一-龠a-zA-Z0-9p{L}\p{N}\-ー〜 ]+$/u']
         ]);
         $users = new User();
-        $email = $tokens->where('token',$token)->value('email');
-        $phoneNumber = $request->phone_number;
-        $phoneNumber = mb_ereg_replace("ー","",$phoneNumber);
-        $phoneNumber = mb_ereg_replace("－","",$phoneNumber);
-        $phoneNumber = mb_ereg_replace("-","",$phoneNumber);
-        $phoneNumber = mb_convert_kana($phoneNumber,'a','UTF-8');
-        $phoneNumber = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $phoneNumber);
-        $postalCode = $request->postalcode;
-        $postalCode = mb_ereg_replace("ー","",$postalCode);
-        $postalCode = mb_ereg_replace("－","",$postalCode);
-        $postalCode = mb_ereg_replace("-","",$postalCode);
-        $postalCode = mb_convert_kana($postalCode,'a','UTF-8');
-        $postalCode = preg_replace('/[\x21-\x2f|\x3a-\x40|\x5b-\x60|\x7b-\x7e]+/', '', $postalCode);
-        $block = $request->block;
-        $FirstReplaceList = array("丁目","丁","ー","－");
-        $SecondReplaceList = array("番地","番");
-        $block = str_replace($FirstReplaceList,'-',$block);
-        $block = str_replace($SecondReplaceList,'',$block);
-        $block = mb_convert_kana($block,'a','UTF-8');
+        $email = $token->where('token',$user_token)->value('email');
+        $phoneNumber = mb_ereg_replace("-","",$request->phone_number);
+        $postalCode = mb_ereg_replace("ー","",$request->postalcode);
         $building = $request->building;
-        if(isset($building)){
-            $building = mb_convert_kana($building,'a','UTF-8');
-        }
         try{
             $users->fill([
                 'name' => $request->name,
@@ -86,7 +63,7 @@ class RegisterController extends Controller
                 'prefecture'=>$request->prefecture,
                 'city'=>$request->city,
                 'town'=>$request->town,
-                'block'=>$block,
+                'block'=>$request->block,
                 'building'=>$building
             ]);
             $users->save();
@@ -100,7 +77,7 @@ class RegisterController extends Controller
             }
             return redirect('/tasks')->withErrors(['registerError' => $errorMessage])->withInput();
         }
-        $tokens->where('email',$email)->delete();
+        $token->where('email',$email)->delete();
         return view('/tasks',[
             'successful' => '会員登録が完了しました。'
         ]);

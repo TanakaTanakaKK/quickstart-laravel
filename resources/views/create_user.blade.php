@@ -67,20 +67,16 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="city" class="control-label">市</label>
+                                    <label for="city" class="control-label">市区町村</label>
                                     <input type="text" name="city" class="form-control border" id="city">
                                 </div>
                                 <div class="form-group">
-                                    <label for="town" class="control-label">区町村</label>
-                                    <input type="text" name="town" class="form-control border" id="town">
-                                </div>
-                                <div class="form-group">
                                     <label for="block" class="control-label">番地</label>
-                                    <input type="text" name="block" class="form-control border" id="block">
+                                    <input type="text" name="block" class="form-control border">
                                 </div>
                                 <div class="form-group">
                                     <label for="building" class="control-label">建物</label>
-                                    <input type="text" name="building" class="form-control border" id="building">
+                                    <input type="text" name="building" class="form-control border">
                                 </div>
                                 <div class="form-group">
                                     <div class="text-right">
