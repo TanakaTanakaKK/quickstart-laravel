@@ -7,7 +7,7 @@
                     登録用メールアドレス
                 </div>
                 <div class="card-body">
-                    <form action="{{ url("register") }}" method="POST">
+                    <form action="{{ route('token.sendMail') }}" method="POST">
                         @csrf
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
@@ -25,9 +25,6 @@
                                     </div>
                                 </div>
                                 @endempty
-                                @isset($email)
-                                    <p>{{ $email }}宛にメールを送信しました。</p>
-                                @endisset
                             </div>
                         </div>
                     </form>

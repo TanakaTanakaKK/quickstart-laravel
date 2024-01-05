@@ -9,7 +9,8 @@ use Illuminate\{
 };
 use App\{
     Models\Token,
-    Mail\SendTokenMail
+    Mail\SendTokenMail,
+    Libraries\CommonFunctions
 };
 
 class TokenController extends Controller
@@ -20,35 +21,35 @@ class TokenController extends Controller
     }
     public function sendMail(Request $request)
     {
-        $this->validate($request,[
-            'email' => 'email:filter|unique:users,email'
+        $request->validate([
+            'email' => [
+                'email:filter',
+                'unique:users,email'
+                ]
         ]);
-        $tokens = new Token();
-        $token = Str::random(rand(30,50));
-        $tokens->fill([
-            'token' => $token,
+        $token = new Token();
+        $user_token = Str::random(rand(30,50));
+        $token->create([
+            'token' => $user_token,
             'email' => $request->email,
             'status' => 'メール送信完了'
         ]);
-        $tokens->save();
-        Mail::to($request->email)->send(new SendTokenMail(route('create.user')."/".$token));
-        return view('register',[
-            'email' => $request->email
-        ]);
+        Mail::to($request->email)->send(new SendTokenMail(route('token.hasToken',$user_token)));
+        return to_route('token.successful',['email' => $request->email])
+        ->withInput();
     }
-    public function checkToken(Request $request)
+        public function tokenSuccessful(Request $request)
     {
-        $tokensTable = new Token();
-        $existsTokensList = $tokensTable->pluck('token');
-        $canAddUser = false;
-        foreach($existsTokensList as $existsToken){
-            if($existsToken === $request->token){
-                $canAddUser = true;
-            }
+        return view('register')
+        ->with(['successful' => $request->input('email')."宛にメールを送信しました。15分以内に登録手続きをしてください。"]);
+    }
+    public function hasToken(Request $request)
+    {
+        if(CommonFunctions::hasToken($request->token)){
+            return view('create_user');
         }
-        if($canAddUser === false){
-            return redirect('/tasks')->withErrors(['tokenError' => 'トークンが無効です。'])->withInput();
-        }
-        return view('create_user');
+        return to_route('home')
+            ->withErrors(['tokenError' => 'トークンが無効です。'])
+            ->withInput();
     }
 }

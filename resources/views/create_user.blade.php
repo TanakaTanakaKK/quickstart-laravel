@@ -8,7 +8,7 @@
                     会員登録ページ
                 </div>
                 <div class="card-body">
-                    <form action="{{ url("create_user") }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('create.user') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="panel panel-default">
                             <div class="panel-body">

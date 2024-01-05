@@ -17,10 +17,10 @@
         <div class="container">
             {{-- navbar --}}
             <div class="navbar-header">
-                <a class="navbar-brand p-0 text-muted" href="{{ url('/') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('home') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ url('/register') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('register') }}">
                 会員登録
                 </a>
             </div>

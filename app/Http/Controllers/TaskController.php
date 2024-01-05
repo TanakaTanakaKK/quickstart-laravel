@@ -37,7 +37,7 @@ class TaskController extends Controller
         $task->name = $request->name;
         $task->save();
 
-        return redirect('/tasks');
+        return to_route('home');
     }
 
     /**
@@ -51,6 +51,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return redirect('/tasks');
+        return to_route('home');
     }
 }
