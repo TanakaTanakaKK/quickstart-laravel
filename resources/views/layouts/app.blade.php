@@ -8,11 +8,8 @@
     type="text/css">
     {{-- CSS bootstrap4 --}}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted">
         <div class="container">
             {{-- navbar --}}
