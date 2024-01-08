@@ -29,7 +29,7 @@ class TokenController extends Controller
         $token = new Token();
         $user_token = Str::random(rand(30,50));
         if($token->where('email',$request->email)->exists()){
-            $token->where('email',$request->email)->update(['token'=>$user_token]);
+            $token->where('email',$request->email)->update(['token' => $user_token]);
         }else{
             $token->create([
                 'token' => $user_token,
@@ -43,7 +43,7 @@ class TokenController extends Controller
         public function tokenSuccessful(Request $request)
     {
         if($request->email){
-        return view('register',['successful' => $request->email."宛にメールを送信しました。15分以内に登録手続きをしてください。"]);
+        return view('successful',['successful' => $request->email."宛にメールを送信しました。15分以内に登録手続きをしてください。"]);
         }
         return to_route('home');
     }

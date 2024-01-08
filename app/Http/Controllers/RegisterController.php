@@ -83,13 +83,13 @@ class RegisterController extends Controller
             return to_route('home')
             ->withErrors(['register_error' => "会員登録に失敗しました。"]);
         }
-        $token->where('token',$user_token)->update(['status'=>'会員登録完了']);
-        return to_route('register.successful',['name'=>$request->name]);
+        $token->where('token',$user_token)->update(['status' => '会員登録完了']);
+        return to_route('register.successful',['name' => $request->name]);
     }
     public function registerSuccessful(Request $request)
     {   
         if($request->name){
-            return view('tasks',['successful' => $request->name.'さんの会員登録が完了しました。']);
+            return view('successful',['successful' => $request->name.'さんの会員登録が完了しました。']);
         }
         return to_route('home');
     }
