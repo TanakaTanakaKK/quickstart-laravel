@@ -15,6 +15,7 @@ class RegisterController extends Controller
 {
     public function register(RegisterRequest $request)
     {   
+        dd($request->gender);
         $user_token = explode('/',$request->headers->get('referer'))[4];
         // if(!CommonFunctions::hasToken($user_token)){
         //     return to_route('home')

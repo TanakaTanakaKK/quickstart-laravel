@@ -9,7 +9,7 @@ const searchPostal = () =>{
     let url = 'https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + postal_code;
     fetch(url).then(response => response.json())
     .then(data => {
-        prefecture.value = data.results[0].address1;
+        prefecture.value = data.results[0].prefcode;
         city.value = data.results[0].address2+data.results[0].address3;
     })
     .catch(error => {
@@ -18,5 +18,4 @@ const searchPostal = () =>{
         prefecture.placeholder = "郵便番号から住所を特定できません";
         city.placeholder = "郵便番号から住所を特定できません";
     });
-    
 }

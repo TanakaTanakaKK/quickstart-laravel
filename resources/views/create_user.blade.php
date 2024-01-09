@@ -40,8 +40,8 @@
                                     <label for="gender" class="control-label">性別</label>
                                     <select name="gender" class="form-control border">
                                         <option value="" selected hidden>選択してください</option>
-                                        @foreach(\App\Enums\Gender::getValues() as $gender)
-                                            <option value="{{ $gender }}">{{$gender}}</option>
+                                        @foreach(\App\Enums\Gender::getValues() as $key => $gender)
+                                            <option value="{{ $key }}">{{$gender}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -60,9 +60,9 @@
                                 <div class="form-group">
                                     <label for="prefecture" class="control-label">都道府県</label>
                                     <select name="prefecture" class="form-control border" id="prefecture">
-                                        <option value="" selected hidden>選択してください</option>
-                                        @foreach(\App\Enums\Prefectures::getValues() as $prefecture)
-                                            <option value="{{ $prefecture }}">{{$prefecture}}</option>
+                                        <option selected hidden>選択してください</option>
+                                        @foreach(\App\Enums\Prefectures::getValues() as $key => $prefectures)
+                                            <option value="{{ $key }}">{{$prefectures}}</option>
                                         @endforeach
                                     </select>
                                 </div>

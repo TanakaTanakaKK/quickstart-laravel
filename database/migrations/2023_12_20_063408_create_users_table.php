@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('gender');
+            $table->integer('gender');
             $table->string('kana_name');
             $table->string('nickname');
             $table->date('birthday');
             $table->string('phone_number')->unique();
             $table->string('img_path')->nullable();
             $table->string('postal_code');
-            $table->string('prefecture');
+            $table->integer('prefecture');
             $table->string('city');
             $table->string('block');
             $table->string('building')->nullable();

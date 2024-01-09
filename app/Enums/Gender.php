@@ -11,6 +11,16 @@ use BenSampo\Enum\Enum;
  */
 final class Gender extends Enum
 {
-    const male = "男";
-    const female = "女";
+    const MALE = 0;
+    const FEMALE = 1;
+    /**
+     * @inheritDoc
+     */
+    public static function getValues($keys = null): array
+    {
+        return [
+            self::MALE => '男性',
+            self::FEMALE => '女性',
+        ];
+    }
 }
