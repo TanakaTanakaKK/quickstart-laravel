@@ -39,7 +39,7 @@ class RegisterController extends Controller
                 "regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/",
                 "unique:users,phone_number"
             ],
-            "postalcode" => [
+            "postal_code" => [
                 "required",
                 "regex:/^[0-9]{3}-?[0-9]{4}$/"
             ],
@@ -62,8 +62,8 @@ class RegisterController extends Controller
         ]);
         $user = new User();
         $token = new Token();
-        $phoneNumber = mb_ereg_replace("-","",$request->phone_number);
-        $postalCode = mb_ereg_replace("-","",$request->postalcode);
+        $phone_number = mb_ereg_replace("-","",$request->phone_number);
+        $postal_code = mb_ereg_replace("-","",$request->postal_code);
         try{
             $user->create([
                 'name' => $request->name,
@@ -72,8 +72,8 @@ class RegisterController extends Controller
                 'nickname'=>$request->nickname,
                 'gender' => $request->gender,
                 'birthday' => $request->birthday,
-                'phone_number' => $phoneNumber,
-                'postal_code' => $postalCode,
+                'phone_number' => $phone_number,
+                'postal_code' => $postal_code,
                 'prefecture'=>$request->prefecture,
                 'city'=>$request->city,
                 'block'=>$request->block,
