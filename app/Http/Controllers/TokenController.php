@@ -10,7 +10,8 @@ use Illuminate\{
 use App\{
     Models\Token,
     Mail\SendTokenMail,
-    Libraries\CommonFunctions
+    Libraries\CommonFunctions,
+    Http\Requests\TokenRequest
 };
 class TokenController extends Controller
 {
@@ -18,14 +19,8 @@ class TokenController extends Controller
     {
         return view('register');
     }
-    public function sendMail(Request $request)
+    public function sendMail(TokenRequest $request)
     {
-        $request->validate([
-            'email' => [
-                'email:filter',
-                'unique:users,email'
-            ]
-        ]);
         $token = new Token();
         $user_token = Str::random(rand(30,50));
         if($token->where('email',$request->email)->exists()){
@@ -49,9 +44,10 @@ class TokenController extends Controller
     }
     public function hasToken(Request $request)
     {
-        if(CommonFunctions::hasToken($request->token)){
-            return view('create_user');
-        }
-        return to_route('home')->withErrors(['token_error' => 'トークンが無効です。']);
+        // if(CommonFunctions::hasToken($request->token)){
+        //     return view('create_user');
+        // }
+        // return to_route('home')->withErrors(['token_error' => 'トークンが無効です。']);
+        return view('create_user');
     }
 }
