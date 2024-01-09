@@ -13,7 +13,6 @@ use Illuminate\{
 class SendTokenMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     public function __construct(public string $create_users_url)
     {
     }

@@ -22,12 +22,3 @@ Route::get('/create_user/{token}',[TokenController::class,'hasToken'])->name('to
 Route::get('/register/successful',[TokenController::class,'tokenSuccessful'])->name('token.successful');
 Route::get('/create_user/successful',[RegisterController::class,'registerSuccessful'])->name('register.successful');
 Route::post('/create_user',[RegisterController::class,'register'])->name('create.user');
-
-
-
-
-
-
-
-
-
