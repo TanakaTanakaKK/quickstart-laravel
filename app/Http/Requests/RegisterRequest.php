@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\{
+    Foundation\Http\FormRequest,
+    Validation\Rules\Enum
+};
+use App\Enums\Prefectures;
 
 class RegisterRequest extends FormRequest
 {
@@ -39,7 +43,7 @@ class RegisterRequest extends FormRequest
             ],
             "prefecture" => [
                 "required",
-                "regex:/^[一-龠]+[都|道|府|県]$/u"
+                //new Enum(Prefectures::class)
             ],
             "city" => [
                 "required",
