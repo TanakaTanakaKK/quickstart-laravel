@@ -18,9 +18,11 @@ class TaskController extends Controller
         $request->validate([
             'name' => 'required|max:255',
         ]);
+
         $task = new Task;
         $task->name = $request->name;
         $task->save();
+        
         return to_route('tasks.index');
     }
     public function destroy(Request $request, Task $task)

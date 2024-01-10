@@ -4,18 +4,14 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-/**
- * @method static static OptionOne()
- * @method static static OptionTwo()
- * @method static static OptionThree()
- */
 final class Gender extends Enum
 {
     const MALE = 0;
     const FEMALE = 1;
+
     public static function getDescription(mixed $value): string
     {
-        return match ($value){
+        return match ($value) {
             self::MALE => '男性',
             self::FEMALE => '女性',
         };
