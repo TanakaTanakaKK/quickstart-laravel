@@ -2,14 +2,14 @@
 
 namespace App\Mail;
 
-use Illuminate\{
-    Mail\Mailable,
-    Mail\Mailables\Content,
-    Mail\Mailables\Envelope,
-    Mail\Mailables\Address,
-    Queue\SerializesModels,
-    Bus\Queueable
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\{
+    Content,
+    Envelope,
 };
+
 class SendTokenMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -19,14 +19,13 @@ class SendTokenMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('quickstart@example.com','Kenta Tanaka'),
             subject: '仮登録完了メール',
         );
     }
     public function content(): Content
     {
         return new Content(
-            view: 'emails.mailable',
+            view: 'emails.authentication_mail',
         );
     }
     public function attachments(): array

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TokenRequest extends FormRequest
+class AuthenticationRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,7 +16,8 @@ class TokenRequest extends FormRequest
         return [
             'email' => [
                 'email:filter',
-                'unique:users,email'
+                'unique:users,email',
+                'string'
             ]
         ];
     }

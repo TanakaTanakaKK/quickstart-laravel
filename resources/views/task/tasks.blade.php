@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     @include('common.info')
-                    <form action="{{ route('task.store') }}" method="POST">
+                    <form action="{{ route('tasks.store') }}" method="POST">
                         @csrf
                         <div class="form-group row mt-0 mx-0">
                             <label for="task-name" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">Task</label>
@@ -43,7 +43,7 @@
                                             <div>{{ $task->name }}</div>
                                         </td>
                                         <td  class="pt-1 pb-1 align-middle">
-                                            <form action="{{ route('task.destroy',$task->id) }}" method="POST">
+                                            <form action="{{ route('tasks.destroy',$task->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger text-nowrap">

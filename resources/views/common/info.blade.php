@@ -1,4 +1,4 @@
-@if(count($errors)>0)
+@if(count($errors) > 0)
     <div class="alert alert-danger small pb-0">
         <strong>おや？　何かがおかしいようです！</strong>
         <br><br>

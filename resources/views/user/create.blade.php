@@ -8,7 +8,7 @@
                     会員登録ページ
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('create.user') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -21,62 +21,93 @@
                                                 ファイルを選択<input type="file" name="user_img" style="display: none;">
                                             </label>
                                         </span>
-                                        <input type="text" class="form-control border" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="name" class="control-label">氏名</label>
+                                    <label for="name" class="control-label">氏名
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="text" name="name" class="form-control border">
                                 </div>
                                 <div class="form-group">
-                                    <label for="kana-name" class="control-label">氏名(カナ)</label>
+                                    <label for="kana-name" class="control-label">氏名(カナ)
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="text" name="kana_name" class="form-control border">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nickname" class="control-label">ニックネーム</label>
+                                    <label for="nickname" class="control-label">ニックネーム
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="text" name="nickname" class="form-control border">
                                 </div>
                                 <div class="form-group">
-                                    <label for="gender" class="control-label">性別</label>
+                                    <label for="gender" class="control-label">性別
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <select name="gender" class="form-control border">
                                         <option value="" selected hidden>選択してください</option>
-                                        @foreach(\App\Enums\Gender::getValues() as $key => $gender)
-                                            <option value="{{ $key }}">{{$gender}}</option>
+                                        @foreach(\App\Enums\Gender::asSelectArray() as $key => $gender)
+                                            <option value="{{ $key }}">{{ $gender }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="birthday" class="control-label">生年月日</label>
+                                    <label for="birthday" class="control-label">生年月日
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="date" name="birthday" class="form-control border">
                                 </div>
                                 <div class="form-group">
-                                    <label for="phonenumber" class="control-label">電話番号</label>
+                                    <label for="phonenumber" class="control-label">電話番号
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="text" name="phone_number" class="form-control border">
                                 </div>
                                 <div class="form-group">
-                                    <label for="postalcode" class="control-label">郵便番号</label>
+                                    <label for="postalcode" class="control-label">郵便番号
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="tel" name="postalcode" class="form-control border" id="postalcode" oninput="searchPostal()">
                                 </div>
                                 <div class="form-group">
-                                    <label for="prefecture" class="control-label">都道府県</label>
+                                    <label for="prefecture" class="control-label">都道府県
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <select name="prefecture" class="form-control border" id="prefecture">
                                         <option selected hidden>選択してください</option>
-                                        @foreach(\App\Enums\Prefectures::getValues() as $key => $prefectures)
-                                            <option value="{{ $key }}">{{$prefectures}}</option>
+                                        @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefectures)
+                                            <option value="{{ $key }}">{{ $prefectures }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="city" class="control-label">市区町村</label>
-                                    <input type="text" name="city" class="form-control border" id="city">
+                                    <label for="city" class="control-label">市区町村
+                                        <span class="badge text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="cities" class="form-control border" id="cities">
                                 </div>
                                 <div class="form-group">
-                                    <label for="block" class="control-label">番地</label>
+                                    <label for="block" class="control-label">番地
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <input type="text" name="block" class="form-control border">
                                 </div>
                                 <div class="form-group">
                                     <label for="building" class="control-label">建物</label>
                                     <input type="text" name="building" class="form-control border">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="control-label">パスワード
+                                        <span class="badge text-danger">*</span>
+                                    </label>
+                                    <input type="password" name="password" class="form-control border">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password_confirmation" class="control-label">パスワード(確認用)
+                                        <span class="badge text-danger">*</span>
+                                    </label>
+                                    <input type="password" name="password_confirmation" class="form-control border">
                                 </div>
                                 <div class="form-group">
                                     <div class="text-right">

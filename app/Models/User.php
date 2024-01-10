@@ -9,8 +9,9 @@ class User extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
         'email',
+        'password',
+        'name',
         'gender',
         'birthday',
         'phone_number',
@@ -19,7 +20,7 @@ class User extends Model
         'nickname',
         'postal_code',
         'prefecture',
-        'city',
+        'cities',
         'block',
         'building'
     ];

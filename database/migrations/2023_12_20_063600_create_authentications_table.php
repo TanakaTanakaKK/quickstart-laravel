@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tokens', function (Blueprint $table) {
+        Schema::create('authentications', function (Blueprint $table) {
+            $table->id();
             $table->string('token')->unique();
             $table->string('email');
-            $table->string('status')->nullable();
+            $table->integer('status');
+            $table->timestamp('expiration_at')->default(now()->addMinutes(15));
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tokens');
+        Schema::dropIfExists('authentications');
     }
 };

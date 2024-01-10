@@ -9,7 +9,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $tasks = Task::orderBy('created_at','asc')->get();
-        return view('tasks', [
+        return view('task/tasks', [
             'tasks' => $tasks
         ]);
     }
@@ -21,11 +21,11 @@ class TaskController extends Controller
         $task = new Task;
         $task->name = $request->name;
         $task->save();
-        return to_route('home');
+        return to_route('tasks.index');
     }
     public function destroy(Request $request, Task $task)
     {
         $task->delete();
-        return to_route('home');
+        return to_route('tasks.index');
     }
 }

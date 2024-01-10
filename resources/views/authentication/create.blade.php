@@ -7,7 +7,7 @@
                     登録用メールアドレス
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('token.sendMail') }}" method="POST">
+                    <form action="{{ route('authentications.store') }}" method="POST">
                         @csrf
                         <div class="mt-0 mx-0">
                             <div class="panel-body">

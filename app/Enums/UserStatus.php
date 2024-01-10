@@ -9,15 +9,17 @@ use BenSampo\Enum\Enum;
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class Gender extends Enum
+final class UserStatus extends Enum
 {
-    const MALE = 0;
-    const FEMALE = 1;
+    const PENDING = 0;
+    const APPROVED = 1;
+    const COMPLETED = 2;
     public static function getDescription(mixed $value): string
     {
         return match ($value){
-            self::MALE => '男性',
-            self::FEMALE => '女性',
+            self::PENDING => 'メール送信完了',
+            self::APPROVED => '承認済み',
+            self::COMPLETED => '本登録完了',
         };
     }
 }

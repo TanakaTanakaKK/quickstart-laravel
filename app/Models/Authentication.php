@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Token extends Model
+class Authentication extends Model
 {
     use HasFactory;
     protected $fillable = [
         'token',
         'email',
-        'status'
+        'status',
+        'expiration_at'
     ];
 }
