@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use BenSampo\Enum\Rules\EnumValue;
 use App\Enums\{
     Prefectures,
     Gender
@@ -33,7 +33,7 @@ class UserRequest extends FormRequest
             'gender' => [
                 'required',
                 'integer',
-                Rule::in(Gender::getValues())
+                new EnumValue(Gender::class,false)
             ],
             'birthday' => [
                 'required',
@@ -54,7 +54,7 @@ class UserRequest extends FormRequest
             'prefecture' => [
                 'required',
                 'integer',
-                Rule::in(Prefectures::getValues())
+                new EnumValue(Prefectures::class,false)
             ],
             'cities' => [
                 'required',

@@ -77,7 +77,7 @@
                                     <select name="prefecture" class="form-control border" id="prefecture">
                                         <option selected hidden>選択してください</option>
                                         @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefectures)
-                                            <option value="{{ $key }}">{{ $prefectures }}</option>
+                                            <option value="{{ ($key) }}">{{ $prefectures }}</option>
                                         @endforeach
                                     </select>
                                 </div>
