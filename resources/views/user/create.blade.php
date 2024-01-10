@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="user_token" value="{{ request()->token }}">
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 @include('common.info')

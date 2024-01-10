@@ -4,22 +4,16 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-/**
- * @method static static OptionOne()
- * @method static static OptionTwo()
- * @method static static OptionThree()
- */
 final class UserStatus extends Enum
 {
-    const PENDING = 0;
-    const APPROVED = 1;
-    const COMPLETED = 2;
+    const MAIL_SENT = 0;
+    const COMPLETED = 1;
+
     public static function getDescription(mixed $value): string
     {
-        return match ($value){
-            self::PENDING => 'メール送信完了',
-            self::APPROVED => '承認済み',
-            self::COMPLETED => '本登録完了',
+        return match ($value) {
+            self::MAIL_SENT => 'メール送信完了',
+            self::COMPLETED => '本登録完了'
         };
     }
 }

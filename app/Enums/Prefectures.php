@@ -53,9 +53,10 @@ final class Prefectures extends Enum
     const MIYAZAKI = 45;
     const KAGOSHIMA = 46;
     const OKINAWA = 47;
+    
     public static function getDescription(mixed $value): string
     {
-        return match ($value){
+        return match ($value) {
             self::HOKKAIDO => '北海道',
             self::AOMORI => '青森県',
             self::IWATE => '岩手県',

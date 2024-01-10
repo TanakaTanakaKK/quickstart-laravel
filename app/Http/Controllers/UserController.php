@@ -18,22 +18,24 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $user_token = $request->token;
-        $authentication = Authentication::where('token', $user_token)->first();
-        if(is_null($authentication) || $authentication->expiration_at < Carbon::now()){
+        $authentication = Authentication::where('token', $user_token)
+            ->where('status',UserStatus::MAIL_SENT)
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
+        }else if($authentication->expiration_at < Carbon::now()){
             return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
         }
-        $request->session()->put('user_token', $request->token);
         return view('user/create');
     }
     public function store(UserRequest $request)
     {   
-        $user_token = $request->session()->get('user_token');
-        $authentication = Authentication::where('token', $user_token)->first();
-        if($authentication->expiration_at < Carbon::now()){
-            return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
-        }else if($authentication->status != UserStatus::PENDING){
-            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
-        }
+        $user_token = $request->user_token;
+        $authentication = Authentication::where('token', $user_token)
+            ->where('status',UserStatus::MAIL_SENT)
+            ->first();
+        
         $result_numbers = str_replace('-', '', [$request->phone_number,$request->postalcode]);
         try{
             User::create([
@@ -54,21 +56,23 @@ class UserController extends Controller
         }catch(Exception $e){
             return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
-        $authentication->status = UserStatus::APPROVED;
+
+        $authentication->status = UserStatus::COMPLETED;
         $authentication->save();
-        return to_route('users.complete',$user_token);
+        
+        return to_route('users.complete',$user_token)->with(['user_complete' => true]);
     }
     public function complete(Request $request)
     {     
-        $authentication = Authentication::where('token',$request->token)->first();
-        if(is_null($request->token) || $authentication->status != UserStatus::APPROVED){
+        if(is_null($request->token)||is_null($request->session()->get('user_complete'))){
             return to_route('tasks.index');
         }
-        $authentication->status = UserStatus::COMPLETED;
-        $authentication->save();
+
+        $request->session()->forget('user_complete');
+        
         return view('user/complete', [
             'successful' => '会員登録が完了しました。',
-            'user' => User::where('email', $authentication->email)->first()
+            'user' => User::where('email', Authentication::where('token',$request->token)->first()->email)->first()
         ]);
     }
 }
