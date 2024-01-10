@@ -38,7 +38,7 @@
                             <td  class="py-1 align-middle">
                                 <div>{{ $user->email }}</div>
                             </td>
-                        </tr>
+                            </tr>
                             <tr>
                                 <td class="py-1 align-middle">
                                     <div>ニックネーム</div>
