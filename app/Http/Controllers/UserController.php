@@ -6,7 +6,7 @@ use App\Models\{
     User,
     Authentication
 };
-use App\Enums\UserStatus;
+use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,8 +19,8 @@ class UserController extends Controller
     {
         $user_token = $request->token;
         $authentication = Authentication::where('token', $user_token)
-            ->where('status', UserStatus::MAIL_SENT)
-            ->where('expiration_at', '>', Carbon::now())
+            ->where('status', AuthenticationStatus::MAIL_SENT)
+            ->where('expired_at', '>', Carbon::now())
             ->first();
 
         if(is_null($authentication)){
@@ -33,8 +33,8 @@ class UserController extends Controller
     {   
         $user_token = $request->user_token;
         $authentication = Authentication::where('token', $user_token)
-            ->where('status', UserStatus::MAIL_SENT)
-            ->where('expiration_at', '>', Carbon::now())
+            ->where('status', AuthenticationStatus::MAIL_SENT)
+            ->where('expired_at', '>', Carbon::now())
             ->first();
 
         if(is_null($authentication)){
@@ -51,7 +51,7 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'birthday' => $request->birthday,
                 'phone_number' => str_replace('-', '', $request->phone_numbe),
-                'postal_code' => str_replace('-', '', $request->postalcode),
+                'postal_code' => str_replace('-', '', $request->postal_code),
                 'prefecture' => $request->prefecture,
                 'cities' => $request->cities,
                 'block' => $request->block,
@@ -61,19 +61,19 @@ class UserController extends Controller
             return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
 
-        $authentication->status = UserStatus::COMPLETED;
+        $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete',$user_token)->with(['user_complete' => true]);
+        return to_route('users.complete',$user_token)->with(['is_user_created' => true]);
     }
 
     public function complete(Request $request)
     {     
-        if(is_null($request->token)||is_null($request->session()->get('user_complete'))){
+        if(is_null($request->tokenauthentication_)||is_null($request->session()->get('is_user_created'))){
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('user_complete');
+        $request->session()->forget('is_user_created');
         
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',

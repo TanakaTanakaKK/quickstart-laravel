@@ -1,5 +1,5 @@
 const searchPostal = () =>{
-    let postal_code = document.getElementById('postalcode').value;
+    let postal_code = document.getElementById('postal_code').value;
     postal_code = postal_code.replace(/[！-～]/g,function(postal_code){
         return String.fromCharCode(postal_code.charCodeAt(0)-0xFEE0);
     });

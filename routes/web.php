@@ -19,6 +19,6 @@ Route::get('/authentications/create', [AuthenticationController::class, 'create'
 Route::post('/authentications', [AuthenticationController::class, 'store'])->name('authentications.store');
 Route::get('/authentications/complete/{token}',[AuthenticationController::class, 'complete'])->name('authentications.complete');
 
-Route::get('/users/create/{token}', [UserController::class, 'create'])->name('users.create');
+Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-Route::get('/users/complete/{token}', [UserController::class, 'complete'])->name('users.complete');
+Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');

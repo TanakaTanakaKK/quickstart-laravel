@@ -9,12 +9,18 @@
         </ul>
     </div>
 @endif
-@if(isset($successful))
+@if(isset($successful) || isset($user_email))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
-        <ul>
-            <li>{{ $successful }}</li>
-        </ul>
+        @if(isset($user_email))
+            <ul>
+                <li>{{ $user_email.'宛にメールを送信しました。15分以内に登録手続きをしてください。' }}</li>
+            </ul>
+        @else
+            <ul>
+                <li>{{ $successful }}</li>
+            </ul>
+        @endif
     </div>
 @endif

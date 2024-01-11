@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Enums\UserStatus;
+use App\Enums\AuthenticationStatus;
 use App\Models\Authentication;
 use App\Mail\SendTokenMail;
 use App\Http\Requests\AuthenticationRequest;
@@ -22,37 +22,38 @@ class AuthenticationController extends Controller
     {
         $user_token = Str::random(rand(30, 50));
         $authentication = Authentication::where('email', $request->email)
-            ->where('status', UserStatus::MAIL_SENT)
+            ->where('status', AuthenticationStatus::MAIL_SENT)
             ->first();
+
+        $expired_at = Carbon::now()->addMinutes(15);
 
         if(!is_null($authentication)){
             $authentication->token = $user_token;
-            $authentication->expiration_at = Carbon::now()->addMinutes(15);
+            $authentication->expired_at = $expired_at;
             $authentication->save();
         }else{
             Authentication::create([
                 'token' => $user_token,
                 'email' => $request->email,
-                'status' => UserStatus::MAIL_SENT,
-                'expiration_at' => Carbon::now()->addMinutes(15)
+                'status' => AuthenticationStatus::MAIL_SENT,
+                'expired_at' => $expired_at
             ]);
         }
 
         Mail::to($request->email)->send(new SendTokenMail($user_token));
 
-        return to_route('authentications.complete', $user_token)->with(['authentications_complete' => true]);
+        return to_route('authentications.complete', $user_token)->with(['is_authentication_created' => true]);
     }
 
     public function complete(Request $request)
     {
-        $authentication = Authentication::where('token', $request->token)->first();
+        $authentication = Authentication::where('token', $request->authentication_token)->first();
 
-        if(is_null($authentication) || is_null($request->session()->get('authentications_complete'))){
+        if(is_null($authentication) || is_null($request->session()->get('is_authentication_created'))){
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('authentications_complete');
-        
-        return view('authentication.complete', ['successful' => $authentication['email'].'宛にメールを送信しました。15分以内に登録手続きをしてください。']);
+        $request->session()->forget('is_authentication_created');
+        return view('authentication.complete')->with(['user_email' => $authentication->email]);
     }
 }

@@ -13,6 +13,6 @@ class Authentication extends Model
         'token',
         'email',
         'status',
-        'expiration_at'
+        'expired_at'
     ];
 }

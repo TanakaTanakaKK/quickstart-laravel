@@ -66,10 +66,10 @@
                                     <input type="text" name="phone_number" class="form-control border" id="phonenumber">
                                 </div>
                                 <div class="form-group">
-                                    <label for="postalcode" class="control-label">郵便番号
+                                    <label for="postal_code" class="control-label">郵便番号
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="tel" name="postalcode" class="form-control border" id="postalcode" oninput="searchPostal()">
+                                    <input type="tel" name="postal_code" class="form-control border" id="postal_code" oninput="searchPostal()">
                                 </div>
                                 <div class="form-group">
                                     <label for="prefecture" class="control-label">都道府県

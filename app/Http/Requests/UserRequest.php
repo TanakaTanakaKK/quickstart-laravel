@@ -22,14 +22,20 @@ class UserRequest extends FormRequest
             'name' => [
                 'required',
                 'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
+                'max:30',
                 'string'
             ],
             'kana_name' => [
                 'required',
                 'regex:/^[ァ-ヶ]+$/u',
+                'max:30',
                 'string'
             ],
-            'nickname' => 'required',
+            'nickname' => [
+                'required',
+                'max:30',
+                'string'
+            ],
             'gender' => [
                 'required',
                 'integer',
@@ -46,7 +52,7 @@ class UserRequest extends FormRequest
                 'unique:users,phone_number',
                 'string'
             ],
-            'postalcode' => [
+            'postal_code' => [
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
                 'string'
@@ -86,7 +92,7 @@ class UserRequest extends FormRequest
             'gender' => '性別',
             'birthday' => '誕生日',
             'phone_number' => '電話番号',
-            'postalcode' => '郵便番号',
+            'postal_code' => '郵便番号',
             'prefecture' => '都道府県',
             'cities' => '市区町村',
             'block' => '番地',
