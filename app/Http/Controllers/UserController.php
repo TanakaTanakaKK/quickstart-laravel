@@ -29,6 +29,7 @@ class UserController extends Controller
         }
         return view('user/create');
     }
+    
     public function store(UserRequest $request)
     {   
         $user_token = $request->user_token;
@@ -62,6 +63,7 @@ class UserController extends Controller
         
         return to_route('users.complete',$user_token)->with(['user_complete' => true]);
     }
+
     public function complete(Request $request)
     {     
         if(is_null($request->token)||is_null($request->session()->get('user_complete'))){
