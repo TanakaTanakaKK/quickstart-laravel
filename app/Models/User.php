@@ -16,7 +16,7 @@ class User extends Model
         'gender',
         'birthday',
         'phone_number',
-        'img_path',
+        'image_path',
         'kana_name',
         'nickname',
         'postal_code',

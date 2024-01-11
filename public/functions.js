@@ -19,3 +19,7 @@ const searchPostal = () =>{
         cities.placeholder = "郵便番号から住所を特定できません";
     });
 }
+
+const showFileName = () => {
+    document.getElementById('image_info').value = document.getElementById('image_file').value;
+}

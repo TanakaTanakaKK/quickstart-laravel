@@ -19,9 +19,11 @@
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <label class="btn btn-default border">
-                                                ファイルを選択<input type="file" name="user_img" style="display: none;">
+                                                ファイルを選択<input type="file" name="image_file" style="display: none;" id="image_file" onchange=showFileName()>
                                             </label>
                                         </span>
+                                        <p id='image_info'>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="form-group">

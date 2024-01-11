@@ -50,7 +50,7 @@ class AuthenticationController extends Controller
         }
 
         $request->session()->forget('authentications_complete');
-        
+
         return view('authentication/complete', ['successful' => $authentication['email'].'宛にメールを送信しました。15分以内に登録手続きをしてください。']);
     }
 }
