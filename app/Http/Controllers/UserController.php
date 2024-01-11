@@ -23,31 +23,31 @@ class UserController extends Controller
         $user_token = $request->token;
         $authentication = Authentication::where('token', $user_token)
             ->where('status',UserStatus::MAIL_SENT)
+            ->where('expiration_at','>',Carbon::now())
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
-        }else if($authentication->expiration_at < Carbon::now()){
-            return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
+            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         return view('user/create');
     }
-    
+
     public function store(UserRequest $request)
     {   
         $user_token = $request->user_token;
         $authentication = Authentication::where('token', $user_token)
             ->where('status',UserStatus::MAIL_SENT)
+            ->where('expiration_at','>',Carbon::now())
             ->first();
+                        
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
-        }else if($authentication->expiration_at < Carbon::now()){
-            return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
+            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
         $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+
         
         if(!is_null($image->getImageProperties("exif:*"))){
             $image->stripImage();
