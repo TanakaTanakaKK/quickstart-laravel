@@ -36,12 +36,11 @@ class UserController extends Controller
             ->where('status',UserStatus::MAIL_SENT)
             ->where('expiration_at','>',Carbon::now())
             ->first();
-            
+
         if(is_null($authentication)){
             return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         
-        $result_numbers = str_replace('-', '', [$request->phone_number,$request->postalcode]);
         try{
             User::create([
                 'email' => $authentication['email'],
@@ -51,8 +50,8 @@ class UserController extends Controller
                 'nickname' => $request->nickname,
                 'gender' => $request->gender,
                 'birthday' => $request->birthday,
-                'phone_number' => $result_numbers[0],
-                'postal_code' => $result_numbers[1],
+                'phone_number' => str_replace('-', '', $request->phone_numbe),
+                'postal_code' => str_replace('-', '', $request->postalcode),
                 'prefecture' => $request->prefecture,
                 'cities' => $request->cities,
                 'block' => $request->block,
