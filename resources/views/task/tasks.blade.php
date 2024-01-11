@@ -25,7 +25,7 @@
                         </div>
                     </form>
                 </div>
-                @if(isset($tasks) && count($tasks) > 0)
+                @if(count($tasks) > 0)
                 <div class="card border rounded mb-4">
                     <div class="card-header rounded-top pt-2 pb-2">
                         現在のタスク
