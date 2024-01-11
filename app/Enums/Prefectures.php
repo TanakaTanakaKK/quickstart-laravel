@@ -20,7 +20,7 @@ final class Prefectures extends Enum
     const CHIBA = 12;
     const TOKYO = 13;
     const KANAGAWA = 14;
-    const NIGATA = 15;
+    const NIIGATA = 15;
     const TOYAMA = 16;
     const ISHIKAWA = 17;
     const FUKUI = 18;
@@ -71,7 +71,7 @@ final class Prefectures extends Enum
             self::CHIBA => '千葉県',
             self::TOKYO => '東京都',
             self::KANAGAWA => '神奈川県',
-            self::NIGATA => '新潟県',
+            self::NIIGATA => '新潟県',
             self::TOYAMA => '富山県',
             self::ISHIKAWA => '石川県',
             self::FUKUI => '福井県',
