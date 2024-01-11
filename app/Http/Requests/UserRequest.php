@@ -58,17 +58,14 @@ class UserRequest extends FormRequest
             ],
             'cities' => [
                 'required',
-                'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
                 'string'
             ],
             'block' => [
                 'required',
-                'regex:/^[0-9]+-?[0-9]+?-?[0-9]+?$/',
                 'string'
             ],
             'building' => [
                 'nullable',
-                'regex:/^[ぁ-んァ-ヶ一-龠a-zA-Z0-9p{L}\p{N}\-ー〜 ]+$/u',
                 'string'
             ],
             'password' => [
