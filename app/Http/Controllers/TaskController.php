@@ -13,6 +13,7 @@ class TaskController extends Controller
             'tasks' => $tasks
         ]);
     }
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -25,6 +26,7 @@ class TaskController extends Controller
         
         return to_route('tasks.index');
     }
+
     public function destroy(Request $request, Task $task)
     {
         $task->delete();

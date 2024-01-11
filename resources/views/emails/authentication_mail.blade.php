@@ -11,6 +11,6 @@
     <br><br>
     下記リンクへ進んでください。
     <br>
-    <a href="{{ $create_users_url }}">{{ $create_users_url }}</a>
+    <a href="{{ route('users.create',$user_token) }}">{{ route('users.create',$user_token) }}</a>
 </body>
 </html>

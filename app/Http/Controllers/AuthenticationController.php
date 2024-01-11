@@ -17,6 +17,7 @@ class AuthenticationController extends Controller
     {
         return view('authentication/create');
     }
+
     public function store(AuthenticationRequest $request)
     {
         $user_token = Str::random(rand(30, 50));
@@ -37,10 +38,11 @@ class AuthenticationController extends Controller
             ]);
         }
 
-        Mail::to($request->email)->send(new SendTokenMail(route('users.create', $user_token)));
+        Mail::to($request->email)->send(new SendTokenMail($user_token));
 
         return to_route('authentications.complete', $user_token)->with(['authentications_complete' => true]);
     }
+
     public function complete(Request $request)
     {
         $authentication = Authentication::where('token', $request->token)->first();
