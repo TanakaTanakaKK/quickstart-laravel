@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="user_token" value="{{ request()->token }}">
+                        <input type="hidden" name="authentication_token" value="{{ request()->authentication_token }}">
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 @include('common.info')
@@ -83,10 +83,10 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="city" class="control-label">市区町村
+                                    <label for="cities" class="control-label">市区町村
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="cities" class="form-control border" id="city">
+                                    <input type="text" name="cities" class="form-control border" id="cities">
                                 </div>
                                 <div class="form-group">
                                     <label for="block" class="control-label">番地

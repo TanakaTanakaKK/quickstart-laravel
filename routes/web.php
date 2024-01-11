@@ -17,7 +17,7 @@ Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.
 
 Route::get('/authentications/create', [AuthenticationController::class, 'create'])->name('authentications.create');
 Route::post('/authentications', [AuthenticationController::class, 'store'])->name('authentications.store');
-Route::get('/authentications/complete/{token}',[AuthenticationController::class, 'complete'])->name('authentications.complete');
+Route::get('/authentications/complete/{authentication_token}',[AuthenticationController::class, 'complete'])->name('authentications.complete');
 
 Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');

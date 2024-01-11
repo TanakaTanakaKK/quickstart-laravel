@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
-        $user_token = $request->token;
+        $user_token = $request->authentication_token;
         $authentication = Authentication::where('token', $user_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
@@ -31,12 +31,11 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {   
-        $user_token = $request->user_token;
+        $user_token = $request->authentication_token;
         $authentication = Authentication::where('token', $user_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
-
         if(is_null($authentication)){
             return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
@@ -50,7 +49,7 @@ class UserController extends Controller
                 'nickname' => $request->nickname,
                 'gender' => $request->gender,
                 'birthday' => $request->birthday,
-                'phone_number' => str_replace('-', '', $request->phone_numbe),
+                'phone_number' => str_replace('-', '', $request->phone_number),
                 'postal_code' => str_replace('-', '', $request->postal_code),
                 'prefecture' => $request->prefecture,
                 'cities' => $request->cities,
@@ -69,15 +68,17 @@ class UserController extends Controller
 
     public function complete(Request $request)
     {     
-        if(is_null($request->tokenauthentication_)||is_null($request->session()->get('is_user_created'))){
+        if(is_null($request->authentication_token)||is_null($request->session()->get('is_user_created'))){
             return to_route('tasks.index');
         }
 
         $request->session()->forget('is_user_created');
-        
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
-            'user' => User::where('email', Authentication::where('token', $request->token)->first()->email)->first()
+            'user' => 
+                User::whereHas('authentication', function($query) use ($request) {
+                    $query->where('token', $request->authentication_token);
+                })->first()
         ]);
     }
 }
