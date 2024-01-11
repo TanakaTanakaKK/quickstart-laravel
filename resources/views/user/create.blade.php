@@ -32,25 +32,25 @@
                                     <label for="name" class="control-label">氏名
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="name" class="form-control border">
+                                    <input type="text" name="name" class="form-control border" id="name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="kana-name" class="control-label">氏名(カナ)
+                                    <label for="kana_name" class="control-label">氏名(カナ)
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="kana_name" class="form-control border">
+                                    <input type="text" name="kana_name" class="form-control border" id="kana_name">
                                 </div>
                                 <div class="form-group">
                                     <label for="nickname" class="control-label">ニックネーム
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="nickname" class="form-control border">
+                                    <input type="text" name="nickname" class="form-control border" id="nickname">
                                 </div>
                                 <div class="form-group">
                                     <label for="gender" class="control-label">性別
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <select name="gender" class="form-control border">
+                                    <select name="gender" class="form-control border" id="gender">
                                         <option value="" selected hidden>選択してください</option>
                                         @foreach(\App\Enums\Gender::asSelectArray() as $key => $gender)
                                             <option value="{{ $key }}">{{ $gender }}</option>
@@ -61,13 +61,13 @@
                                     <label for="birthday" class="control-label">生年月日
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="date" name="birthday" class="form-control border">
+                                    <input type="date" name="birthday" class="form-control border" id="birthday">
                                 </div>
                                 <div class="form-group">
                                     <label for="phonenumber" class="control-label">電話番号
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="phone_number" class="form-control border">
+                                    <input type="text" name="phone_number" class="form-control border" id="phonenumber">
                                 </div>
                                 <div class="form-group">
                                     <label for="postalcode" class="control-label">郵便番号
@@ -81,8 +81,8 @@
                                     </label>
                                     <select name="prefecture" class="form-control border" id="prefecture">
                                         <option selected hidden>選択してください</option>
-                                        @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefectures)
-                                            <option value="{{ ($key) }}">{{ $prefectures }}</option>
+                                        @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefecture)
+                                            <option value="{{ ($key) }}">{{ $prefecture }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -90,29 +90,29 @@
                                     <label for="city" class="control-label">市区町村
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="cities" class="form-control border" id="cities">
+                                    <input type="text" name="cities" class="form-control border" id="city">
                                 </div>
                                 <div class="form-group">
                                     <label for="block" class="control-label">番地
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="block" class="form-control border">
+                                    <input type="text" name="block" class="form-control border" id="block">
                                 </div>
                                 <div class="form-group">
                                     <label for="building" class="control-label">建物</label>
-                                    <input type="text" name="building" class="form-control border">
+                                    <input type="text" name="building" class="form-control border" id="building">
                                 </div>
                                 <div class="form-group">
                                     <label for="password" class="control-label">パスワード
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="password" name="password" class="form-control border">
+                                    <input type="password" name="password" class="form-control border" id="password">
                                 </div>
                                 <div class="form-group">
                                     <label for="password_confirmation" class="control-label">パスワード(確認用)
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="password" name="password_confirmation" class="form-control border">
+                                    <input type="password" name="password_confirmation" class="form-control border" id="password_confirmation">
                                 </div>
                                 <div class="form-group">
                                     <div class="text-right">

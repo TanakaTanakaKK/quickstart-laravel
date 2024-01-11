@@ -15,14 +15,14 @@ class AuthenticationController extends Controller
 {
     public function create(Request $request)
     {
-        return view('authentication/create');
+        return view('authentication.create');
     }
 
     public function store(AuthenticationRequest $request)
     {
         $user_token = Str::random(rand(30, 50));
         $authentication = Authentication::where('email', $request->email)
-            ->where('status',UserStatus::MAIL_SENT)
+            ->where('status', UserStatus::MAIL_SENT)
             ->first();
 
         if(!is_null($authentication)){

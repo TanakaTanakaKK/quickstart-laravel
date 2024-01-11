@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('token')->unique();
             $table->string('email');
             $table->integer('status');
-            $table->timestamp('expiration_at')->default(now()->addMinutes(15));
+            $table->timestamp('expiration_at');
             $table->timestamps();
         });
     }
