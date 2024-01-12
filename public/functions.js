@@ -27,4 +27,3 @@ const showFileName = () => {
     image_info.textContent = image_file_name;
     image_info.classList.add('form-control', 'border', 'overflow-auto');
 }
-
