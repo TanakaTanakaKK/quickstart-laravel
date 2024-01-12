@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\HasUsersRecord;
 
-class AuthenticationRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,9 +18,15 @@ class AuthenticationRequest extends FormRequest
             'email' => [
                 'required',
                 'email:filter',
-                'unique:users,email',
+                'exists:users,email',
                 'string'
-            ]
+            ],
+            'password' => [
+                'required',
+                'regex:/^[!-~]+$/',
+                'string',
+                new HasUsersRecord($this)
+            ],
         ];
     }
 
@@ -27,6 +34,7 @@ class AuthenticationRequest extends FormRequest
     {
         return [
             'email' => 'メールアドレス',
+            'password' => 'パスワード',
         ];
     }
 }

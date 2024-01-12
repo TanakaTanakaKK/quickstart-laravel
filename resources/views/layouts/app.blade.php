@@ -17,6 +17,15 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
+                @if(is_null(session('user_record')))
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login.create') }}">
+                ログイン
+                </a>
+                @else
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login.create') }}">
+                ログアウト
+                </a>
+                @endif
             </div>
         </div>
     </nav>

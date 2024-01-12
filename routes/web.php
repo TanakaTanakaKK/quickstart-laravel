@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     TaskController,
     UserController,
-    AuthenticationController
+    AuthenticationController,
+    LoginController
 };
 
 Route::get('/', function () {
@@ -22,3 +23,6 @@ Route::get('/authentications/complete/{authentication_token}',[AuthenticationCon
 Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+
+Route::get('/login/create', [LoginController::class, 'create'])->name('login.create');
+ROute::post('/login/store', [LoginController::class, 'store'])->name('login.store');
