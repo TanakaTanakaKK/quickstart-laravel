@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
+use imagick;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -32,16 +35,38 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {   
         $user_token = $request->authentication_token;
+
         $authentication = Authentication::where('token', $user_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
+
         if(is_null($authentication)){
             return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
+
+        $image = new Imagick();
+        $image->readImage($request->file('image_file'));
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         
+        if(!is_null($image->getImageProperties("exif:*"))){
+            $image->stripImage();
+        }
+        if($image->getImageFormat() != 'webp'){
+            $image->setImageFormat('webp');
+        } 
+        
+        $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
+        while(!is_null(User::where('image_path',$save_image_path)->first())){
+            $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
+        }
+    
+        Storage::put('public/'.$save_image_path,$image);
+        $image->clear();
+
         try{
             User::create([
+                'image_path' => $save_image_path,
                 'email' => $authentication['email'],
                 'password' => Hash::make($request->password),
                 'name' => $request->name,

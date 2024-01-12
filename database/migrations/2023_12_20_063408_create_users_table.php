@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('nickname');
             $table->date('birthday');
             $table->string('phone_number')->unique();
-            $table->string('img_path')->nullable();
+            $table->string('image_path')->unique();
             $table->string('postal_code');
             $table->integer('prefecture');
             $table->string('cities');
