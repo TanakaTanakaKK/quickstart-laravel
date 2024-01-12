@@ -25,11 +25,11 @@ class UserController extends Controller
             ->where('status',UserStatus::MAIL_SENT)
             ->first();
 
-        // if(is_null($authentication)){
-        //     return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
-        // }else if($authentication->expiration_at < Carbon::now()){
-        //     return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
-        // }
+        if(is_null($authentication)){
+            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
+        }else if($authentication->expiration_at < Carbon::now()){
+            return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
+        }
         return view('user/create');
     }
     public function store(UserRequest $request)
@@ -38,11 +38,11 @@ class UserController extends Controller
         $authentication = Authentication::where('token', $user_token)
             ->where('status',UserStatus::MAIL_SENT)
             ->first();
-        // if(is_null($authentication)){
-        //     return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
-        // }else if($authentication->expiration_at < Carbon::now()){
-        //     return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
-        // }
+        if(is_null($authentication)){
+            return to_route('tasks.index')->withErrors(['status_error' => '既に登録済みです。']);
+        }else if($authentication->expiration_at < Carbon::now()){
+            return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);
+        }
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
@@ -51,19 +51,20 @@ class UserController extends Controller
         if(!is_null($image->getImageProperties("exif:*"))){
             $image->stripImage();
         }
-        if($image->getImageFormat() != 'jpeg'){
-            $image->setImageFormat('jpeg');
+        if($image->getImageFormat() != 'webp'){
+            $image->setImageFormat('webp');
         } 
         
-        $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.jpeg';
+        $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
         while(!is_null(User::where('image_path',$save_image_path)->first())){
-            $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.jpeg';
+            $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
         }
     
-        Storage::put($save_image_path,$image);
-        
+        Storage::put('public/'.$save_image_path,$image);
+        $image->clear();
+
         $result_numbers = str_replace('-', '', [$request->phone_number,$request->postalcode]);
-        // try{
+        try{
             User::create([
                 'image_path' => $save_image_path,
                 'email' => $authentication['email'],
@@ -80,9 +81,9 @@ class UserController extends Controller
                 'block' => $request->block,
                 'building' => $request->building
             ]);
-        // }catch(Exception $e){
-        //     return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
-        // }
+        }catch(Exception $e){
+            return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
+        }
 
         $authentication->status = UserStatus::COMPLETED;
         $authentication->save();
@@ -91,11 +92,11 @@ class UserController extends Controller
     }
     public function complete(Request $request)
     {     
-        // if(is_null($request->token)||is_null($request->session()->get('user_complete'))){
-        //     return to_route('tasks.index');
-        // }
+        if(is_null($request->token)||is_null($request->session()->get('user_complete'))){
+            return to_route('tasks.index');
+        }
 
-        // $request->session()->forget('user_complete');
+        $request->session()->forget('user_complete');
         return view('user/complete', [
             'successful' => '会員登録が完了しました。',
             'user' => User::where('email', Authentication::where('token',$request->token)->first()->email)->first()

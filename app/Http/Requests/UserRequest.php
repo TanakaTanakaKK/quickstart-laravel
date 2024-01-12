@@ -77,7 +77,7 @@ class UserRequest extends FormRequest
             ],
             'image_file' => [
                 'required',
-                'mimes:jpg,gif,png'
+                'mimes:jpg,gif,png,webp'
             ]
         ];
     }

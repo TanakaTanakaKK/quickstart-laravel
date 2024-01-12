@@ -21,5 +21,9 @@ const searchPostal = () =>{
 }
 
 const showFileName = () => {
-    document.getElementById('image_info').value = document.getElementById('image_file').value;
+    let image_file_form = document.getElementById('image_file');
+    let image_info = document.getElementById('image_info');
+    let image_file_name = image_file_form.files[0].name;
+    image_info.textContent = image_file_name;
+    image_info.classList.add('form-control', 'border');
 }

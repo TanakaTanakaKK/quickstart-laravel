@@ -21,7 +21,7 @@
                                     <div>画像</div>
                                 </td>
                                 <td  class="py-1 align-middle">
-                                    <img src="{{ asset($user->image_path) }}">
+                                    <img src="{{ asset('/storage/'.$user->image_path) }}">
                                 </td>
                             </tr>
                             <tr>

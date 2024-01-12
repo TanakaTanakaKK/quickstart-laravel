@@ -15,7 +15,9 @@
                             <div class="panel-body">
                                 @include('common.info')
                                 <div class="form-group">
-                                    <label for="user-img" class="control-label">画像</label>
+                                    <label for="image_file" class="control-label">画像
+                                        <span class="badge text-danger">*</span>
+                                    </label>
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <label class="btn btn-default border">
