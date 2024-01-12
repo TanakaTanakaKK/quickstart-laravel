@@ -55,7 +55,7 @@ class UserController extends Controller
         if($image->getImageFormat() != 'webp'){
             $image->setImageFormat('webp');
         } 
-        
+
         $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
         while(!is_null(User::where('image_path',$save_image_path)->first())){
             $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
