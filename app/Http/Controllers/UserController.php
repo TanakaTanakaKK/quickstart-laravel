@@ -34,9 +34,7 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {   
-        $user_token = $request->authentication_token;
-
-        $authentication = Authentication::where('token', $user_token)
+        $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
@@ -47,13 +45,15 @@ class UserController extends Controller
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
+        $archive_format = $image->getImageFormat();
         
-        $archive_image_path = 'archive_images/'.Str::random(rand(20,50)).'.webp';
-        while(!is_null(User::where('archive_image_path',$archive_image_path)->first())){
-            $archive_image_path = 'archive_images/'.Str::random(rand(20,50)).'.webp';
+        $is_deprecated_archive_image_path = true;
+        while($is_deprecated_archive_image_path){
+            $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
+            $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
-        Storage::put('public/'.$archive_image_path,$image);
+        Storage::put('public/archive_images/'.$archive_image_path, $image);
 
         $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if(!is_null($image->getImageProperties("exif:*"))){
@@ -63,12 +63,13 @@ class UserController extends Controller
             $image->setImageFormat('webp');
         } 
 
-        $thumbnail_image_path = 'thumbnail_images/'.Str::random(rand(20,50)).'.webp';
-        while(!is_null(User::where('thumbnail_image_path',$thumbnail_image_path)->first())){
-            $thumbnail_image_path = 'thumbnail_images/'.Str::random(rand(20,50)).'.webp';
+        $is_deprecated_thumbnail_image_path = true;
+        while($is_deprecated_thumbnail_image_path){
+            $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+            $is_deprecated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
-        Storage::put('public/'.$thumbnail_image_path,$image);
+        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
 
         $image->clear();
 
@@ -97,7 +98,7 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete',$user_token)->with(['is_user_created' => true]);
+        return to_route('users.complete', $request->authentication_token)->with(['is_user_created' => true]);
     }
 
     public function complete(Request $request)
