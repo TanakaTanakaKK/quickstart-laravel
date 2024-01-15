@@ -42,4 +42,10 @@ class LoginSessionController extends Controller
 
         return to_route('tasks.index');
     }
+
+    public function edit(Request $request)
+    {
+        
+
+    }
 }

@@ -124,4 +124,9 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    public function edit(Request $request)
+    {
+        return view('user.edit');
+    }
 }

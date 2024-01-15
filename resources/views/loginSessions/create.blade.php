@@ -27,6 +27,13 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="rounded text-right">
+                                        <a href="{{ 'users.edit' }}">
+                                            <small>パスワードをリセット</small>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
