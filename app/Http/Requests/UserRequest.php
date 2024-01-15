@@ -83,7 +83,8 @@ class UserRequest extends FormRequest
             ],
             'image_file' => [
                 'required',
-                'mimes:jpg,gif,png,webp'
+                'mimes:jpg,gif,png,webp',
+                'max:2048'
             ]
         ];
     }

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
-use imagick;
+use Imagick;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -48,26 +48,35 @@ class UserController extends Controller
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
-        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         
+        $archive_image_path = 'archive_images/'.Str::random(rand(20,50)).'.webp';
+        while(!is_null(User::where('archive_image_path',$archive_image_path)->first())){
+            $archive_image_path = 'archive_images/'.Str::random(rand(20,50)).'.webp';
+        }
+
+        Storage::put('public/'.$archive_image_path,$image);
+
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if(!is_null($image->getImageProperties("exif:*"))){
             $image->stripImage();
         }
         if($image->getImageFormat() != 'webp'){
             $image->setImageFormat('webp');
         } 
-        
-        $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
-        while(!is_null(User::where('image_path',$save_image_path)->first())){
-            $save_image_path = 'user_images/'.Str::random(rand(20,50)).'.webp';
+
+        $thumbnail_image_path = 'thumbnail_images/'.Str::random(rand(20,50)).'.webp';
+        while(!is_null(User::where('thumbnail_image_path',$thumbnail_image_path)->first())){
+            $thumbnail_image_path = 'thumbnail_images/'.Str::random(rand(20,50)).'.webp';
         }
-    
-        Storage::put('public/'.$save_image_path,$image);
+
+        Storage::put('public/'.$thumbnail_image_path,$image);
+
         $image->clear();
 
         try{
             User::create([
-                'image_path' => $save_image_path,
+                'thumbnail_image_path' => $thumbnail_image_path,
+                'archive_image_path' => $archive_image_path,
                 'email' => $authentication['email'],
                 'password' => Hash::make($request->password),
                 'name' => $request->name,
