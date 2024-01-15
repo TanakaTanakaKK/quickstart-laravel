@@ -18,11 +18,11 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login.create') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_sessions.create') }}">
                 ログイン
                 </a>
                 @else
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login.destroy') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_sessions.destroy') }}">
                 ログアウト
                 </a>
                 @endif

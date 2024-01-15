@@ -69,7 +69,7 @@ class UserController extends Controller
             $thumbnail_image_path = 'thumbnail_images/'.Str::random(rand(20,50)).'.webp';
         }
 
-        Storage::put('public/'.$thumbnail_image_path,$image);
+        Storage::put('public/'.$thumbnail_image_path, $image);
 
         $image->clear();
 
@@ -98,7 +98,7 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete',$user_token)->with(['is_user_created' => true]);
+        return to_route('users.complete', $user_token)->with(['is_user_created' => true]);
     }
 
     public function complete(Request $request)
@@ -110,14 +110,14 @@ class UserController extends Controller
         $user = User::whereHas('authentication', function($query) use ($request) {
             $query->where('token', $request->authentication_token);
         })->first();
+
         LoginSession::create([
             'logged_in_at' => Carbon::now(),
             'user_id' => $user->id
         ]);
 
         $request->session()->forget('is_user_created');
-        $request->session()->put('user_record',$user);
-
+        $request->session()->put('user_record', $user);
 
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',

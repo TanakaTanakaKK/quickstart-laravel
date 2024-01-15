@@ -24,6 +24,6 @@ Route::get('/users/create/{authentication_token}', [UserController::class, 'crea
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
 
-Route::get('/login/create', [LoginSessionController::class, 'create'])->name('login.create');
-Route::post('login/store',[LoginSessionController::class,'store'])->name('login.store');
-Route::get('/login/destroy', [LoginSessionController::class, 'destroy'])->name('login.destroy');
+Route::get('/login_sessions/create', [LoginSessionController::class, 'create'])->name('login_sessions.create');
+Route::post('login_sessions/store',[LoginSessionController::class,'store'])->name('login_sessions.store');
+Route::get('/login_sessions/destroy', [LoginSessionController::class, 'destroy'])->name('login_sessions.destroy');

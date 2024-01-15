@@ -7,7 +7,7 @@
                     ログイン画面
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('login.store') }}" method="POST">
+                    <form action="{{ route('login_sessions.store') }}" method="POST">
                         @csrf
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
@@ -23,7 +23,7 @@
                                 <div class="form-group">
                                     <div class="rounded text-right">
                                         <button class="btn btn-default border text-nowrap">
-                                            <i></i>送信
+                                            <i></i>ログイン
                                         </button>
                                     </div>
                                 </div>
