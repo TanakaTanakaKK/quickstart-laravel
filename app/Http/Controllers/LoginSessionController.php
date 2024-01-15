@@ -13,7 +13,7 @@ class LoginSessionController extends Controller
 {
     public function create(Request $request)
     {
-        return view('loginSessions.create');
+        return view('loginSession.create');
     }
 
     public function store(LoginSessionRequest $request)
