@@ -20,8 +20,7 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
-        $user_token = $request->authentication_token;
-        $authentication = Authentication::where('token', $user_token)
+        $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
