@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\HasUsersRecord;
 
-class LoginRequest extends FormRequest
+class LoginSessionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

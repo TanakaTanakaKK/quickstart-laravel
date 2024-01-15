@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     User,
-    Authentication
+    Authentication,
+    LoginSession
 };
 use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
@@ -97,13 +98,21 @@ class UserController extends Controller
             return to_route('tasks.index');
         }
 
+        $user = User::whereHas('authentication', function($query) use ($request) {
+            $query->where('token', $request->authentication_token);
+        })->first();
+        LoginSession::create([
+            'logged_in_at' => Carbon::now(),
+            'user_id' => $user->id
+        ]);
+
         $request->session()->forget('is_user_created');
+        $request->session()->put('user_record',$user);
+
+
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
-            'user' => 
-                User::whereHas('authentication', function($query) use ($request) {
-                    $query->where('token', $request->authentication_token);
-                })->first()
+            'user' => $user
         ]);
     }
 }
