@@ -9,6 +9,7 @@
                 <div class="card-body">
                     <form action="{{ route('reset_password.update') }}" method="POST">
                         @csrf
+                        @method('PATCH')
                         <input type="hidden" name="reset_password_token" value="{{ request()->reset_password_token }}">
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
@@ -23,7 +24,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="rounded text-right">
-                                        <button class="btn btn-default border text-nowrap">
+                                        <button class="btn border">
                                             <i></i>設定
                                         </button>
                                     </div>

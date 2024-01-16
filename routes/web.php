@@ -8,7 +8,6 @@ use App\Http\Controllers\{
     LoginSessionController,
     ResetPasswordController
 };
-use App\Models\ResetPassword;
 
 Route::get('/', function () {
     return to_route('tasks.index');
@@ -33,5 +32,5 @@ Route::get('/login_sessions/destroy', [LoginSessionController::class, 'destroy']
 Route::get('/reset_password/create', [ResetPasswordController::class, 'create'])->name('reset_password.create');
 Route::post('/reset_password/store', [ResetPasswordController::class, 'store'])->name('reset_password.store');
 Route::get('/reset_password/edit/{reset_password_token}', [ResetPasswordController::class, 'edit'])->name('reset_password.edit');
-Route::post('reset_password/update', [ResetPasswordController::class, 'update'])->name('reset_password.update');
+Route::patch('reset_password/update', [ResetPasswordController::class, 'update'])->name('reset_password.update');
 Route::get('/reset_password/complete/{reset_password_token}', [ResetPasswordController::class, 'complete'])->name('reset_password.complete');

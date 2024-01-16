@@ -63,11 +63,11 @@ class ResetPasswordController extends Controller
     public function edit(Request $request)
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
-        ->where('status', ResetPasswordStatus::MAIL_SENT)
-        ->where('expired_at', '>', Carbon::now())
-        ->first();
+            ->where('status', ResetPasswordStatus::MAIL_SENT)
+            ->where('expired_at', '>', Carbon::now())
+            ->first();
         if(is_null($reset_password)){
-            return to_route('tasks.index');
+            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         return view('reset_password.edit');
@@ -81,7 +81,7 @@ class ResetPasswordController extends Controller
             ->first();
         
         if(is_null($reset_password)){
-            return to_route('tasks.index')->withErrors(['reset_error' => 'リセットトークンが無効です。']);
+            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         $reset_password->status = ResetPasswordStatus::COMPLETED;
@@ -99,9 +99,11 @@ class ResetPasswordController extends Controller
             return to_route('tasks.index');
         }else if($request->session()->get('is_reset_mail_send') == true && $reset_password->status == ResetPasswordStatus::MAIL_SENT){
             $request->session()->forget('is_reset_mail_send');
+
             return view('reset_password.complete')->with(['reset_password_email' => $reset_password->email]);
-        }else if($request->session()->get('is_password_updated') == true && $reset_password->status == ResetPasswordStatus::COMPLETED){
+        }else if($request->session()->get('is_password_updated') == true && $reset_password->status == ResetPasswordStatus::COMPLETED){    
             $request->session()->forget('is_password_updated');
+
             return view('reset_password.complete')->with(['successful' => 'ログインパスワードの変更が完了しました。']);
         }else{
             return to_route('tasks.index');
