@@ -37,6 +37,7 @@ class LoginSessionController extends Controller
         ]);
 
         $request->session()->put('login_session_token', $login_session_token);
+
         return to_route('tasks.index');
     }
     
