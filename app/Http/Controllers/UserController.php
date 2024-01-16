@@ -111,7 +111,8 @@ class UserController extends Controller
         }
 
         $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
-            $query->where('token', $request->authentication_token);
+            $query->where('token', $request->authentication_token)
+                ->where('expired_at', '>', Carbon::now());
         })->first();
 
         $request->session()->forget('is_user_created');
