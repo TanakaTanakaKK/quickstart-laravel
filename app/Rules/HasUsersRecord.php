@@ -24,7 +24,8 @@ class HasUsersRecord implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(!Hash::check($value,User::where('email', $this->request->email)->first()->password)){
+        $user = User::where('email', $this->request->email)->first();
+        if(!is_null($user) && !Hash::check($value,$user->password)){
             $fail(':attributeが一致しません。');
         }
     }
