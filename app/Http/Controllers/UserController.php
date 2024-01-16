@@ -110,21 +110,22 @@ class UserController extends Controller
             return to_route('tasks.index');
         }
 
-        $user = User::whereHas('authentication', function($query) use ($request) {
-            $query->where('token', $request->authentication_token);
+        $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
+            $query->where('token', $request->authentication_token)
+                ->where('expired_at', '>', Carbon::now());
         })->first();
 
         LoginSession::create([
             'logged_in_at' => Carbon::now(),
-            'user_id' => $user->id
+            'user_id' => $authenticated_user->id
         ]);
 
         $request->session()->forget('is_user_created');
-        $request->session()->put('user_record', $user);
+        $request->session()->put('user_record', $authenticated_user);
         
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
-            'user' => $user
+            'user' => $authenticated_user
         ]);
     }
 }

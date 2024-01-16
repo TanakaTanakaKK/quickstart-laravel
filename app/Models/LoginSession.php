@@ -11,6 +11,7 @@ class LoginSession extends Model
 
     protected $fillable = [
         'logged_in_at',
-        'user_id'
+        'user_id',
+        'token'
     ];
 }

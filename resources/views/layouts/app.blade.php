@@ -14,7 +14,7 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
                 Task List
                 </a>
-                @if(is_null(session('user_record')))
+                @if(is_null(session('login_session_token')))
                 <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
