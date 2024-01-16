@@ -12,7 +12,6 @@
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
                                 @include('common.info')
-                                @empty($email)
                                 <label for="email-form" class="col-form-label font-weight-bold">Eメールアドレス</label>
                                 <div class="form-group col-md-12 px-0">
                                     <input type="text" name="email" class="form-control" id="email-form">
@@ -24,7 +23,6 @@
                                         </button>
                                     </div>
                                 </div>
-                                @endempty
                             </div>
                         </div>
                     </form>
