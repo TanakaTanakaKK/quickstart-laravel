@@ -7,14 +7,16 @@ use App\Models\{
     Authentication,
     LoginSession
 };
+use Illuminate\Support\Facades\{
+    Hash,
+    Storage
+};
 use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
 use Imagick;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -53,12 +55,13 @@ class UserController extends Controller
             $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
-        Storage::put('public/archive_images/'.$archive_image_path, $image);
-
-        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if(!is_null($image->getImageProperties("exif:*"))){
             $image->stripImage();
         }
+
+        Storage::put('public/archive_images/'.$archive_image_path, $image);
+
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if($image->getImageFormat() != 'webp'){
             $image->setImageFormat('webp');
         } 
