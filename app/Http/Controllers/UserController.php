@@ -53,12 +53,13 @@ class UserController extends Controller
             $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
-        Storage::put('public/archive_images/'.$archive_image_path, $image);
-
-        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if(!is_null($image->getImageProperties("exif:*"))){
             $image->stripImage();
         }
+
+        Storage::put('public/archive_images/'.$archive_image_path, $image);
+
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
         if($image->getImageFormat() != 'webp'){
             $image->setImageFormat('webp');
         } 
