@@ -8,7 +8,7 @@
 </head>
 <body>
     下記リンクへ進んでパスワードを再設定してください。
-    <br>
+    <br><br>
     <a href="{{ route('reset_password.edit',$reset_password_token) }}">{{ route('reset_password.edit',$reset_password_token) }}</a>
 </body>
 </html>
