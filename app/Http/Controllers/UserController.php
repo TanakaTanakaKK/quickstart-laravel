@@ -68,17 +68,18 @@ class UserController extends Controller
 
     public function complete(Request $request)
     {     
-        if(is_null($request->authentication_token)||is_null($request->session()->get('is_user_created'))){
+        if(is_null($request->authentication_token) || is_null($request->session()->get('is_user_created'))){
             return to_route('tasks.index');
         }
+
+        $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
+            $query->where('token', $request->authentication_token);
+        })->first();
 
         $request->session()->forget('is_user_created');
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
-            'user' => 
-                User::whereHas('authentication', function($query) use ($request) {
-                    $query->where('token', $request->authentication_token);
-                })->first()
+            'authenticated_user' => $authenticated_user
         ]);
     }
 }
