@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="rounded text-right">
-                                        <button class="btn btn-default border text-nowrap">
+                                        <button class="btn border">
                                             <i></i>送信
                                         </button>
                                     </div>
