@@ -119,7 +119,6 @@ class UserController extends Controller
         $request->session()->forget('is_user_created');
         $request->session()->put('user_record', $user);
         
-
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
             'user' => $user
