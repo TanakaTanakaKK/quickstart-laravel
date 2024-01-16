@@ -83,7 +83,7 @@
                                     <select name="prefecture" class="form-control border" id="prefecture">
                                         <option selected hidden>選択してください</option>
                                         @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefecture)
-                                            <option value="{{ ($key) }}">{{ $prefecture }}</option>
+                                            <option value="{{ $key }}">{{ $prefecture }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -117,7 +117,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="text-right">
-                                        <button type="submit" class="btn btn-default border text-nowrap">
+                                        <button type="submit" class="btn border">
                                             <i class="fa fa-btn fa-plus"></i>会員登録
                                         </button>
                                     </div>
