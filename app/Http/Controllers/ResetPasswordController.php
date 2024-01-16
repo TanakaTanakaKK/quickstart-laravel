@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\{
     Hash,
     Mail
 };
+use App\Http\Requests\{
+    ResetPasswordRequest,
+    ResetNewPasswordRequest
+};
 use App\Models\{
     ResetPassword,
     User
 };
 use App\Mail\ResetPasswordMail;
 use App\Enums\ResetPasswordStatus;
-use App\Http\Requests\ResetPasswordRequest;
 use Carbon\Carbon;
 
 class ResetPasswordController extends Controller
@@ -36,7 +39,7 @@ class ResetPasswordController extends Controller
         }
 
         $reset_password = ResetPassword::where('email', $request->email)
-            ->where('status', ResetPasswordStatus::COMPLETED)
+            ->where('status', ResetPasswordStatus::MAIL_SENT)
             ->first();
 
         if(!is_null($reset_password)){
@@ -59,16 +62,18 @@ class ResetPasswordController extends Controller
 
     public function edit(Request $request)
     {
-        $reset_password = ResetPassword::where('token', $request->reset_password_token)->first();
-
-        if(is_null($reset_password) || $reset_password->status == ResetPasswordStatus::COMPLETED){
+        $reset_password = ResetPassword::where('token', $request->reset_password_token)
+        ->where('status', ResetPasswordStatus::MAIL_SENT)
+        ->where('expired_at', '>', Carbon::now())
+        ->first();
+        if(is_null($reset_password)){
             return to_route('tasks.index');
         }
 
         return view('reset_password.edit');
     }
 
-    public function update(Request $request)
+    public function update(ResetNewPasswordRequest $request)
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
             ->where('status', ResetPasswordStatus::MAIL_SENT)
@@ -80,23 +85,17 @@ class ResetPasswordController extends Controller
         }
 
         $reset_password->status = ResetPasswordStatus::COMPLETED;
-        $reset_password->save();
-        
-        $user = User::where('email', $reset_password->email)->first();
-
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $reset_password->users->password = Hash::make($request->password);
+        $reset_password->push();
 
         return to_route('reset_password.complete',$request->reset_password_token)->with(['is_password_updated' => true]);
     }
 
     public function complete(Request $request)
     {
-        $reset_password = ResetPassword::where('token', $request->reset_password_token)
-        ->orderBy('updated_at', 'desc')
-        ->first();
+        $reset_password = ResetPassword::where('token', $request->reset_password_token)->first();
 
-        if(is_null($reset_password) || is_null($request->session()->get('is_reset_mail_send'))){
+        if(is_null($reset_password)){
             return to_route('tasks.index');
         }else if($request->session()->get('is_reset_mail_send') == true && $reset_password->status == ResetPasswordStatus::MAIL_SENT){
             $request->session()->forget('is_reset_mail_send');

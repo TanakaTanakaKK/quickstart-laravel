@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Model
 {
@@ -34,4 +33,8 @@ class User extends Model
         return $this->hasOne(Authentication::class, 'email', 'email');
     }
 
+    public function reset_passwords(): HasMany
+    {
+        return $this->hasMany(ResetPassword::class,'email','email');    
+    }
 }
