@@ -9,13 +9,17 @@
         </ul>
     </div>
 @endif
-@if(isset($successful) || isset($user_email))
+@if(isset($successful) || isset($user_email) ||isset($reset_password_email))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
         @if(isset($user_email))
             <ul>
                 <li>{{ $user_email.'宛にメールを送信しました。15分以内に登録手続きをしてください。' }}</li>
+            </ul>
+        @elseif(isset($reset_password_email))
+            <ul>
+                <li>{{ $reset_password_email.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
             </ul>
         @else
             <ul>

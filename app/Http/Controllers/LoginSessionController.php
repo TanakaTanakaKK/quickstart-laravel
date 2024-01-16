@@ -13,7 +13,7 @@ class LoginSessionController extends Controller
 {
     public function create(Request $request)
     {
-        return view('loginSessions.create');
+        return view('loginSession.create');
     }
 
     public function store(LoginSessionRequest $request)
@@ -41,11 +41,5 @@ class LoginSessionController extends Controller
         $request->session()->forget('user_record');
 
         return to_route('tasks.index');
-    }
-
-    public function edit(Request $request)
-    {
-        
-
     }
 }

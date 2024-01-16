@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="rounded text-right">
-                                        <a href="{{ 'users.edit' }}">
+                                        <a href="{{ route('reset_password.create') }}">
                                             <small>パスワードをリセット</small>
                                         </a>
                                     </div>
