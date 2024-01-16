@@ -6,14 +6,16 @@ use App\Models\{
     User,
     Authentication
 };
+use Illuminate\Support\Facades\{
+    Hash,
+    Storage
+};
 use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Exception;
 use Carbon\Carbon;
 use Imagick;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
