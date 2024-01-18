@@ -35,13 +35,14 @@ class UserController extends Controller
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
+
         if(is_null($authentication)){
             return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         
         try{
             User::create([
-                'email' => $authentication['email'],
+                'email' => $authentication->email,
                 'password' => Hash::make($request->password),
                 'name' => $request->name,
                 'kana_name' => $request->kana_name,

@@ -64,19 +64,23 @@ class UserRequest extends FormRequest
             ],
             'address' => [
                 'required',
+                'max:128',
                 'string'
             ],
             'block' => [
                 'required',
+                'max:128',
                 'string'
             ],
             'building' => [
                 'nullable',
+                'max:128',
                 'string'
             ],
             'password' => [
                 'required',
                 'min:8',
+                'max:128',
                 'regex:/^[!-~]+$/',
                 'string',
                 'confirmed'
