@@ -20,7 +20,7 @@ Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.
 
 Route::get('/authentications/create', [AuthenticationController::class, 'create'])->name('authentications.create');
 Route::post('/authentications', [AuthenticationController::class, 'store'])->name('authentications.store');
-Route::get('/authentications/complete/{authentication_token}',[AuthenticationController::class, 'complete'])->name('authentications.complete');
+Route::get('/authentications/complete/{authentication_token}', [AuthenticationController::class, 'complete'])->name('authentications.complete');
 
 Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
@@ -30,7 +30,7 @@ Route::get('/users/{login_session_token}/edit', [UserController::class, 'edit'])
 Route::patch('/users/{login_session_token}', [UserController::class, 'update'])->name('users.update');
 
 Route::get('/login_sessions/create', [LoginSessionController::class, 'create'])->name('login_sessions.create');
-Route::post('login_sessions/store',[LoginSessionController::class, 'store'])->name('login_sessions.store');
+Route::post('login_sessions/store', [LoginSessionController::class, 'store'])->name('login_sessions.store');
 Route::get('/login_sessions/destroy', [LoginSessionController::class, 'destroy'])->name('login_sessions.destroy');
 
 Route::get('/reset_password/create', [ResetPasswordController::class, 'create'])->name('reset_password.create');

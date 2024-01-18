@@ -18,6 +18,7 @@ class AuthenticationRequest extends FormRequest
                 'required',
                 'email:filter',
                 'unique:users,email',
+                'max:128',
                 'string'
             ]
         ];

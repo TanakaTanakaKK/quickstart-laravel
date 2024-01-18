@@ -97,8 +97,8 @@
                                         </td>
                                         <td  class="py-1 align-middle">
                                             <select name="prefecture" class="form-control border text-muted" id="prefecture" onclick="deleteColorClass(this)">
-                                                <option selected hidden value="">{{ \App\Enums\Prefectures::getDescription($user_info->prefecture) }}</option>
-                                                @foreach(\App\Enums\Prefectures::asSelectArray() as $key => $prefecture)
+                                                <option selected hidden value="">{{ \App\Enums\Prefecture::getDescription($user_info->prefecture) }}</option>
+                                                @foreach(\App\Enums\Prefecture::asSelectArray() as $key => $prefecture)
                                                     <option value="{{ $key }}">{{ $prefecture }}</option>
                                                 @endforeach
                                             </select>
@@ -109,7 +109,7 @@
                                             <div>市区町村</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="cities" class="form-control" placeholder="{{ $user_info->cities }}" id="cities">
+                                            <input type="text" name="address" class="form-control" placeholder="{{ $user_info->address }}" id="address">
                                         </td>
                                     </tr>
                                     <tr>
