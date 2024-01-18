@@ -80,7 +80,7 @@ class UserController extends Controller
             User::create([
                 'thumbnail_image_path' => $thumbnail_image_path,
                 'archive_image_path' => $archive_image_path,
-                'email' => $authentication['email'],
+                'email' => $authentication->email,
                 'password' => Hash::make($request->password),
                 'name' => $request->name,
                 'kana_name' => $request->kana_name,
@@ -90,7 +90,7 @@ class UserController extends Controller
                 'phone_number' => str_replace('-', '', $request->phone_number),
                 'postal_code' => str_replace('-', '', $request->postal_code),
                 'prefecture' => $request->prefecture,
-                'cities' => $request->cities,
+                'address' => $request->address,
                 'block' => $request->block,
                 'building' => $request->building
             ]);

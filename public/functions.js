@@ -5,18 +5,18 @@ const searchPostal = () =>{
     });
     postal_code = postal_code.replace(/[ー－-]/g,'');
     let prefecture = document.getElementById('prefecture');
-    let cities = document.getElementById('cities');
+    let address = document.getElementById('address');
     let url = 'https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + postal_code;
     fetch(url).then(response => response.json())
     .then(data => {
         prefecture.value = data.results[0].prefcode;
-        cities.value = data.results[0].address2+data.results[0].address3;
+        address.value = data.results[0].address2+data.results[0].address3;
     })
     .catch(error => {
         prefecture.value = "";
-        cities.value = "";
+        address.value = "";
         prefecture.placeholder = "郵便番号から住所を特定できません";
-        cities.placeholder = "郵便番号から住所を特定できません";
+        address.placeholder = "郵便番号から住所を特定できません";
     });
 }
 
