@@ -21,6 +21,9 @@
                 ログイン
                 </a>
                 @else
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show',session('login_session_token')) }}">
+                アカウント
+                </a>
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_sessions.destroy') }}">
                 ログアウト
                 </a>

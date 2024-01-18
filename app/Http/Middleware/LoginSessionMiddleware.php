@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 use App\Models\LoginSession;
 use Carbon\Carbon;
 
@@ -18,10 +19,13 @@ class LoginSessionMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(!is_null(session('login_session_token'))){
-            $request->session()->regenerate();
-            LoginSession::where('token', session('login_session_token'))
-                ->update(['updated_at' => Carbon::now()]);
+            if(is_null(LoginSession::where('token', session('login_session_token'))->first())){
+                $request->session()->forget('login_session_token');
             }
+            $csrf_token = $request->session()->get('_token');
+            $request->session()->regenerate();
+            $request->session()->put('_token', $csrf_token);
+        }
         
         return $next($request);
     }

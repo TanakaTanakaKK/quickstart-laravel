@@ -5,14 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\{
     User,
     Authentication,
-    LoginSession
+    LoginSession,
+    ResetEmail
 };
 use Illuminate\Support\Facades\{
     Hash,
-    Storage
+    Storage,
+    Mail
 };
+use App\Http\Requests\{
+    UserRequest,
+    UserUpdateRequest
+};
+use App\Enums\ResetEmailStatus;
 use App\Enums\AuthenticationStatus;
-use App\Http\Requests\UserRequest;
+use App\Mail\ResetEmailAddressMail;
 use Illuminate\Http\Request;
 use Exception;
 use Carbon\Carbon;
@@ -102,6 +109,110 @@ class UserController extends Controller
         $authentication->save();
         
         return to_route('users.complete', $request->authentication_token)->with(['is_user_created' => true]);
+    }
+
+    public function show(Request $request)
+    {
+        if(is_null($request->session()->get('is_succesful_updated'))){
+            if(!is_null($request->session()->get('is_user_updated'))){
+                $request->session()->forget('is_user_updated');
+            }
+            return view('user.show', ['user_info' => LoginSession::where('token', $request->login_session_token)->first()->users]);
+        }
+        
+        $request->session()->put('user_info', LoginSession::where('token', $request->login_session_token)->first()->users);
+
+        if($request->session()->get('updated_info_array') && !is_null($request->session()->get('reset_email'))){
+            $request->session()->forget('is_succesful_updated');
+            dump('1');
+            return view('user.show', [
+                'reset_email' => $request->session()->get('reset_email'),
+                'updated_info_array' => $request->session()->get('updated_info_array'),
+                'is_user_updated' => true
+            ]);
+
+        }else if(!is_null($request->session()->get('reset_email'))){
+            $request->session()->forget('is_succesful_updated');
+            dump('2');
+            return view('user.show', [
+                'reset_email' => $request->session()->get('reset_email'),
+                'is_user_updated' => true
+            ]);
+
+        }else{
+            $request->session()->forget('is_succesful_updated');
+            dump('3');
+            return view('user.show', [
+                'updated_info_array' => $request->session()->get('updated_info_array'),
+                'is_user_updated' => true
+            ]);
+        }
+    }
+
+    public function edit(Request $request)
+    {
+        $login_session=LoginSession::where('token', $request->login_session_token)->first();
+
+        if(is_null($login_session)){
+            return to_route('tasks.index');
+        }
+        return view('user.edit', ['user_info' => $login_session->users]);
+        
+    }
+
+    public function update(Request $request)
+    {    
+        $updated_info_array = [];
+        $user = LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users;
+
+        foreach($request->all() as $data_name => $data){
+            if(!is_null($data) && !in_array($data_name,['email','_token','_method'])){
+                $user->$data_name = $data;
+                $updated_info_array[] = $data_name;
+            }
+        }
+
+        if(count($updated_info_array) >= 1){
+            $user->save();
+        }else if(count($updated_info_array) == 0 && is_null($request->email)){
+            return to_route('users.show', $request->session()->get('login_session_token'));
+        }
+
+        if(!is_null($request->email)){
+            $is_deprecated_reset_email_token = true;
+            while($is_deprecated_reset_email_token){
+                $reset_email_token = Str::random(rand(30,50));
+                $is_deprecated_reset_email_token = ResetEmail::where('token', $reset_email_token)->exists();
+            }
+
+            Mail::to($request->email)->send(new ResetEmailAddressMail($reset_email_token));
+
+            ResetEmail::create([
+                'email' => $request->email,
+                'token' => $reset_email_token,
+                'user_id' => $user->id,
+                'status' => ResetEmailStatus::MAIL_SENT,
+                'expired_at' => Carbon::now()->addMinute(15)
+            ]);
+
+            if(count($updated_info_array) >= 1){
+                return to_route('users.show', $request->session()->get('login_session_token'))->with([
+                    'is_succesful_updated' => true,
+                    'updated_info_array' => $updated_info_array,
+                    'reset_email' => $request->email
+                ]);
+            }else{
+                return to_route('users.show', $request->session()->get('login_session_token'))->with([
+                    'is_succesful_updated' => true,
+                    'reset_email' => $request->email
+                ]);
+            }
+        }
+
+        return to_route('users.show', $request->session()->get('login_session_token'))->with([
+            'is_succesful_updated' => true,
+            'updated_info_array' => $updated_info_array
+        ]);
     }
 
     public function complete(Request $request)

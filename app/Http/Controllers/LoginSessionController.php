@@ -43,10 +43,6 @@ class LoginSessionController extends Controller
     
     public function destroy(Request $request)
     {
-        if(is_null($request->session('login_session_token'))){
-            return to_route('tasks.index');
-        }
-
         $request->session()->forget('login_session_token');
 
         return to_route('tasks.index');

@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     UserController,
     AuthenticationController,
     LoginSessionController,
-    ResetPasswordController
+    ResetPasswordController,
+    ResetEmailController
 };
 
 Route::get('/', function () {
@@ -24,6 +25,9 @@ Route::get('/authentications/complete/{authentication_token}',[AuthenticationCon
 Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+Route::get('/users/{login_session_token}', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/{login_session_token}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::patch('/users/{login_session_token}', [UserController::class, 'update'])->name('users.update');
 
 Route::get('/login_sessions/create', [LoginSessionController::class, 'create'])->name('login_sessions.create');
 Route::post('login_sessions/store',[LoginSessionController::class, 'store'])->name('login_sessions.store');
@@ -34,3 +38,6 @@ Route::post('/reset_password/store', [ResetPasswordController::class, 'store'])-
 Route::get('/reset_password/edit/{reset_password_token}', [ResetPasswordController::class, 'edit'])->name('reset_password.edit');
 Route::patch('reset_password/update', [ResetPasswordController::class, 'update'])->name('reset_password.update');
 Route::get('/reset_password/complete/{reset_password_token}', [ResetPasswordController::class, 'complete'])->name('reset_password.complete');
+
+Route::get('/reset_email/{reset_email_token}', [ResetEmailController::class, 'edit'])->name('reset_email.edit');
+Route::patch('/reset_email/update', [ResetEmailController::class, 'update'])->name('reset_email.update');

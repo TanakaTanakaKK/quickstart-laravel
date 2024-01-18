@@ -4,7 +4,7 @@
         <div class="mx-auto">
             <div class="card border rounded">
                 <div class="card-header py-2">
-                    登録情報
+                    アカウント情報
                 </div>
                 <div class="card-body px-0">
                     <div class="mt-0 mx-0">
@@ -22,7 +22,7 @@
                                         <div>画像</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <img src="{{ asset('/storage/thumbnail_images/'.$authenticated_user->thumbnail_image_path) }}" class="w-25 h-25">
+                                        <img src="{{ asset('/storage/thumbnail_images/'.$user_info->thumbnail_image_path) }}" class="w-25 h-25">
                                     </td>
                                 </tr>
                                 <tr>
@@ -30,7 +30,7 @@
                                         <div>氏名</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->name }}</div>
+                                        <div>{{ $user_info->name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -38,7 +38,7 @@
                                         <div>氏名(カナ)</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->kana_name }}</div>
+                                        <div>{{ $user_info->kana_name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -46,7 +46,7 @@
                                         <div>メールアドレス</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->email }}</div>
+                                        <div>{{ $user_info->email }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -54,7 +54,7 @@
                                         <div>ニックネーム</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->nickname }}</div>
+                                        <div>{{ $user_info->nickname }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -62,7 +62,7 @@
                                         <div>性別</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ \App\Enums\Gender::getDescription($authenticated_user->gender) }}</div>
+                                        <div>{{ \App\Enums\Gender::getDescription($user_info->gender) }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -70,7 +70,7 @@
                                         <div>生年月日</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->birthday }}</div>
+                                        <div>{{ $user_info->birthday }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -78,7 +78,7 @@
                                         <div>電話番号</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->phone_number }}</div>
+                                        <div>{{ $user_info->phone_number }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -86,7 +86,7 @@
                                         <div>郵便番号</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->postal_code }}</div>
+                                        <div>{{ $user_info->postal_code }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -94,7 +94,7 @@
                                         <div>都道府県</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ \App\Enums\Prefectures::getDescription($authenticated_user->prefecture) }}</div>
+                                        <div>{{ \App\Enums\Prefectures::getDescription($user_info->prefecture) }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -102,7 +102,7 @@
                                         <div>市区町村</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->cities }}</div>
+                                        <div>{{ $user_info->cities }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -110,16 +110,16 @@
                                         <div>番地</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->block }}</div>
+                                        <div>{{ $user_info->block }}</div>
                                     </td>
                                 </tr>
-                                @if(isset($authenticated_user->building))
+                                @if(isset($user_info->building))
                                 <tr>
                                     <td class="py-1 align-middle">
                                         <div>建物</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $authenticated_user->building }}</div>
+                                        <div>{{ $user_info->building }}</div>
                                     </td>
                                 </tr>
                                 @endif
@@ -127,6 +127,13 @@
                         </table>
                     </div>
                 </div>  
+                <div class="card-body px-0 py-0">
+                    <div class="text-right">
+                        <button class="btn border">
+                            <a href="{{ route('users.edit', session('login_session_token')) }}" class="text-dark">編集</a>
+                        </button>
+                    </div>
+                </div>    
             </div>
         </div>
     </div>
