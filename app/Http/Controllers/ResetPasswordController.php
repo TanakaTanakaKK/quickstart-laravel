@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ResetPasswordStatus;
+use App\Models\{
+    ResetPassword,
+    User
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{
@@ -9,15 +14,10 @@ use Illuminate\Support\Facades\{
     Mail
 };
 use App\Http\Requests\{
-    ResetPasswordRequest,
-    ResetNewPasswordRequest
-};
-use App\Models\{
-    ResetPassword,
-    User
+    ResetNewPasswordRequest,
+    ResetPasswordRequest
 };
 use App\Mail\ResetPasswordMail;
-use App\Enums\ResetPasswordStatus;
 use Carbon\Carbon;
 
 class ResetPasswordController extends Controller

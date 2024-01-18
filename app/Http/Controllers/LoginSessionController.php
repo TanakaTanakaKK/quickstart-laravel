@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginSessionRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 use App\Models\{
     User,
     LoginSession
 };
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
+use App\Http\Requests\LoginSessionRequest;
 
 class LoginSessionController extends Controller
 {

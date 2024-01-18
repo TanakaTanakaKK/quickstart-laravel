@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    TaskController,
-    UserController,
     AuthenticationController,
     LoginSessionController,
-    ResetPasswordController
+    ResetPasswordController,
+    TaskController,
+    UserController
 };
 
 Route::middleware(['auth.user'])->group(function () {

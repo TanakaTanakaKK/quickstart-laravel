@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\{
     Content,
     Envelope,
 };
+use Illuminate\Queue\SerializesModels;
 
 class SendTokenMail extends Mailable
 {

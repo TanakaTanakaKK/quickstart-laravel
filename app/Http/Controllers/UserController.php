@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AuthenticationStatus;
 use App\Models\{
-    User,
     Authentication,
-    LoginSession
+    User
 };
 use Illuminate\Support\Facades\{
     Hash,
     Storage
 };
-use App\Enums\AuthenticationStatus;
-use App\Http\Requests\UserRequest;
-use Illuminate\Http\Request;
-use Exception;
-use Carbon\Carbon;
-use Imagick;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use Carbon\Carbon;
+use Exception;
+use Imagick;
+
 
 class UserController extends Controller
 {

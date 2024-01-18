@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AuthenticationStatus;
+use App\Models\Authentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Enums\AuthenticationStatus;
-use App\Models\Authentication;
-use App\Mail\SendTokenMail;
 use App\Http\Requests\AuthenticationRequest;
+use App\Mail\SendTokenMail;
 use Carbon\Carbon;
 
 class AuthenticationController extends Controller

@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
+use App\Models\LoginSession;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\LoginSession;
-use Carbon\Carbon;
+use Closure;
 
 class LoginSessionMiddleware
 {
