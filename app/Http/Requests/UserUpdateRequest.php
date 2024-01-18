@@ -20,51 +20,65 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => [
+                'nullable',
                 'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
                 'max:30',
                 'string'
             ],
             'kana_name' => [
+                'nullable',
                 'regex:/^[ァ-ヶ]+$/u',
                 'max:30',
                 'string'
             ],
             'nickname' => [
+                'nullable',
                 'max:30',
                 'string'
             ],
             'gender' => [
+                'nullable',
                 'integer',
                 new EnumValue(Gender::class,false)
             ],
             'birthday' => [
+                'nullable',
                 'before:today',
                 'date'
             ],
             'phone_number' => [
+                'nullable',
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
                 'unique:users,phone_number',
                 'string'
             ],
             'postal_code' => [
+                'nullable',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
                 'string'
             ],
             'prefecture' => [
+                'nullable',
                 'integer',
                 new EnumValue(Prefecture::class,false)
             ],
             'address' => [
+                'nullable',
+                'max:128',
                 'string'
             ],
             'block' => [
+                'nullable',
+                'max:128',
                 'string'
             ],
             'building' => [
                 'nullable',
+                'max:128',
                 'string'
             ],
             'image_file' => [
+                'nullable',
                 'file',
                 'image',
                 'mimes:jpg,gif,png,webp',

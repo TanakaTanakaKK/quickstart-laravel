@@ -154,7 +154,7 @@ class UserController extends Controller
         
     }
 
-    public function update(Request $request)
+    public function update(UserUpdateRequest $request)
     {    
         $updated_info_array = [];
         $user = LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users;
