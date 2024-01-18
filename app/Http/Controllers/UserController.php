@@ -17,8 +17,7 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
-        $user_token = $request->authentication_token;
-        $authentication = Authentication::where('token', $user_token)
+        $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', Carbon::now())
             ->first();
@@ -63,7 +62,7 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete',$request->authentication_token)->with(['is_user_created' => true]);
+        return to_route('users.complete', $request->authentication_token)->with(['is_user_created' => true]);
     }
 
     public function complete(Request $request)

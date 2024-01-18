@@ -8,7 +8,7 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $tasks = Task::orderBy('created_at','asc')->get();
+        $tasks = Task::orderBy('created_at', 'asc')->get();
         return view('task.tasks', [
             'tasks' => $tasks
         ]);
