@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
 use App\Enums\{
-    Prefectures,
+    Prefecture,
     Gender
 };
 
@@ -60,23 +60,27 @@ class UserRequest extends FormRequest
             'prefecture' => [
                 'required',
                 'integer',
-                new EnumValue(Prefectures::class,false)
+                new EnumValue(Prefecture::class,false)
             ],
-            'cities' => [
+            'address' => [
                 'required',
+                'max:128',
                 'string'
             ],
             'block' => [
                 'required',
+                'max:128',
                 'string'
             ],
             'building' => [
                 'nullable',
+                'max:128',
                 'string'
             ],
             'password' => [
                 'required',
                 'min:8',
+                'max:128',
                 'regex:/^[!-~]+$/',
                 'string',
                 'confirmed'
@@ -101,7 +105,7 @@ class UserRequest extends FormRequest
             'phone_number' => '電話番号',
             'postal_code' => '郵便番号',
             'prefecture' => '都道府県',
-            'cities' => '市区町村',
+            'address' => '市区町村',
             'block' => '番地',
             'password' => 'パスワード',
             'image_file' => '画像ファイル'

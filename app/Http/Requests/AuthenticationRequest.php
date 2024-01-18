@@ -17,6 +17,7 @@ class AuthenticationRequest extends FormRequest
             'email' => [
                 'email:filter',
                 'unique:users,email',
+                'max:128',
                 'string'
             ]
         ];
