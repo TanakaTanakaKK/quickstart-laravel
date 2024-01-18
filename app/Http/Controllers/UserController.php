@@ -114,16 +114,13 @@ class UserController extends Controller
     public function show(Request $request)
     {
         if(is_null($request->session()->get('is_succesful_updated'))){
-            if(!is_null($request->session()->get('is_user_updated'))){
-                $request->session()->forget('is_user_updated');
-            }
             return view('user.show', ['user_info' => LoginSession::where('token', $request->login_session_token)->first()->users]);
         }
-        
+
+        $request->session()->forget('is_succesful_updated');
         $request->session()->put('user_info', LoginSession::where('token', $request->login_session_token)->first()->users);
 
-        if($request->session()->get('updated_info_array') && !is_null($request->session()->get('reset_email'))){
-            $request->session()->forget('is_succesful_updated');
+        if(!is_null($request->session()->get('updated_info_array')) && !is_null($request->session()->get('reset_email'))){
             dump('1');
             return view('user.show', [
                 'reset_email' => $request->session()->get('reset_email'),
@@ -132,7 +129,6 @@ class UserController extends Controller
             ]);
 
         }else if(!is_null($request->session()->get('reset_email'))){
-            $request->session()->forget('is_succesful_updated');
             dump('2');
             return view('user.show', [
                 'reset_email' => $request->session()->get('reset_email'),
@@ -140,7 +136,6 @@ class UserController extends Controller
             ]);
 
         }else{
-            $request->session()->forget('is_succesful_updated');
             dump('3');
             return view('user.show', [
                 'updated_info_array' => $request->session()->get('updated_info_array'),
@@ -196,23 +191,26 @@ class UserController extends Controller
             ]);
 
             if(count($updated_info_array) >= 1){
-                return to_route('users.show', $request->session()->get('login_session_token'))->with([
-                    'is_succesful_updated' => true,
-                    'updated_info_array' => $updated_info_array,
-                    'reset_email' => $request->email
-                ]);
+                return to_route('users.show', $request->session()->get('login_session_token'))
+                    ->with([
+                        'is_succesful_updated' => true,
+                        'updated_info_array' => $updated_info_array,
+                        'reset_email' => $request->email
+                    ]);
             }else{
-                return to_route('users.show', $request->session()->get('login_session_token'))->with([
-                    'is_succesful_updated' => true,
-                    'reset_email' => $request->email
-                ]);
+                return to_route('users.show', $request->session()->get('login_session_token'))
+                    ->with([
+                        'is_succesful_updated' => true,
+                        'reset_email' => $request->email
+                    ]);
             }
         }
 
-        return to_route('users.show', $request->session()->get('login_session_token'))->with([
-            'is_succesful_updated' => true,
-            'updated_info_array' => $updated_info_array
-        ]);
+        return to_route('users.show', $request->session()->get('login_session_token'))
+            ->with([
+                'is_succesful_updated' => true,
+                'updated_info_array' => $updated_info_array
+            ]);
     }
 
     public function complete(Request $request)
