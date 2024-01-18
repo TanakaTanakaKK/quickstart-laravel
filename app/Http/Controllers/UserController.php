@@ -52,7 +52,7 @@ class UserController extends Controller
                 'phone_number' => str_replace('-', '', $request->phone_number),
                 'postal_code' => str_replace('-', '', $request->postal_code),
                 'prefecture' => $request->prefecture,
-                'cities' => $request->cities,
+                'address' => $request->address,
                 'block' => $request->block,
                 'building' => $request->building
             ]);

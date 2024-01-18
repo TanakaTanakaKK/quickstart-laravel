@@ -92,7 +92,7 @@
                                     <div>市区町村</div>
                                 </td>
                                 <td  class="py-1 align-middle">
-                                    <div>{{ $authenticated_user->cities }}</div>
+                                    <div>{{ $authenticated_user->address }}</div>
                                 </td>
                             </tr>
                             <tr>

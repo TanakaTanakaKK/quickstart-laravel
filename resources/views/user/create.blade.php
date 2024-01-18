@@ -83,10 +83,10 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cities" class="control-label">市区町村
+                                    <label for="address" class="control-label">市区町村
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="cities" class="form-control border" id="cities">
+                                    <input type="text" name="address" class="form-control border" id="address">
                                 </div>
                                 <div class="form-group">
                                     <label for="block" class="control-label">番地

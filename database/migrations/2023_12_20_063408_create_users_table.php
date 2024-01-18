@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('img_path')->nullable();
             $table->string('postal_code');
             $table->integer('prefecture');
-            $table->string('cities');
+            $table->string('address');
             $table->string('block');
             $table->string('building')->nullable();
             $table->timestamps();

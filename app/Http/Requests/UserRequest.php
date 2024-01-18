@@ -62,7 +62,7 @@ class UserRequest extends FormRequest
                 'integer',
                 new EnumValue(Prefecture::class,false)
             ],
-            'cities' => [
+            'address' => [
                 'required',
                 'string'
             ],
@@ -94,7 +94,7 @@ class UserRequest extends FormRequest
             'phone_number' => '電話番号',
             'postal_code' => '郵便番号',
             'prefecture' => '都道府県',
-            'cities' => '市区町村',
+            'address' => '市区町村',
             'block' => '番地',
             'password' => 'パスワード',
         ];
