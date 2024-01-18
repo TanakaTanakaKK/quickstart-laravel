@@ -145,17 +145,18 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-        $login_session=LoginSession::where('token', $request->login_session_token)->first();
-
-        if(is_null($login_session)){
-            return to_route('tasks.index');
+        if(is_null(LoginSession::where('token', $request->session()->get('login_session_token'))->first())){
+            return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
-        return view('user.edit', ['user_info' => $login_session->users]);
+        return view('user.edit', ['user_info' => LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users]);
         
     }
 
     public function update(UserUpdateRequest $request)
     {    
+        if(is_null(LoginSession::where('token', $request->session()->get('login_session_token'))->first())){
+            return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
+        }
         $updated_info_array = [];
         $user = LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users;
 

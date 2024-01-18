@@ -34,6 +34,12 @@ class UserUpdateRequest extends FormRequest
                 'string',
                 new IsSameRecord($this)
             ],
+            'email' => [
+                'email:filter',
+                'unique:users,email',
+                'max:255',
+                'string',
+            ],
             'nickname' => [
                 'nullable',
                 'max:30',
@@ -63,25 +69,21 @@ class UserUpdateRequest extends FormRequest
                 'nullable',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
                 'string',
-                new IsSameRecord($this)
             ],
             'prefecture' => [
                 'nullable',
                 'integer',
                 new EnumValue(Prefecture::class,false),
-                new IsSameRecord($this)
             ],
             'address' => [
                 'nullable',
                 'max:128',
                 'string',
-                new IsSameRecord($this)
             ],
             'block' => [
                 'nullable',
                 'max:128',
                 'string',
-                new IsSameRecord($this)
             ],
             'building' => [
                 'nullable',
@@ -95,7 +97,6 @@ class UserUpdateRequest extends FormRequest
                 'image',
                 'mimes:jpg,gif,png,webp',
                 'max:2048',
-                new IsSameRecord($this)
             ]
         ];
     }

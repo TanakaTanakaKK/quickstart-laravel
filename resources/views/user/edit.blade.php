@@ -95,7 +95,7 @@
                                             <div>郵便番号</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="postal_code" class="form-control" placeholder="{{ $user_info->postal_code }}" oninput="searchPostal()" >
+                                            <input type="text" name="postal_code" class="form-control" placeholder="{{ $user_info->postal_code }}" id="postal_code" oninput="searchPostal()" >
                                         </td>
                                     </tr>
                                     <tr>

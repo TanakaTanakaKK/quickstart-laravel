@@ -159,6 +159,7 @@ return [
     'attributes' => [
         'name' => '氏名',
         'kana_name' => '氏名(カナ)',
+        'email' => 'メールアドレス',
         'nickname' => 'ニックネーム',
         'gender' => '性別',
         'birthday' => '誕生日',
