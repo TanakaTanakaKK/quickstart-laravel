@@ -118,26 +118,25 @@ class UserController extends Controller
         }
 
         $request->session()->forget('is_succesful_updated');
-        $request->session()->put('user_info', LoginSession::where('token', $request->login_session_token)->first()->users);
 
         if(!is_null($request->session()->get('updated_info_array')) && !is_null($request->session()->get('reset_email'))){
-            dump('1');
             return view('user.show', [
+                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
                 'reset_email' => $request->session()->get('reset_email'),
                 'updated_info_array' => $request->session()->get('updated_info_array'),
                 'is_user_updated' => true
             ]);
 
         }else if(!is_null($request->session()->get('reset_email'))){
-            dump('2');
             return view('user.show', [
+                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
                 'reset_email' => $request->session()->get('reset_email'),
                 'is_user_updated' => true
             ]);
 
         }else{
-            dump('3');
             return view('user.show', [
+                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
                 'updated_info_array' => $request->session()->get('updated_info_array'),
                 'is_user_updated' => true
             ]);
@@ -161,16 +160,59 @@ class UserController extends Controller
         $user = LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users;
 
         foreach($request->all() as $data_name => $data){
+
             if(!is_null($data) && !in_array($data_name,['email','_token','_method'])){
-                $user->$data_name = $data;
-                $updated_info_array[] = $data_name;
+
+                if($data_name != 'image_file'){
+                    $user->$data_name = $data;
+                    $updated_info_array[] = $data_name;
+                }else{
+
+                    $image = new Imagick();
+                    $image->readImage($request->file('image_file'));
+                    $archive_format = $image->getImageFormat();
+                    
+                    $is_deprecated_archive_image_path = true;
+                    while($is_deprecated_archive_image_path){
+                        $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
+                        $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+                    }
+            
+                    if(!is_null($image->getImageProperties("exif:*"))){
+                        $image->stripImage();
+                    }
+
+                    Storage::put('public/archive_images/'.$archive_image_path, $image);
+                    Storage::delete('public/archive_images/'.$user->archive_image_path);
+                    $user->archive_image_path = $archive_image_path;
+            
+                    $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+                    if($image->getImageFormat() != 'webp'){
+                        $image->setImageFormat('webp');
+                    } 
+            
+                    $is_deprecated_thumbnail_image_path = true;
+                    while($is_deprecated_thumbnail_image_path){
+                        $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+                        $is_deprecated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+                    }
+
+                    Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
+                    Storage::delete('public/thumbnail_images/'.$user->thumbnail_image_path);
+                    $user->thumbnail_image_path = $thumbnail_image_path;
+            
+                    $image->clear();
+
+                    $updated_info_array[] = 'image_file';
+                }
             }
         }
 
         if(count($updated_info_array) >= 1){
             $user->save();
         }else if(count($updated_info_array) == 0 && is_null($request->email)){
-            return to_route('users.show', $request->session()->get('login_session_token'));
+            return to_route('users.show', $request->session()->get('login_session_token'))
+                ->with(['user_info' => $user]);
         }
 
         if(!is_null($request->email)){

@@ -157,6 +157,17 @@ return [
     */
 
     'attributes' => [
-        'name' => 'タスク名'
+        'name' => '氏名',
+        'kana_name' => '氏名(カナ)',
+        'nickname' => 'ニックネーム',
+        'gender' => '性別',
+        'birthday' => '誕生日',
+        'phone_number' => '電話番号',
+        'postal_code' => '郵便番号',
+        'prefecture' => '都道府県',
+        'cities' => '市区町村',
+        'block' => '番地',
+        'password' => 'パスワード',
+        'image_file' => '画像ファイル'
     ],
 ];

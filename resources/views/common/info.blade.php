@@ -21,22 +21,20 @@
             <ul>
                 <li>{{ $reset_password_email.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
             </ul>
-        @elseif(isset($reset_email) && isset($updated_info_array) )
+        @endif
+        @if(isset($reset_email))
             <ul>
                 <li>{{ $reset_email }}宛にメールを送信しました。<br>メールアドレスを更新する為、15分以内にリンクにアクセスしてください。</li>
             </ul>
-            @foreach($updated_info_array as $updated_info)
-                <li>{{ $updated_info }}を更新しました。</li>
-            @endforeach
-        @elseif(isset($reset_email))
+        @endif
+        @if(isset($updated_info_array))
             <ul>
-                <li>{{ $reset_email }}宛にメールを送信しました。<br>メールアドレスを更新する為、15分以内にリンクにアクセスしてください。</li>
-            </ul>
-        @elseif(isset($updated_info_array))
             @foreach($updated_info_array as $updated_info)
-                <li>{{ $updated_info }}を更新しました。</li>
+                <li>{{ trans('validation.attributes.'.$updated_info) }}を更新しました。</li>
             @endforeach
-        @else
+            </ul>
+        @endif
+        @if(isset($successful))
             <ul>
                 <li>{{ $successful }}</li>
             </ul>
