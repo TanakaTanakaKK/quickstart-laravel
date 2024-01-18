@@ -8,6 +8,7 @@ use App\Enums\{
     Prefecture,
     Gender
 };
+use App\Rules\IsSameRecord;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -23,66 +24,78 @@ class UserUpdateRequest extends FormRequest
                 'nullable',
                 'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
                 'max:30',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'kana_name' => [
                 'nullable',
                 'regex:/^[ァ-ヶ]+$/u',
                 'max:30',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'nickname' => [
                 'nullable',
                 'max:30',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'gender' => [
                 'nullable',
                 'integer',
-                new EnumValue(Gender::class,false)
+                new EnumValue(Gender::class,false),
+                new IsSameRecord($this)
             ],
             'birthday' => [
                 'nullable',
                 'before:today',
-                'date'
+                'date',
+                new IsSameRecord($this)
             ],
             'phone_number' => [
                 'nullable',
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
                 'unique:users,phone_number',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'postal_code' => [
                 'nullable',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'prefecture' => [
                 'nullable',
                 'integer',
-                new EnumValue(Prefecture::class,false)
+                new EnumValue(Prefecture::class,false),
+                new IsSameRecord($this)
             ],
             'address' => [
                 'nullable',
                 'max:128',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'block' => [
                 'nullable',
                 'max:128',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'building' => [
                 'nullable',
                 'max:128',
-                'string'
+                'string',
+                new IsSameRecord($this)
             ],
             'image_file' => [
                 'nullable',
                 'file',
                 'image',
                 'mimes:jpg,gif,png,webp',
-                'max:2048'
+                'max:2048',
+                new IsSameRecord($this)
             ]
         ];
     }

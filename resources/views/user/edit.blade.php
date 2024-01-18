@@ -7,6 +7,13 @@
                 <div class="card-header py-2">
                     アカウント情報を編集
                 </div>
+                <div class="card-body px-0">
+                    <div class="mt-0 mx-0">
+                        <div class="panel-body">
+                            @include('common.info')
+                        </div>
+                    </div>
+                </div>
                 <form action="{{ route('users.update', session('login_session_token')) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
