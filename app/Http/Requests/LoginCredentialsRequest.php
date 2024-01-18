@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\HasUsersRecord;
 
-class LoginSessionRequest extends FormRequest
+class LoginCredentialsRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -24,8 +24,7 @@ class LoginSessionRequest extends FormRequest
             'password' => [
                 'required',
                 'regex:/^[!-~]+$/',
-                'string',
-                new HasUsersRecord($this)
+                'string'
             ],
         ];
     }

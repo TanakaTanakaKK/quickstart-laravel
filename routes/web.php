@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     TaskController,
     UserController,
     AuthenticationController,
-    LoginSessionController
+    LoginCredentialsController
 };
 
 Route::get('/', function () {
@@ -24,6 +24,6 @@ Route::get('/users/create/{authentication_token}', [UserController::class, 'crea
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
 
-Route::get('/login_sessions/create', [LoginSessionController::class, 'create'])->name('login_sessions.create');
-Route::post('login_sessions/store',[LoginSessionController::class,'store'])->name('login_sessions.store');
-Route::get('/login_sessions/destroy', [LoginSessionController::class, 'destroy'])->name('login_sessions.destroy');
+Route::get('/login_credentials/create', [LoginCredentialsController::class, 'create'])->name('login_credentials.create');
+Route::post('login_credentials/store',[LoginCredentialsController::class,'store'])->name('login_credentials.store');
+Route::get('/login_credentials/destroy', [LoginCredentialsController::class, 'destroy'])->name('login_credentials.destroy');

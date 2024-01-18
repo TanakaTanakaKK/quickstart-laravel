@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\{
     User,
     Authentication,
-    LoginSession
 };
 use Illuminate\Support\Facades\{
     Hash,
@@ -116,7 +115,6 @@ class UserController extends Controller
         })->first();
 
         $request->session()->forget('is_user_created');
-        $request->session()->put('user_record', $authenticated_user);
         
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',

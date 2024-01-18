@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginSessionRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 use App\Models\{
     User,
-    LoginSession
+    LoginCredentials
 };
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Http\Requests\LoginCredentialsRequest;
 
-class LoginSessionController extends Controller
+class LoginCredentialsController extends Controller
 {
     public function create(Request $request)
     {
-        return view('login_session.create');
+        return view('login_credentials.create');
     }
 
-    public function store(LoginSessionRequest $request)
+    public function store(LoginCredentialsRequest $request)
     {
+        $user = User::where('email', $request->email)->first();
+        if(!is_null($user) && !Hash::check($request->password,$user->password)){
+            return to_route('login_credentials.create')->withErrors(['login_error' => 'パスワードが一致しません']);
+        }
+
         if(!is_null($request->session('login_session_token'))){
             $request->session()->forget('login_session_token');
         }
 
         $is_deprecated_login_session_token = true;
-        while( $is_deprecated_login_session_token ){
+        while($is_deprecated_login_session_token){
             $login_session_token = Str::random(rand(30,50));
-            $is_deprecated_login_session_token = LoginSession::where('token', $login_session_token)->exists();
+            $is_deprecated_login_session_token = LoginCredentials::where('token', $login_session_token)->exists();
         }
 
-        LoginSession::create([
+        LoginCredentials::create([
             'logged_in_at' => now(),
             'user_id' => User::where('email', $request->email)->first()->id,
             'token' => $login_session_token
