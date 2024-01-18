@@ -15,7 +15,8 @@ final class Gender extends Enum
         return match ($value) {
             self::MALE => '男性',
             self::FEMALE => '女性',
-            self::OTHER => 'その他'
+            self::OTHER => 'その他',
+            default => '不明'
         };
     }
 }

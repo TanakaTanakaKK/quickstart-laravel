@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordRequest extends FormRequest
+class UserEmailRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,6 +18,7 @@ class ResetPasswordRequest extends FormRequest
                 'required',
                 'email:filter',
                 'exists:users,email',
+                'max:255',
                 'string'
             ]
         ];

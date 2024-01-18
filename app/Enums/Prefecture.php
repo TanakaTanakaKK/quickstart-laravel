@@ -103,7 +103,8 @@ final class Prefecture extends Enum
             self::OITA => '大分県',
             self::MIYAZAKI => '宮崎県',
             self::KAGOSHIMA => '鹿児島県',
-            self::OKINAWA => '沖縄県'
+            self::OKINAWA => '沖縄県',
+            default => '不明'
         };
     }
 }
