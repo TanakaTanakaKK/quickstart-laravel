@@ -24,7 +24,7 @@ class User extends Model
         'nickname',
         'postal_code',
         'prefecture',
-        'cities',
+        'address',
         'block',
         'building'
     ];

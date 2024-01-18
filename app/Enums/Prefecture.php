@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class Prefectures extends Enum
+final class Prefecture extends Enum
 {
     const HOKKAIDO = 1;
     const AOMORI = 2;
