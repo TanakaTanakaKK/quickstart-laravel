@@ -18,15 +18,16 @@ class LoginSessionMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(!is_null(session('login_session_token'))){
-            if(is_null(LoginSession::where('token', session('login_session_token'))->first())){
+            $login_session = LoginSession::where('token', session('login_session_token'))->first();
+
+            if(is_null($login_session)){
                 $request->session()->forget('login_session_token');
+
             }else{
-                LoginSession::where('token', session('login_session_token'))
-                    ->update(['updated_at' => Carbon::now()]);
-            }
-            $csrf_token = $request->session()->get('_token');
-            $request->session()->regenerate();
-            $request->session()->put('_token', $csrf_token);
+                $login_session->updated_at = now();
+                $request->session()->put('login_session_token', $login_session->token);
+                $login_session->save();
+            }        
         }    
         return $next($request);
     }    
