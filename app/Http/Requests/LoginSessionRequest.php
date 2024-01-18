@@ -19,11 +19,13 @@ class LoginSessionRequest extends FormRequest
                 'required',
                 'email:filter',
                 'exists:users,email',
+                'max:255',
                 'string'
             ],
             'password' => [
                 'required',
                 'regex:/^[!-~]+$/',
+                'max:255',
                 'string',
                 new HasUsersRecord($this)
             ],
