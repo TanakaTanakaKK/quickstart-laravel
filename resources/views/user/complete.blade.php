@@ -84,7 +84,7 @@
                                     <div>都道府県</div>
                                 </td>
                                 <td  class="py-1 align-middle">
-                                    <div>{{ \App\Enums\Prefectures::getDescription($authenticated_user->prefecture) }}</div>
+                                    <div>{{ \App\Enums\Prefecture::getDescription($authenticated_user->prefecture) }}</div>
                                 </td>
                             </tr>
                             <tr>

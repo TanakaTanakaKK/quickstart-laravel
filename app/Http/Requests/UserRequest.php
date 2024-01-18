@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
 use App\Enums\{
-    Prefectures,
+    Prefecture,
     Gender
 };
 
@@ -60,7 +60,7 @@ class UserRequest extends FormRequest
             'prefecture' => [
                 'required',
                 'integer',
-                new EnumValue(Prefectures::class,false)
+                new EnumValue(Prefecture::class,false)
             ],
             'cities' => [
                 'required',
