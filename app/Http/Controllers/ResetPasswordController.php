@@ -88,7 +88,7 @@ class ResetPasswordController extends Controller
         $reset_password->users->password = Hash::make($request->password);
         $reset_password->push();
 
-        return to_route('reset_password.complete',$request->reset_password_token)->with(['is_password_updated' => true]);
+        return to_route('reset_password.complete', $request->reset_password_token)->with(['is_password_updated' => true]);
     }
 
     public function complete(Request $request)
