@@ -5,25 +5,35 @@ use App\Http\Controllers\{
     TaskController,
     UserController,
     AuthenticationController,
-    LoginCredentialsController
+    LoginCredentialController
 };
 
-Route::get('/', function () {
-    return to_route('tasks.index');
+Route::middleware(['auth.user'])->group(function () {
+
+    Route::get('/', function () {
+        return to_route('tasks.index');
+    });
+    
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    
+    Route::prefix('/authentications')->group(function () {
+        Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
+        Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
+        Route::get('/complete/{authentication_token}', [AuthenticationController::class, 'complete'])->name('authentications.complete');
+    });
+
+    Route::prefix('/users')->group(function () {
+        Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
+        Route::post('/store', [UserController::class, 'store'])->name('users.store');
+        Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+    });
+
+    Route::prefix('/login_credential')->group(function () {
+        Route::get('/create', [LoginCredentialController::class, 'create'])->name('login_credential.create');
+        Route::post('/store', [LoginCredentialController::class, 'store'])->name('login_credential.store');
+        Route::get('/destroy', [LoginCredentialController::class, 'destroy'])->name('login_credential.destroy');
+    });
+
 });
-
-Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
-Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
-
-Route::get('/authentications/create', [AuthenticationController::class, 'create'])->name('authentications.create');
-Route::post('/authentications', [AuthenticationController::class, 'store'])->name('authentications.store');
-Route::get('/authentications/complete/{authentication_token}',[AuthenticationController::class, 'complete'])->name('authentications.complete');
-
-Route::get('/users/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
-Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-Route::get('/users/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
-
-Route::get('/login_credentials/create', [LoginCredentialsController::class, 'create'])->name('login_credentials.create');
-Route::post('login_credentials/store',[LoginCredentialsController::class,'store'])->name('login_credentials.store');
-Route::get('/login_credentials/destroy', [LoginCredentialsController::class, 'destroy'])->name('login_credentials.destroy');

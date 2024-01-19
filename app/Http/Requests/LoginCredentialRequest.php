@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\HasUsersRecord;
+use Illuminate\Support\Facades\Hash;
 
-class LoginCredentialsRequest extends FormRequest
+class LoginCredentialRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -26,7 +27,12 @@ class LoginCredentialsRequest extends FormRequest
                 'required',
                 'regex:/^[!-~]+$/',
                 'between:8,255',
-                'string'
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, User::where('email', $this->email)->first()->password)) {
+                        $fail(':attributeが一致していません。');
+                    }
+                }
             ],
         ];
     }

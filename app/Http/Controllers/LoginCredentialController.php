@@ -4,25 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     User,
-    LoginCredentials
+    LoginCredential
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Http\Requests\LoginCredentialsRequest;
+use App\Http\Requests\LoginCredentialRequest;
 
-class LoginCredentialsController extends Controller
+class LoginCredentialController extends Controller
 {
     public function create(Request $request)
     {
-        return view('login_credentials.create');
+        return view('login_credential.create');
     }
 
-    public function store(LoginCredentialsRequest $request)
+    public function store(LoginCredentialRequest $request)
     {
         $user = User::where('email', $request->email)->first();
         if(!is_null($user) && !Hash::check($request->password,$user->password)){
-            return to_route('login_credentials.create')->withErrors(['login_error' => 'パスワードが一致しません']);
+            return to_route('login_credential.create')->withErrors(['login_error' => 'パスワードが一致しません']);
         }
 
         if(!is_null($request->session('login_session_token'))){
@@ -32,10 +32,10 @@ class LoginCredentialsController extends Controller
         $is_duplicated_login_session_token = true;
         while($is_duplicated_login_session_token){
             $login_session_token = Str::random(rand(30,50));
-            $is_duplicated_login_session_token = LoginCredentials::where('token', $login_session_token)->exists();
+            $is_duplicated_login_session_token = LoginCredential::where('token', $login_session_token)->exists();
         }
 
-        LoginCredentials::create([
+        LoginCredential::create([
             'logged_in_at' => now(),
             'user_id' => $user->id,
             'token' => $login_session_token
