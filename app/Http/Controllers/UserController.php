@@ -14,10 +14,8 @@ use Illuminate\Support\Facades\{
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
-use Carbon\Carbon;
 use Exception;
 use Imagick;
-
 
 class UserController extends Controller
 {
@@ -25,7 +23,7 @@ class UserController extends Controller
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -38,7 +36,7 @@ class UserController extends Controller
     {   
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -112,7 +110,7 @@ class UserController extends Controller
 
         $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
             $query->where('token', $request->authentication_token)
-                ->where('expired_at', '>', Carbon::now());
+                ->where('expired_at', '>', now());
         })->first();
 
         $request->session()->forget('is_user_created');

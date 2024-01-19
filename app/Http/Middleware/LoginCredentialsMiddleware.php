@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\LoginCredentials;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
-use Carbon\Carbon;
 
 class LoginCredentialsMiddleware
 {

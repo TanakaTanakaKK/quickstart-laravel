@@ -18,7 +18,6 @@ use App\Http\Requests\{
     UserEmailRequest
 };
 use App\Mail\ResetPasswordMail;
-use Carbon\Carbon;
 
 class ResetPasswordController extends Controller
 {
@@ -44,14 +43,14 @@ class ResetPasswordController extends Controller
 
         if(!is_null($reset_password)){
             $reset_password->token = $reset_password_token;
-            $reset_password->expired_at = Carbon::now()->addMinute(15);
+            $reset_password->expired_at = now()->addMinute(15);
             $reset_password->save();
         }else{
             ResetPassword::create([
                 'email' => $request->email,
                 'token' => $reset_password_token,
                 'status' => UserEditStatus::MAIL_SENT,
-                'expired_at' => Carbon::now()->addMinute(15)
+                'expired_at' => now()->addMinute(15)
             ]);
         }
 
@@ -64,7 +63,7 @@ class ResetPasswordController extends Controller
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
             ->where('status', UserEditStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
         if(is_null($reset_password)){
             return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
@@ -77,7 +76,7 @@ class ResetPasswordController extends Controller
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
             ->where('status', UserEditStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
         
         if(is_null($reset_password)){
