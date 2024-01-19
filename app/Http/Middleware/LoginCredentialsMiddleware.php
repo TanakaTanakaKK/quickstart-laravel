@@ -17,7 +17,7 @@ class LoginCredentialsMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!is_null(session('login_session_token'))){
+        if(!is_null(session('login_session_token')) && LoginCredentials::where('token', session('login_session_token'))->exists()){
             $request->session()->put('login_session_token', $request->session()->get('login_session_token'));
         }
         return $next($request);

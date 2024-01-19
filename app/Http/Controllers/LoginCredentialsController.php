@@ -29,15 +29,15 @@ class LoginCredentialsController extends Controller
             $request->session()->forget('login_session_token');
         }
 
-        $is_deprecated_login_session_token = true;
-        while($is_deprecated_login_session_token){
+        $is_duplicated_login_session_token = true;
+        while($is_duplicated_login_session_token){
             $login_session_token = Str::random(rand(30,50));
-            $is_deprecated_login_session_token = LoginCredentials::where('token', $login_session_token)->exists();
+            $is_duplicated_login_session_token = LoginCredentials::where('token', $login_session_token)->exists();
         }
 
         LoginCredentials::create([
             'logged_in_at' => now(),
-            'user_id' => User::where('email', $request->email)->first()->id,
+            'user_id' => $user->id,
             'token' => $login_session_token
         ]);
 

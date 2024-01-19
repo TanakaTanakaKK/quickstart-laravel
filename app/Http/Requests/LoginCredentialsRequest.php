@@ -19,11 +19,13 @@ class LoginCredentialsRequest extends FormRequest
                 'required',
                 'email:filter',
                 'exists:users,email',
+                'max:255',
                 'string'
             ],
             'password' => [
                 'required',
                 'regex:/^[!-~]+$/',
+                'between:8,255',
                 'string'
             ],
         ];
