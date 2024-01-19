@@ -9,7 +9,6 @@ use App\Enums\AuthenticationStatus;
 use App\Models\Authentication;
 use App\Mail\SendTokenMail;
 use App\Http\Requests\AuthenticationRequest;
-use Carbon\Carbon;
 
 class AuthenticationController extends Controller
 {
@@ -25,7 +24,7 @@ class AuthenticationController extends Controller
             ->where('status', AuthenticationStatus::MAIL_SENT)
             ->first();
 
-        $expired_at = Carbon::now()->addMinutes(15);
+        $expired_at = now()->addMinutes(15);
 
         if(!is_null($authentication)){
             $authentication->token = $user_token;

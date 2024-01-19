@@ -14,7 +14,6 @@ use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Exception;
-use Carbon\Carbon;
 use Imagick;
 use Illuminate\Support\Str;
 
@@ -24,7 +23,7 @@ class UserController extends Controller
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -37,7 +36,7 @@ class UserController extends Controller
     {   
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
