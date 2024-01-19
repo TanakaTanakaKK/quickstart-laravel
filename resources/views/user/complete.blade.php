@@ -22,7 +22,7 @@
                                         <div>画像</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <img src="{{ asset('/storage/thumbnail_images/'.$user->thumbnail_image_path) }}" class="w-25 h-25">
+                                        <img src="{{ asset('/storage/thumbnail_images/'.$authenticated_user->thumbnail_image_path) }}" class="w-25 h-25">
                                     </td>
                                 </tr>
                                 <tr>
@@ -30,7 +30,7 @@
                                         <div>氏名</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user->name }}</div>
+                                        <div>{{ $authenticated_user->name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -38,7 +38,7 @@
                                         <div>氏名(カナ)</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user->kana_name }}</div>
+                                        <div>{{ $authenticated_user->kana_name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
