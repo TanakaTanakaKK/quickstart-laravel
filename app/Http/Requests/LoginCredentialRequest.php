@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\HasUsersRecord;
 
-class ResetPasswordRequest extends FormRequest
+class LoginCredentialRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,8 +19,15 @@ class ResetPasswordRequest extends FormRequest
                 'required',
                 'email:filter',
                 'exists:users,email',
+                'max:255',
                 'string'
-            ]
+            ],
+            'password' => [
+                'required',
+                'regex:/^[!-~]+$/',
+                'max:255',
+                'string'
+            ],
         ];
     }
 
@@ -27,6 +35,7 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'email' => 'メールアドレス',
+            'password' => 'パスワード',
         ];
     }
 }

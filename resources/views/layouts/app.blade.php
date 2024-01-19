@@ -13,18 +13,18 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
                 Task List
                 </a>
-                @if(is_null(session('login_session_token')))
+                @if(is_null(session('login_credential_token')))
                 <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login_sessions.create') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.create') }}">
                 ログイン
                 </a>
                 @else
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show',session('login_session_token')) }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show',session('login_credential_token')) }}">
                 アカウント
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login_sessions.destroy') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
                 ログアウト
                 </a>
                 @endif

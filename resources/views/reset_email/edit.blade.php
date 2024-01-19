@@ -16,16 +16,16 @@
                                 @include('common.info')
                                 <label for="password" class="col-form-label font-weight-bold">メールアドレス</label>
                                 <div class="form-group col-md-12 px-0">
-                                    <p></p>
+                                    <input type="text" class="form-control">
                                 </div>
                                 <label for="password_confirmation" class="col-form-label font-weight-bold">新しいメールアドレス</label>
                                 <div class="form-group col-md-12 px-0">
-                                    <p></p>
+                                    <p class="form-control, border, overflow-auto"></p>
                                 </div>
                                 <div class="form-group">
                                     <div class="rounded text-right">
                                         <button class="btn border">
-                                            <i class="fa-thin fa-address-book"></i>更新
+                                            <i class="fa-solid fa-user-plus"></i> 更新
                                         </button>
                                     </div>
                                 </div>

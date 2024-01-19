@@ -38,7 +38,7 @@ class User extends Model
         return $this->hasMany(ResetPassword::class, 'email', 'email');    
     }
 
-    public function login_sessions(): HasMany{
-        return $this->hasMany(LoginSession::class, 'user_id', 'id');
+    public function login_credentials(): HasMany{
+        return $this->hasMany(LoginCredential::class, 'user_id', 'id');
     }
 }

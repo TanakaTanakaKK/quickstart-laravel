@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <div class="rounded text-right">
                                         <button class="btn border">
-                                            <i class="fa-thin fa-address-book"></i>設定
+                                            <i class="fa-solid fa-upload"></i>設定
                                         </button>
                                     </div>
                                 </div>

@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserEditStatus;
+use App\Models\{
+    ResetPassword,
+    User
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\{
@@ -9,16 +14,10 @@ use Illuminate\Support\Facades\{
     Mail
 };
 use App\Http\Requests\{
-    ResetPasswordRequest,
-    ResetNewPasswordRequest
-};
-use App\Models\{
-    ResetPassword,
-    User
+    ResetNewPasswordRequest,
+    UserEmailRequest
 };
 use App\Mail\ResetPasswordMail;
-use App\Enums\ResetPasswordStatus;
-use Carbon\Carbon;
 
 class ResetPasswordController extends Controller
 {
@@ -27,31 +26,31 @@ class ResetPasswordController extends Controller
         return view('reset_password.create');
     }
 
-    public function store(ResetPasswordRequest $request)
+    public function store(UserEmailRequest $request)
     {
         if(is_null(User::Where('email', $request->email)->first())){
             return to_route('tasks.index');
         }
-        $is_deprecated_reset_password_token = true;
-        while($is_deprecated_reset_password_token){
+        $is_token_inappropriate = true;
+        while($is_token_inappropriate){
             $reset_password_token = Str::random(rand(30, 50));
-            $is_deprecated_reset_password_token = ResetPassword::where('token', $reset_password_token)->exists();
+            $is_token_inappropriate = ResetPassword::where('token', $reset_password_token)->exists();
         }
 
         $reset_password = ResetPassword::where('email', $request->email)
-            ->where('status', ResetPasswordStatus::MAIL_SENT)
+            ->where('status', UserEditStatus::MAIL_SENT)
             ->first();
 
         if(!is_null($reset_password)){
             $reset_password->token = $reset_password_token;
-            $reset_password->expired_at = Carbon::now()->addMinute(15);
+            $reset_password->expired_at = now()->addMinute(15);
             $reset_password->save();
         }else{
             ResetPassword::create([
                 'email' => $request->email,
                 'token' => $reset_password_token,
-                'status' => ResetPasswordStatus::MAIL_SENT,
-                'expired_at' => Carbon::now()->addMinute(15)
+                'status' => UserEditStatus::MAIL_SENT,
+                'expired_at' => now()->addMinute(15)
             ]);
         }
 
@@ -63,8 +62,8 @@ class ResetPasswordController extends Controller
     public function edit(Request $request)
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
-            ->where('status', ResetPasswordStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('status', UserEditStatus::MAIL_SENT)
+            ->where('expired_at', '>', now())
             ->first();
         if(is_null($reset_password)){
             return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
@@ -76,15 +75,15 @@ class ResetPasswordController extends Controller
     public function update(ResetNewPasswordRequest $request)
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)
-            ->where('status', ResetPasswordStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('status', UserEditStatus::MAIL_SENT)
+            ->where('expired_at', '>', now())
             ->first();
         
         if(is_null($reset_password)){
             return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
-        $reset_password->status = ResetPasswordStatus::COMPLETED;
+        $reset_password->status = UserEditStatus::COMPLETED;
         $reset_password->users->password = Hash::make($request->password);
         $reset_password->push();
 
@@ -95,18 +94,24 @@ class ResetPasswordController extends Controller
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)->first();
 
-        if(is_null($reset_password)){
-            return to_route('tasks.index');
-        }else if($request->session()->get('is_reset_mail_send') == true && $reset_password->status == ResetPasswordStatus::MAIL_SENT){
-            $request->session()->forget('is_reset_mail_send');
-
-            return view('reset_password.complete')->with(['reset_password_email' => $reset_password->email]);
-        }else if($request->session()->get('is_password_updated') == true && $reset_password->status == ResetPasswordStatus::COMPLETED){    
-            $request->session()->forget('is_password_updated');
-
-            return view('reset_password.complete')->with(['successful' => 'ログインパスワードの変更が完了しました。']);
-        }else{
+        if(is_null($reset_password) && (is_null($request->session()->get('is_reset_mail_send')) === false || is_null($request->session()->get('is_password_updated')))){
             return to_route('tasks.index');
         }
+
+        $complete_message = match($reset_password->status){
+            UserEditStatus::MAIL_SENT => ['reset_password_email' => $reset_password->email],
+            UserEditStatus::COMPLETED => ['successful' => 'ログインパスワードの変更が完了しました。'],
+            default => null
+        };
+        
+        $request->session()->forget('is_reset_mail_send'); 
+        $request->session()->forget('is_password_updated');
+
+        if(!is_null($complete_message)){
+            return view('reset_password.complete')->with($complete_message);
+        }
+    
+        return to_route('tasks.index');
+        
     }
 }

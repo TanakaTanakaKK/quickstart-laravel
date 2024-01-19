@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use BenSampo\Enum\Rules\EnumValue;
 use App\Enums\{
     Prefecture,
     Gender
 };
+use Illuminate\Foundation\Http\FormRequest;
+use BenSampo\Enum\Rules\EnumValue;
 
 class UserRequest extends FormRequest
 {

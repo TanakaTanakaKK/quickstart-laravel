@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use App\Models\LoginSession;
+use App\Models\LoginCredential;
 
 class IsSameRecord implements ValidationRule
 {
@@ -15,7 +15,7 @@ class IsSameRecord implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(LoginSession::where('token', session('login_session_token'))->first()->users->$attribute == $value){
+        if(LoginCredential::where('token', session('login_credential_token'))->first()->users->$attribute == $value){
             $fail('既に登録されている:attributeと同じです。');
         }
     }

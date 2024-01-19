@@ -130,7 +130,7 @@
                 <div class="card-body px-0 py-0">
                     <div class="text-right">
                         <button class="btn border">
-                            <a href="{{ route('users.edit', session('login_session_token')) }}" class="text-dark">編集</a>
+                            <a href="{{ route('users.edit', session('login_credential_token')) }}" class="text-dark">編集</a>
                         </button>
                     </div>
                 </div>    

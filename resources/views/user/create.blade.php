@@ -26,8 +26,8 @@
                                             </label>
                                         </span>
                                     </div>
-                                        <p id='image_info'>
-                                        </p>
+                                    <p id='image_info'>
+                                    </p>
                                 </div>
                                 <div class="form-group">
                                     <label for="name" class="control-label">氏名

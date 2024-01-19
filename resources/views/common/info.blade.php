@@ -24,7 +24,7 @@
         @endif
         @if(isset($reset_email))
             <ul>
-                <li>{{ $reset_email }}宛にメールを送信しました。<br>メールアドレスを更新する為、15分以内にリンクにアクセスしてください。</li>
+                <li>{{ $reset_email }}宛にメールを送信しました。<br>メールアドレスを更新するには、15分以内にリンクにアクセスしてください。</li>
             </ul>
         @endif
         @if(isset($updated_info_array))

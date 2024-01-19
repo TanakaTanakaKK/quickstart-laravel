@@ -18,6 +18,7 @@ class ResetNewPasswordRequest extends FormRequest
                 'required',
                 'string',
                 'min:8',
+                'max:255',
                 'regex:/^[!-~]+$/',
                 'confirmed'
             ]

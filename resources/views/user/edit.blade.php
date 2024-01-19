@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{{ route('users.update', session('login_session_token')) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('users.update', session('login_credential_token')) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="card-body px-0 py-0">

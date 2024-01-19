@@ -2,29 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\{
+    AuthenticationStatus,
+    ResetEmailStatus
+};
 use App\Models\{
-    User,
     Authentication,
-    LoginSession,
-    ResetEmail
+    LoginCredential,
+    ResetEmail,
+    User
 };
 use Illuminate\Support\Facades\{
     Hash,
     Storage,
     Mail
 };
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Requests\{
     UserRequest,
     UserUpdateRequest
 };
-use App\Enums\ResetEmailStatus;
-use App\Enums\AuthenticationStatus;
 use App\Mail\ResetEmailAddressMail;
-use Illuminate\Http\Request;
 use Exception;
-use Carbon\Carbon;
 use Imagick;
-use Illuminate\Support\Str;
+
+
 
 class UserController extends Controller
 {
@@ -32,7 +35,7 @@ class UserController extends Controller
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -45,7 +48,7 @@ class UserController extends Controller
     {   
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -56,10 +59,10 @@ class UserController extends Controller
         $image->readImage($request->file('image_file'));
         $archive_format = $image->getImageFormat();
         
-        $is_deprecated_archive_image_path = true;
-        while($is_deprecated_archive_image_path){
+        $is_exists_archive_image_path = true;
+        while($is_exists_archive_image_path){
             $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
-            $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+            $is_exists_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
         if(!is_null($image->getImageProperties("exif:*"))){
@@ -73,10 +76,10 @@ class UserController extends Controller
             $image->setImageFormat('webp');
         } 
 
-        $is_deprecated_thumbnail_image_path = true;
-        while($is_deprecated_thumbnail_image_path){
+        $is_exists_thumbnail_image_path = true;
+        while($is_exists_thumbnail_image_path){
             $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-            $is_deprecated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            $is_exists_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
         Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
@@ -114,14 +117,14 @@ class UserController extends Controller
     public function show(Request $request)
     {
         if(is_null($request->session()->get('is_succesful_updated'))){
-            return view('user.show', ['user_info' => LoginSession::where('token', $request->login_session_token)->first()->users]);
+            return view('user.show', ['user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users]);
         }
 
         $request->session()->forget('is_succesful_updated');
 
         if(!is_null($request->session()->get('updated_info_array')) && !is_null($request->session()->get('reset_email'))){
             return view('user.show', [
-                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
+                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
                 'reset_email' => $request->session()->get('reset_email'),
                 'updated_info_array' => $request->session()->get('updated_info_array'),
                 'is_user_updated' => true
@@ -129,14 +132,14 @@ class UserController extends Controller
 
         }else if(!is_null($request->session()->get('reset_email'))){
             return view('user.show', [
-                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
+                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
                 'reset_email' => $request->session()->get('reset_email'),
                 'is_user_updated' => true
             ]);
 
         }else{
             return view('user.show', [
-                'user_info' => LoginSession::where('token', $request->login_session_token)->first()->users,
+                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
                 'updated_info_array' => $request->session()->get('updated_info_array'),
                 'is_user_updated' => true
             ]);
@@ -145,20 +148,20 @@ class UserController extends Controller
 
     public function edit(Request $request)
     {
-        if(is_null(LoginSession::where('token', $request->session()->get('login_session_token'))->first())){
+        if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
             return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
-        return view('user.edit', ['user_info' => LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users]);
+        return view('user.edit', ['user_info' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->users]);
         
     }
 
     public function update(UserUpdateRequest $request)
     {    
-        if(is_null(LoginSession::where('token', $request->session()->get('login_session_token'))->first())){
+        if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
             return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
         $updated_info_array = [];
-        $user = LoginSession::where('token', $request->session()->get('login_session_token'))->first()->users;
+        $user = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->users;
 
         foreach($request->all() as $data_name => $data){
 
@@ -212,7 +215,7 @@ class UserController extends Controller
         if(count($updated_info_array) >= 1){
             $user->save();
         }else if(count($updated_info_array) == 0 && is_null($request->email)){
-            return to_route('users.show', $request->session()->get('login_session_token'))
+            return to_route('users.show', $request->session()->get('login_credential_token'))
                 ->with(['user_info' => $user]);
         }
 
@@ -230,18 +233,18 @@ class UserController extends Controller
                 'token' => $reset_email_token,
                 'user_id' => $user->id,
                 'status' => ResetEmailStatus::MAIL_SENT,
-                'expired_at' => Carbon::now()->addMinute(15)
+                'expired_at' => now()->addMinute(15)
             ]);
 
             if(count($updated_info_array) >= 1){
-                return to_route('users.show', $request->session()->get('login_session_token'))
+                return to_route('users.show', $request->session()->get('login_credential_token'))
                     ->with([
                         'is_succesful_updated' => true,
                         'updated_info_array' => $updated_info_array,
                         'reset_email' => $request->email
                     ]);
             }else{
-                return to_route('users.show', $request->session()->get('login_session_token'))
+                return to_route('users.show', $request->session()->get('login_credential_token'))
                     ->with([
                         'is_succesful_updated' => true,
                         'reset_email' => $request->email
@@ -249,7 +252,7 @@ class UserController extends Controller
             }
         }
 
-        return to_route('users.show', $request->session()->get('login_session_token'))
+        return to_route('users.show', $request->session()->get('login_credential_token'))
             ->with([
                 'is_succesful_updated' => true,
                 'updated_info_array' => $updated_info_array
@@ -264,11 +267,10 @@ class UserController extends Controller
 
         $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
             $query->where('token', $request->authentication_token)
-                ->where('expired_at', '>', Carbon::now());
+                ->where('expired_at', '>', now());
         })->first();
 
         $request->session()->forget('is_user_created');
-        $request->session()->put('user_record', $authenticated_user);
         
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
