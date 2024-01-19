@@ -35,6 +35,7 @@ class UserUpdateRequest extends FormRequest
                 new IsSameRecord($this)
             ],
             'email' => [
+                'nullable',
                 'email:filter',
                 'unique:users,email',
                 'max:255',

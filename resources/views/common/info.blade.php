@@ -9,7 +9,7 @@
         </ul>
     </div>
 @endif
-@if(isset($successful) || isset($user_email) || isset($reset_password_email) || isset($is_user_updated))
+@if(isset($is_succeeded))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
@@ -17,16 +17,30 @@
             <ul>
                 <li>{{ $user_email.'宛にメールを送信しました。15分以内に登録手続きをしてください。' }}</li>
             </ul>
-        @elseif(isset($reset_password_email))
+        @elseif(isset($email_for_reset_password))
             <ul>
-                <li>{{ $reset_password_email.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
+                <li>{{ $email_for_reset_password.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
             </ul>
         @endif
-        @if(isset($reset_email))
+
+        @if(isset($completed_reset_password))
+        <ul>
+            <li>{{ $completed_reset_password }}</li>
+        </ul>
+        @endif
+        
+        @if(isset($email_for_reset_email))
             <ul>
-                <li>{{ $reset_email }}宛にメールを送信しました。<br>メールアドレスを更新するには、15分以内にリンクにアクセスしてください。</li>
+                <li>{{ $email_for_reset_email }}宛にメールを送信しました。<br>メールアドレスを更新するには、15分以内にリンクにアクセスしてください。</li>
             </ul>
         @endif
+
+        @if(isset($is_completed_reset_email))
+            <ul>
+                <li>メールアドレスを{{ $user_info->email }}に更新しました。</li>
+            </ul>
+        @endif
+
         @if(isset($updated_info_array))
             <ul>
             @foreach($updated_info_array as $updated_info)
@@ -34,9 +48,10 @@
             @endforeach
             </ul>
         @endif
-        @if(isset($successful))
+        
+        @if(isset($user_add_messsage))
             <ul>
-                <li>{{ $successful }}</li>
+                <li>{{ $user_add_messsage }}</li>
             </ul>
         @endif
     </div>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->integer('status');
             $table->string('email');
+            $table->timestamp('expired_at');
             $table->timestamps();
         });
     }

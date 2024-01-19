@@ -52,6 +52,9 @@ class AuthenticationController extends Controller
         }
 
         $request->session()->forget('is_authentication_created');
-        return view('authentication.complete')->with(['user_email' => $authentication->email]);
+        return view('authentication.complete', [
+            'is_succeeded' => true,
+            'user_email' => $authentication->email
+        ]);
     }
 }

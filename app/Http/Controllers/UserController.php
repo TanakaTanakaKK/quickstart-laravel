@@ -116,34 +116,25 @@ class UserController extends Controller
 
     public function show(Request $request)
     {
-        if(is_null($request->session()->get('is_succesful_updated'))){
+        if(is_null($request->session()->get('is_succeeded_updated'))){
             return view('user.show', ['user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users]);
         }
 
-        $request->session()->forget('is_succesful_updated');
-
-        if(!is_null($request->session()->get('updated_info_array')) && !is_null($request->session()->get('reset_email'))){
-            return view('user.show', [
-                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
-                'reset_email' => $request->session()->get('reset_email'),
-                'updated_info_array' => $request->session()->get('updated_info_array'),
-                'is_user_updated' => true
-            ]);
-
-        }else if(!is_null($request->session()->get('reset_email'))){
-            return view('user.show', [
-                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
-                'reset_email' => $request->session()->get('reset_email'),
-                'is_user_updated' => true
-            ]);
-
-        }else{
-            return view('user.show', [
-                'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
-                'updated_info_array' => $request->session()->get('updated_info_array'),
-                'is_user_updated' => true
-            ]);
+        $request->session()->forget('is_succeeded_updated');
+        
+        $complete_messages = [
+            'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
+            'is_succeeded' => true
+        ];
+        
+        if(!is_null($request->session()->get('email_for_reset_email'))){
+            $complete_messages += array('email_for_reset_email' => $request->session()->get('email_for_reset_email'));
         }
+        if(!is_null($request->session()->get('updated_info_array'))){
+            $complete_messages += array('updated_info_array' => $request->session()->get('updated_info_array'));
+        }
+
+        return view('user.show')->with($complete_messages);
     }
 
     public function edit(Request $request)
@@ -171,7 +162,6 @@ class UserController extends Controller
                     $user->$data_name = $data;
                     $updated_info_array[] = $data_name;
                 }else{
-
                     $image = new Imagick();
                     $image->readImage($request->file('image_file'));
                     $archive_format = $image->getImageFormat();
@@ -215,8 +205,7 @@ class UserController extends Controller
         if(count($updated_info_array) >= 1){
             $user->save();
         }else if(count($updated_info_array) == 0 && is_null($request->email)){
-            return to_route('users.show', $request->session()->get('login_credential_token'))
-                ->with(['user_info' => $user]);
+            return to_route('users.show', $request->session()->get('login_credential_token'));
         }
 
         if(!is_null($request->email)){
@@ -228,33 +217,42 @@ class UserController extends Controller
 
             Mail::to($request->email)->send(new ResetEmailAddressMail($reset_email_token));
 
-            ResetEmail::create([
-                'email' => $request->email,
-                'token' => $reset_email_token,
-                'user_id' => $user->id,
-                'status' => ResetEmailStatus::MAIL_SENT,
-                'expired_at' => now()->addMinute(15)
-            ]);
-
-            if(count($updated_info_array) >= 1){
-                return to_route('users.show', $request->session()->get('login_credential_token'))
-                    ->with([
-                        'is_succesful_updated' => true,
-                        'updated_info_array' => $updated_info_array,
-                        'reset_email' => $request->email
-                    ]);
+            $reset_email = ResetEmail::where('user_id', $user->email)
+                ->where('expired_at', '>', now())
+                ->where('status', ResetEmailStatus::MAIL_SENT)
+                ->first();
+            
+            if(!is_null($reset_email)){
+                $reset_email->token = $reset_email_token;
+                $reset_email->expired_at = now()->addMinute(15);
+                $reset_email->save();
             }else{
-                return to_route('users.show', $request->session()->get('login_credential_token'))
-                    ->with([
-                        'is_succesful_updated' => true,
-                        'reset_email' => $request->email
-                    ]);
+                ResetEmail::create([
+                    'email' => $request->email,
+                    'token' => $reset_email_token,
+                    'user_id' => $user->id,
+                    'status' => ResetEmailStatus::MAIL_SENT,
+                    'expired_at' => now()->addMinute(15)
+                ]);
             }
+
+            $complete_messages = [
+                'is_succeeded_updated' => true,
+                'email_for_reset_email' => $request->email
+            ];
+            
+            if(count($updated_info_array) >= 1){
+                $complete_messages += array('updated_info_array' => $updated_info_array);
+            }
+
+                return to_route('users.show', $request->session()->get('login_credential_token'))
+                    ->with($complete_messages);
+            
         }
 
         return to_route('users.show', $request->session()->get('login_credential_token'))
             ->with([
-                'is_succesful_updated' => true,
+                'is_succeeded_updated' => true,
                 'updated_info_array' => $updated_info_array
             ]);
     }
@@ -273,7 +271,8 @@ class UserController extends Controller
         $request->session()->forget('is_user_created');
         
         return view('user.complete', [
-            'successful' => '会員登録が完了しました。',
+            'is_succeeded' => true,
+            'user_add_messsage' => '会員登録が完了しました。',
             'authenticated_user' => $authenticated_user
         ]);
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reset_passwords', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
+            $table->foreign('email')->references('email')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('token');
             $table->integer('status');
             $table->timestamp('expired_at');

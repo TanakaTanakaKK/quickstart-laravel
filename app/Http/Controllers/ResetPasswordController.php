@@ -99,8 +99,8 @@ class ResetPasswordController extends Controller
         }
 
         $complete_message = match($reset_password->status){
-            UserEditStatus::MAIL_SENT => ['reset_password_email' => $reset_password->email],
-            UserEditStatus::COMPLETED => ['successful' => 'ログインパスワードの変更が完了しました。'],
+            UserEditStatus::MAIL_SENT => ['email_for_reset_password' => $reset_password->email],
+            UserEditStatus::COMPLETED => ['completed_reset_password' => 'ログインパスワードの変更が完了しました。'],
             default => null
         };
         
@@ -108,7 +108,7 @@ class ResetPasswordController extends Controller
         $request->session()->forget('is_password_updated');
 
         if(!is_null($complete_message)){
-            return view('reset_password.complete')->with($complete_message);
+            return view('reset_password.complete', ['is_succeeded' => true])->with($complete_message);
         }
     
         return to_route('tasks.index');

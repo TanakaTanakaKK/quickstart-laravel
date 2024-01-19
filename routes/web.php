@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     TaskController,
     UserController
 };
+use App\Models\ResetEmail;
 
 Route::middleware(['auth.user'])->group(function () {
 
@@ -51,6 +52,7 @@ Route::middleware(['auth.user'])->group(function () {
 
     Route::prefix('/reset_email')->group(function () {
         Route::get('/{reset_email_token}', [ResetEmailController::class, 'edit'])->name('reset_email.edit');
-        Route::patch('/update', [ResetEmailController::class, 'update'])->name('reset_email.update');
+        Route::patch('/{reset_email_token}', [ResetEmailController::class, 'update'])->name('reset_email.update');
+        Route::get('/complete/{reset_email_token}', [ResetEmailController::class, 'complete'])->name('reset_email.complete');
     });
 });
