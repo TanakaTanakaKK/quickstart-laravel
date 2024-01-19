@@ -148,11 +148,12 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request)
     {    
-        if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
+        $login_credential = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first();
+        if(is_null($login_credential)){
             return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
         $updated_info_array = [];
-        $user = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->users;
+        $user = $login_credential->users;
 
         foreach($request->all() as $data_name => $data){
 
@@ -166,10 +167,10 @@ class UserController extends Controller
                     $image->readImage($request->file('image_file'));
                     $archive_format = $image->getImageFormat();
                     
-                    $is_deprecated_archive_image_path = true;
-                    while($is_deprecated_archive_image_path){
+                    $is_duplicated_archive_image_path = true;
+                    while($is_duplicated_archive_image_path){
                         $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
-                        $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+                        $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
                     }
             
                     if(!is_null($image->getImageProperties("exif:*"))){
@@ -185,10 +186,10 @@ class UserController extends Controller
                         $image->setImageFormat('webp');
                     } 
             
-                    $is_deprecated_thumbnail_image_path = true;
-                    while($is_deprecated_thumbnail_image_path){
+                    $is_duplicated_thumbnail_image_path = true;
+                    while($is_duplicated_thumbnail_image_path){
                         $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-                        $is_deprecated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+                        $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
                     }
 
                     Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
@@ -209,10 +210,10 @@ class UserController extends Controller
         }
 
         if(!is_null($request->email)){
-            $is_deprecated_reset_email_token = true;
-            while($is_deprecated_reset_email_token){
+            $is_duplicated_reset_email_token = true;
+            while($is_duplicated_reset_email_token){
                 $reset_email_token = Str::random(rand(30,50));
-                $is_deprecated_reset_email_token = ResetEmail::where('token', $reset_email_token)->exists();
+                $is_duplicated_reset_email_token = ResetEmail::where('token', $reset_email_token)->exists();
             }
 
             Mail::to($request->email)->send(new ResetEmailAddressMail($reset_email_token));

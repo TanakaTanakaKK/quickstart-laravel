@@ -29,9 +29,9 @@ class ResetEmailController extends Controller
     public function update(Request $request){
 
         $reset_email = ResetEmail::where('token', $request->reset_email_token)
-        ->where('status', ResetEmailStatus::MAIL_SENT)
-        ->where('expired_at', '>', now())
-        ->first();
+            ->where('status', ResetEmailStatus::MAIL_SENT)
+            ->where('expired_at', '>', now())
+            ->first();
 
         if(is_null($reset_email)){
             return to_route('tasks.index')->withErrors(['token_error' => 'トークンが無効です。']);

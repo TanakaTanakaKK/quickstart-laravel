@@ -11,6 +11,6 @@
     <br>
     下記リンクへアクセスしてください。
     <br><br>
-    <a href="{{ route('reset_email.edit',$reset_email_token) }}">{{ route('reset_email.edit',$reset_email_token) }}</a>
+    <a href="{{ route('reset_email.edit', $reset_email_token) }}">{{ route('reset_email.edit', $reset_email_token) }}</a>
 </body>
 </html>

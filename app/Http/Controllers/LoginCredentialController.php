@@ -29,10 +29,10 @@ class LoginCredentialController extends Controller
             $request->session()->forget('login_credential_token');
         }
 
-        $is_deprecated_login_credential_token = true;
-        while($is_deprecated_login_credential_token){
+        $is_duplicated_login_credential_token = true;
+        while($is_duplicated_login_credential_token){
             $login_credential_token = Str::random(rand(30,50));
-            $is_deprecated_login_credential_token = LoginCredential::where('token', $login_credential_token)->exists();
+            $is_duplicated_login_credential_token = LoginCredential::where('token', $login_credential_token)->exists();
         }
 
         LoginCredential::create([
