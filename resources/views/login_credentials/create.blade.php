@@ -7,7 +7,7 @@
                     ログイン画面
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('login_sessions.store') }}" method="POST">
+                    <form action="{{ route('login_credentials.store') }}" method="POST">
                         @csrf
                         <div class="mt-0 mx-0">
                             <div class="panel-body">

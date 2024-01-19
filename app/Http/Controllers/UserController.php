@@ -49,10 +49,10 @@ class UserController extends Controller
         $image->readImage($request->file('image_file'));
         $archive_format = $image->getImageFormat();
         
-        $is_deprecated_archive_image_path = true;
-        while($is_deprecated_archive_image_path){
+        $is_exists_archive_image_path = true;
+        while($is_exists_archive_image_path){
             $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
-            $is_deprecated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+            $is_exists_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
         if(!is_null($image->getImageProperties("exif:*"))){
@@ -66,10 +66,10 @@ class UserController extends Controller
             $image->setImageFormat('webp');
         } 
 
-        $is_deprecated_thumbnail_image_path = true;
-        while($is_deprecated_thumbnail_image_path){
+        $is_exists_thumbnail_image_path = true;
+        while($is_exists_thumbnail_image_path){
             $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-            $is_deprecated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            $is_exists_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
         Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
@@ -116,7 +116,6 @@ class UserController extends Controller
         })->first();
 
         $request->session()->forget('is_user_created');
-        $request->session()->put('user_record', $authenticated_user);
         
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',

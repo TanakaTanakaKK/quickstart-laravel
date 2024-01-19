@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthenticationController,
-    LoginSessionController,
+    LoginCredentialsController,
     ResetPasswordController,
     TaskController,
     UserController
@@ -31,10 +31,10 @@ Route::middleware(['auth.user'])->group(function () {
         Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
     });
 
-    Route::prefix('/login_sessions')->group(function () {
-        Route::get('/create', [LoginSessionController::class, 'create'])->name('login_sessions.create');
-        Route::post('/store', [LoginSessionController::class, 'store'])->name('login_sessions.store');
-        Route::get('/destroy', [LoginSessionController::class, 'destroy'])->name('login_sessions.destroy');
+    Route::prefix('/login_credentials')->group(function () {
+        Route::get('/create', [LoginCredentialsController::class, 'create'])->name('login_credentials.create');
+        Route::post('/store', [LoginCredentialsController::class, 'store'])->name('login_credentials.store');
+        Route::get('/destroy', [LoginCredentialsController::class, 'destroy'])->name('login_credentials.destroy');
     });
 
     Route::prefix('/reset_password')->group(function () {
