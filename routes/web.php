@@ -9,7 +9,6 @@ use App\Http\Controllers\{
     TaskController,
     UserController
 };
-use App\Models\ResetEmail;
 
 Route::middleware(['auth.user'])->group(function () {
 
