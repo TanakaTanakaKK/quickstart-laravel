@@ -199,25 +199,19 @@ class UserController extends Controller
                     }
 
                     if($archive_mimetype === '.gif'){
-                        $gifImage = new Imagick();
-                        $gifImage = $gifImage->setImageFormat('png');
-                        $gifImage->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-                        $gifImage->setImageFormat('webp');
+                        $gif_image = new Imagick();
+                        $gif_image = $gif_image->setImageFormat('png');
+                        $gif_image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+                        $gif_image->setImageFormat('webp');
 
-                        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gifImage);
+                        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gif_image);
                 
-                        $gifImage->clear();
+                        $gif_image->clear();
                     }else{
                         $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
                         if($image->getImageFormat() != 'webp'){
                             $image->setImageFormat('webp');
                         } 
-                        
-                        $is_duplicated_thumbnail_image_path = true;
-                        while($is_duplicated_thumbnail_image_path){
-                            $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-                            $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
-                        }
     
                         Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
                     }
