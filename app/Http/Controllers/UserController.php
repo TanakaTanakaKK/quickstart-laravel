@@ -57,11 +57,11 @@ class UserController extends Controller
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
-        $archive_mimetype = config('mimetypes')[$image->getImageMimetype()];
+        $archive_extension = config('mimetypes')[$image->getImageMimetype()];
         
         $is_duplicated_archive_image_path = true;
         while($is_duplicated_archive_image_path){
-            $archive_image_path = Str::random(rand(20, 50)).$archive_mimetype;
+            $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
             $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
@@ -77,22 +77,12 @@ class UserController extends Controller
             $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
-        if($archive_image_path === '.gif'){
-            $gif_image = new Imagick();
-            $gif_image->readImage($request->file('image_file'));
-            $gif_image->setImageFormat('png');
-            $gif_image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            $gif_image->setImageFormat('webp');
+        if($archive_extension !== '.webp'){
+            $image->setImageFormat('webp');
+        } 
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
 
-            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gif_image);
-            $gif_image->clear();
-        }else{
-            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            if($image->getImageFormat() != 'webp'){
-                $image->setImageFormat('webp');
-            } 
-            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
-        }
+        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
         
         $image->clear();
 
