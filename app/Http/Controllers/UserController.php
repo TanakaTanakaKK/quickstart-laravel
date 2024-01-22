@@ -71,11 +71,6 @@ class UserController extends Controller
 
         Storage::put('public/archive_images/'.$archive_image_path, $image);
 
-        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-        if($image->getImageFormat() != 'webp'){
-            $image->setImageFormat('webp');
-        }
-
         $is_duplicated_thumbnail_image_path = true;
         while($is_duplicated_thumbnail_image_path){
             $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
@@ -87,7 +82,7 @@ class UserController extends Controller
             $gifImage->readImage($request->file('image_file'));
             $gifImage->setImageFormat('png');
             $gifImage->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            $gifImage->setImageFormat('png');
+            $gifImage->setImageFormat('webp');
 
             Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gifImage);
             $gifImage->clear();
