@@ -47,10 +47,10 @@ class UserController extends Controller
         $image->readImage($request->file('image_file'));
         $archive_extension = config('mimetypes')[$image->getImageMimetype()];
         
-        $is_duplicate_archive_image_path = true;
-        while($is_duplicate_archive_image_path){
+        $is_duplicated_archive_image_path = true;
+        while($is_duplicated_archive_image_path){
             $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
-            $is_duplicate_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+            $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
         if(!is_null($image->getImageProperties("exif:*"))){
@@ -59,10 +59,10 @@ class UserController extends Controller
 
         Storage::put('public/archive_images/'.$archive_image_path, $image);
 
-        $is_duplicate_thumbnail_image_path = true;
-        while($is_duplicate_thumbnail_image_path){
+        $is_duplicated_thumbnail_image_path = true;
+        while($is_duplicated_thumbnail_image_path){
             $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-            $is_duplicate_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
         if($archive_extension !== '.webp'){
