@@ -118,7 +118,7 @@
                                 <div class="form-group">
                                     <div class="text-right">
                                         <button type="submit" class="btn border">
-                                            <i class="fa fa-btn fa-plus"></i>会員登録
+                                            <i class="fa-solid fa-user-plus"></i>会員登録
                                         </button>
                                     </div>
                                 </div>
