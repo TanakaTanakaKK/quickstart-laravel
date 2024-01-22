@@ -23,7 +23,7 @@
                                 <div class="form-group">
                                     <div class="rounded text-right">
                                         <button class="btn border">
-                                            <i class="fa-solid fa-right-to-bracket">ログイン
+                                            <i class="fa-solid fa-right-to-bracket"></i> ログイン
                                         </button>
                                     </div>
                                 </div>
