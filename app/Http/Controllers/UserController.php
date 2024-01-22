@@ -70,7 +70,7 @@ class UserController extends Controller
             $gifImage->readImage($request->file('image_file'));
             $gifImage->setImageFormat('png');
             $gifImage->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            $gifImage->setImageFormat('png');
+            $gifImage->setImageFormat('webp');
 
             Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gifImage);
             $gifImage->clear();
