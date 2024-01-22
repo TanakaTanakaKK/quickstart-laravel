@@ -19,7 +19,7 @@
                                 <div class="form-group">
                                     <div class="rounded text-right">
                                         <button class="btn border">
-                                            <i class="fa-regular fa-paper-plane"></i>送信
+                                            <i class="fa-regular fa-paper-plane"></i> 送信
                                         </button>
                                     </div>
                                 </div>
