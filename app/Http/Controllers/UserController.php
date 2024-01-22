@@ -78,22 +78,23 @@ class UserController extends Controller
         }
 
         if($archive_image_path === '.gif'){
-            $gifImage = new Imagick();
-            $gifImage->readImage($request->file('image_file'));
-            $gifImage->setImageFormat('png');
-            $gifImage->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            $gifImage->setImageFormat('webp');
+            $gif_image = new Imagick();
+            $gif_image->readImage($request->file('image_file'));
+            $gif_image->setImageFormat('png');
+            $gif_image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+            $gif_image->setImageFormat('webp');
 
-            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gifImage);
-            $gifImage->clear();
+            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gif_image);
+            $gif_image->clear();
         }else{
             $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
             if($image->getImageFormat() != 'webp'){
                 $image->setImageFormat('webp');
             } 
             Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
-            $image->clear();
         }
+        
+        $image->clear();
 
         try{
             User::create([
