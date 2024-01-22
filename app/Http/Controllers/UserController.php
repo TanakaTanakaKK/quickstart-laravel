@@ -80,8 +80,9 @@ class UserController extends Controller
                 $image->setImageFormat('webp');
             } 
             Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
-            $image->clear();
         }
+        
+        $image->clear();
 
         try{
             User::create([
