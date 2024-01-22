@@ -20,11 +20,6 @@ class LoginCredentialController extends Controller
 
     public function store(LoginCredentialRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
-        if(!is_null($user) && !Hash::check($request->password,$user->password)){
-            return to_route('login_credential.create')->withErrors(['login_error' => 'パスワードが一致しません']);
-        }
-
         if(!is_null($request->session('login_credential_token'))){
             $request->session()->forget('login_credential_token');
         }
@@ -36,7 +31,7 @@ class LoginCredentialController extends Controller
         }
 
         LoginCredential::create([
-            'user_id' => $user->id,
+            'user_id' => User::where('email', $request->email)->first()->id,
             'token' => $login_credential_token
         ]);
 
@@ -47,11 +42,9 @@ class LoginCredentialController extends Controller
     
     public function destroy(Request $request)
     {
-        if(is_null($request->session('login_credential_token'))){
-            return to_route('tasks.index');
+        if(!is_null($request->session('login_credential_token'))){
+            $request->session()->forget('login_credential_token');
         }
-
-        $request->session()->forget('login_credential_token');
 
         return to_route('tasks.index');
     }
