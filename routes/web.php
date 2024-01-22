@@ -7,7 +7,8 @@ use App\Http\Controllers\{
     ResetPasswordController,
     ResetEmailController,
     TaskController,
-    UserController
+    UserController,
+    WeatherController
 };
 
 Route::middleware(['auth.user'])->group(function () {
@@ -55,3 +56,5 @@ Route::middleware(['auth.user'])->group(function () {
         Route::get('/complete/{reset_email_token}', [ResetEmailController::class, 'complete'])->name('reset_email.complete');
     });
 });
+
+Route::get('/weather/show', [WeatherController::class, 'show'])->name('weather.show');

@@ -28,6 +28,9 @@
                 ログアウト
                 </a>
                 @endif
+                <a class="navbar-brand p-0 text-muted" href="{{ route('weather.show') }}">
+                天気
+                </a>
             </div>
         </div>
     </nav>
