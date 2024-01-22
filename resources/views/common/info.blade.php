@@ -9,7 +9,7 @@
         </ul>
     </div>
 @endif
-@if(isset($successful) || isset($user_email) ||isset($reset_password_email))
+@if(isset($successful) || isset($user_email) || isset($reset_password_email))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
