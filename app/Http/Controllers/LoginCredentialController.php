@@ -20,8 +20,8 @@ class LoginCredentialController extends Controller
 
     public function store(LoginCredentialRequest $request)
     {
-        if(!is_null($request->session('login_session_token'))){
-            $request->session()->forget('login_session_token');
+        if(!is_null($request->session('login_credential_token'))){
+            $request->session()->forget('login_credential_token');
         }
 
         $is_duplicated_login_credential_token = true;
@@ -32,7 +32,7 @@ class LoginCredentialController extends Controller
 
         LoginCredential::create([
             'user_id' => User::where('email', $request->email)->first()->id,
-            'token' => $login_session_token
+            'token' => $login_credential_token
         ]);
 
         $request->session()->put('login_credential_token', $login_credential_token);
@@ -42,8 +42,8 @@ class LoginCredentialController extends Controller
     
     public function destroy(Request $request)
     {
-        if(!is_null($request->session('login_session_token'))){
-            $request->session()->forget('login_session_token');
+        if(!is_null($request->session('login_credential_token'))){
+            $request->session()->forget('login_credential_token');
         }
 
         return to_route('tasks.index');
