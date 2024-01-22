@@ -57,12 +57,12 @@ class UserController extends Controller
 
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
-        $archive_format = $image->getImageFormat();
+        $archive_mimetype = config('mimetypes')[$image->getImageMimetype()];
         
-        $is_exists_archive_image_path = true;
-        while($is_exists_archive_image_path){
-            $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_format;
-            $is_exists_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+        $is_duplicated_archive_image_path = true;
+        while($is_duplicated_archive_image_path){
+            $archive_image_path = Str::random(rand(20, 50)).$archive_mimetype;
+            $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
         }
 
         if(!is_null($image->getImageProperties("exif:*"))){
@@ -82,9 +82,23 @@ class UserController extends Controller
             $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
         }
 
-        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
+        if($archive_image_path === '.gif'){
+            $gifImage = new Imagick();
+            $gifImage->readImage($request->file('image_file'));
+            $gifImage->setImageFormat('png');
+            $gifImage->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+            $gifImage->setImageFormat('png');
 
-        $image->clear();
+            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $gifImage);
+            $gifImage->clear();
+        }else{
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+            if($image->getImageFormat() != 'webp'){
+                $image->setImageFormat('webp');
+            } 
+            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
+            $image->clear();
+        }
 
         try{
             User::create([
