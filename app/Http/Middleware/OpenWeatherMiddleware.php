@@ -20,6 +20,7 @@ class OpenWeatherMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $login_credential = LoginCredential::where('token', session('login_credential_token'))->first();
+
         if(!is_null(session('login_credential_token')) && !is_null($login_credential)){
             
             $weather_info = Cache::remember('weather_info', 300, function() use($login_credential){
@@ -35,9 +36,11 @@ class OpenWeatherMiddleware
         
                 $data = $response->getBody();
                 $data = json_decode($data, true);
+
                 return [
                     'prefecture' => $prefecture_japanese_name,
-                    'current_weather' => $data['weather'][0]['description'],
+                    'icon_url' => 'https://openweathermap.org/img/wn/'.$data['weather'][0]['icon'].'.png',
+                    // 'current_weather' => $data['weather'][0]['description'],
                     'current_temperature' => $data['main']['temp'],
                 ];
             });

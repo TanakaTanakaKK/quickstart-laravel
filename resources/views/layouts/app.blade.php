@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted text-nowrap overflow-auto">
+    <nav class="navbar navbar-expand-lg navbar-light bg-muted border text-muted text-nowrap overflow-auto">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand text-muted" href="{{ route('tasks.index') }}">
@@ -28,11 +28,9 @@
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    <div class="w-25 h-25 img-fluid ">
-                        {{ session('weather_info')['prefecture'] }}
-                        {{ session('weather_info')['current_weather'] }}
-                        {{ session('weather_info')['current_temperature'].'℃' }}
-                    </div>
+                    {{ session('weather_info')['prefecture'] }}
+                    <img src="{{ session('weather_info')['icon_url'] }}" >
+                    {{ session('weather_info')['current_temperature'].'℃' }}
                 </div>
                 @endif
             </div>
