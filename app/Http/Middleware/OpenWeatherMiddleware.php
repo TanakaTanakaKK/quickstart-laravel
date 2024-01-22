@@ -19,14 +19,15 @@ class OpenWeatherMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!is_null(session('login_credential_token')) && LoginCredential::where('token', session('login_credential_token'))->exists()){
-                
-            $weather_info = Cache::remember('weather_info', 60, function(){
+        $login_credential = LoginCredential::where('token', session('login_credential_token'))->first();
+        if(!is_null(session('login_credential_token')) && !is_null($login_credential)){
+            
+            $weather_info = Cache::remember('weather_info', 300, function() use($login_credential){
+
                 $api_key = 'e28457d1536e8199f3bcdb7710267d73';
-                $city_name = 'NIIGATA';
-                $url = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=ja&q=$city_name&appid=$api_key";
-        
-                $method = "GET";
+                $prefecture_japanese_name = Prefecture::getDescription($login_credential->users->prefecture);
+                $url = 'http://api.openweathermap.org/data/2.5/weather?units=metric&lang=ja&q='.Prefecture::getKey($login_credential->users->prefecture).'&appid='.$api_key;
+                $method = 'GET';
         
                 $client = new Client();
         
@@ -35,18 +36,13 @@ class OpenWeatherMiddleware
                 $data = $response->getBody();
                 $data = json_decode($data, true);
                 return [
+                    'prefecture' => $prefecture_japanese_name,
                     'current_weather' => $data['weather'][0]['description'],
                     'current_temperature' => $data['main']['temp'],
-                    'todays_high_temperature' => $data['main']['temp_max'],
-                    'todays_low_temperature' => $data['main']['temp_min']
                 ];
             });
-
-            dd($weather_info);
-        }else{
-            return $next($request);
+            session()->put('weather_info', $weather_info);   
         }
-
-        
+        return $next($request);
     }
 }

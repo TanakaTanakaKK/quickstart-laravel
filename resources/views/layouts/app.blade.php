@@ -7,30 +7,34 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted text-nowrap overflow-auto">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
+                <a class="navbar-brand text-muted" href="{{ route('tasks.index') }}">
                 Task List
                 </a>
                 @if(is_null(session('login_credential_token')))
-                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
+                <a class="navbar-brand text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.create') }}">
+                <a class="navbar-brand text-muted" href="{{ route('login_credential.create') }}">
                 ログイン
                 </a>
                 @else
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
+                <a class="navbar-brand text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
                 アカウント
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
+                <a class="navbar-brand text-muted" href="{{ route('login_credential.destroy') }}">
                 ログアウト
                 </a>
+                <div class="navbar-brand text-muted">
+                    <div class="w-25 h-25 img-fluid ">
+                        {{ session('weather_info')['prefecture'] }}
+                        {{ session('weather_info')['current_weather'] }}
+                        {{ session('weather_info')['current_temperature'].'℃' }}
+                    </div>
+                </div>
                 @endif
-                <a class="navbar-brand p-0 text-muted" href="{{ route('weather.show') }}">
-                天気
-                </a>
             </div>
         </div>
     </nav>
