@@ -29,7 +29,7 @@ class LoginCredentialRequest extends FormRequest
                 'between:8,255',
                 'string',
                 function ($attribute, $value, $fail) {
-                    if (!Hash::check($value, User::where('email', $this->email)->first()->password)) {
+                    if (!Hash::check($value, User::where('email', $this->email)->value('password'))) {
                         $fail(':attributeが一致していません。');
                     }
                 }
