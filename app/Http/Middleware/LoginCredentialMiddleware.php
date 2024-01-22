@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
+use App\Models\LoginCredential;
+use Carbon\Carbon;
 
 class LoginCredentialMiddleware
 {
@@ -15,7 +17,7 @@ class LoginCredentialMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!is_null(session('login_credential_token'))){
+        if(!is_null(session('login_credential_token')) && LoginCredential::where('token', session('login_credential_token'))->exists()){
             $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
         }
         return $next($request);

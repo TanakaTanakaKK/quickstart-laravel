@@ -79,8 +79,7 @@ class UserRequest extends FormRequest
             ],
             'password' => [
                 'required',
-                'min:8',
-                'max:128',
+                'between:8,255',
                 'regex:/^[!-~]+$/',
                 'string',
                 'confirmed'

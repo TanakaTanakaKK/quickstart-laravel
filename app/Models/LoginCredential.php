@@ -11,7 +11,6 @@ class LoginCredential extends Model
     use HasFactory;
 
     protected $fillable = [
-        'logged_in_at',
         'user_id',
         'token'
     ];
