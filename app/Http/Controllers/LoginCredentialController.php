@@ -36,7 +36,6 @@ class LoginCredentialController extends Controller
         }
 
         LoginCredential::create([
-            'logged_in_at' => now(),
             'user_id' => $user->id,
             'token' => $login_session_token
         ]);
