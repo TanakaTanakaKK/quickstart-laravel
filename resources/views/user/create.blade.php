@@ -21,13 +21,12 @@
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <label class="btn btn-default border">
-                                                ファイルを選択<input type="file" name="image_file" style="display: none;" id="image_file" onchange=showFileName()
+                                                ファイルを選択<input type="file" name="image_file" class="d-none" id="image_file" onchange=showFileName()
                                                 accept="image/png, image/jpeg, image/gif, image/webp">
                                             </label>
                                         </span>
                                     </div>
-                                    <p id='image_info'>
-                                    </p>
+                                    <p id='image_info'></p>
                                 </div>
                                 <div class="form-group">
                                     <label for="name" class="control-label">氏名

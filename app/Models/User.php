@@ -33,7 +33,7 @@ class User extends Model
         return $this->hasOne(Authentication::class, 'email', 'email');
     }
 
-    public function reset_passwords(): HasMany
+    public function resetPasswords(): HasMany
     {
         return $this->hasMany(ResetPassword::class, 'email', 'email');    
     }
@@ -47,4 +47,10 @@ class User extends Model
     {
         return $this->hasMany(ResetEmail::class, 'user_id', 'id');
     }
+    
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id', 'id');
+    }
+
 }

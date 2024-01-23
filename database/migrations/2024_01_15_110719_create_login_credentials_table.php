@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('token');
+            $table->string('agent');
+            $table->string('ip');
             $table->timestamps();
         });
     }

@@ -12,7 +12,9 @@ class LoginCredential extends Model
 
     protected $fillable = [
         'user_id',
-        'token'
+        'token',
+        'agent',
+        'ip'
     ];
 
     public function users(): BelongsTo
