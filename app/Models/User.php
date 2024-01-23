@@ -37,4 +37,9 @@ class User extends Model
     {
         return $this->hasMany(ResetPassword::class,'email','email');    
     }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id', 'id');
+    }
+
 }

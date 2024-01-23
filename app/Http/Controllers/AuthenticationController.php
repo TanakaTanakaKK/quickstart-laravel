@@ -47,7 +47,9 @@ class AuthenticationController extends Controller
     public function complete(Request $request)
     {
         $authentication = Authentication::where('token', $request->authentication_token)->first();
-        if(is_null($authentication) || is_null($request->session()->get('is_authentication_created'))){
+        if(is_null($authentication)){
+            return to_route('login_credential.create');
+        }elseif(is_null($request->session()->get('is_authentication_created'))){
             return to_route('tasks.index');
         }
 
