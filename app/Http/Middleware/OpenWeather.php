@@ -5,8 +5,8 @@ namespace App\Http\Middleware;
 use App\Enums\Prefecture;
 use App\Models\LoginCredential;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 use Closure;
 use Exception;
 
