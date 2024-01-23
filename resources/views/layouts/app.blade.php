@@ -28,9 +28,9 @@
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    {{ session('weather_info')['prefecture'] }}
-                    <img src="{{ session('weather_info')['icon_url'] }}" >
-                    {{ session('weather_info')['current_temperature'].'℃' }}
+                    {{ cache('weather_info')['prefecture'] }}
+                    <img src="{{ cache('weather_info')['icon_url'] }}" >
+                    {{ cache('weather_info')['current_temperature'] }}
                 </div>
                 @endif
             </div>

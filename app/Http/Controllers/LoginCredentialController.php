@@ -7,7 +7,7 @@ use App\Models\{
     LoginCredential
 };
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Http\Requests\LoginCredentialRequest;
 
@@ -50,6 +50,8 @@ class LoginCredentialController extends Controller
         if(!is_null($request->session()->get('login_credential_token'))){
             $request->session()->forget('login_credential_token');
         }
+
+        Cache::forget('weather_info');
 
         return to_route('login_credential.create');
     }
