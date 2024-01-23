@@ -27,7 +27,9 @@ class OpenWeather
             return to_route('login_credential.create');
         }
 
-        cache()->remember('weather_info', 300, function() use($login_credential){
+        session()->put('prefecture_number',$login_credential->user->prefecture);
+
+        cache()->remember('weather_info'.$login_credential->user->prefecture, 10800, function() use($login_credential){
 
             $url = config('services.open_weather.url').Prefecture::getKey($login_credential->user->prefecture).'&appid='.config('services.open_weather.key');
             $prefecture_japanese_name = Prefecture::getDescription($login_credential->user->prefecture);

@@ -28,9 +28,9 @@
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    {{ cache('weather_info')['prefecture'] }}
-                    <img src="{{ cache('weather_info')['icon_url'] }}" >
-                    {{ cache('weather_info')['current_temperature'] }}
+                    {{ cache('weather_info'.session('prefecture_number'))['prefecture'] }}
+                    <img src="{{ cache('weather_info'.session('prefecture_number'))['icon_url'] }}" >
+                    {{ cache('weather_info'.session('prefecture_number'))['current_temperature'] }}
                 </div>
                 @endif
             </div>
