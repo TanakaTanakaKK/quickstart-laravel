@@ -31,7 +31,7 @@ class LoginCredentialController extends Controller
         }
 
         LoginCredential::create([
-            'user_id' => User::where('email', $request->email)->first()->id,
+            'user_id' => User::where('email', $request->email)->value('id'),
             'token' => $login_session_token
         ]);
 
