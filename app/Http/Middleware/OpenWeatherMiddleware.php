@@ -24,15 +24,15 @@ class OpenWeatherMiddleware
 
         if(!is_null(session('login_credential_token')) && !is_null($login_credential)){
             
-            if($login_credential->users->prefecture !== session()->get('weather_info')['prefecture']){
+            if($login_credential->user->prefecture !== session()->get('weather_info')['prefecture']){
                 Cache::forget('weather_info');
             }
 
             $weather_info = Cache::remember('weather_info', 300, function() use($login_credential){
 
                 $api_key = 'e28457d1536e8199f3bcdb7710267d73';
-                $prefecture_japanese_name = Prefecture::getDescription($login_credential->users->prefecture);
-                $url = 'http://api.openweathermap.org/data/2.5/weather?units=metric&lang=ja&q='.Prefecture::getKey($login_credential->users->prefecture).'&appid='.$api_key;
+                $prefecture_japanese_name = Prefecture::getDescription($login_credential->user->prefecture);
+                $url = 'http://api.openweathermap.org/data/2.5/weather?units=metric&lang=ja&q='.Prefecture::getKey($login_credential->user->prefecture).'&appid='.$api_key;
                 $method = 'GET';
                 
                 $client = new Client();

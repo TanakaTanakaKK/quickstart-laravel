@@ -117,13 +117,13 @@ class UserController extends Controller
     public function show(Request $request)
     {
         if(is_null($request->session()->get('is_succeeded_updated'))){
-            return view('user.show', ['user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users]);
+            return view('user.show', ['user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->user]);
         }
 
         $request->session()->forget('is_succeeded_updated');
         
         $complete_messages = [
-            'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->users,
+            'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->user,
             'is_succeeded' => true
         ];
         
@@ -142,7 +142,7 @@ class UserController extends Controller
         if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
             return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
-        return view('user.edit', ['user_info' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->users]);
+        return view('user.edit', ['user_info' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
         
     }
 
@@ -153,7 +153,7 @@ class UserController extends Controller
             return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
         $updated_info_array = [];
-        $user = $login_credential->users;
+        $user = $login_credential->user;
 
         foreach($request->all() as $data_name => $data){
 
