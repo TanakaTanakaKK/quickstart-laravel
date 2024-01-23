@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\{
+    Task,
+    LoginCredential
+};
 use Illuminate\Http\Request;
-use App\Models\Task;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $tasks = Task::orderBy('created_at', 'asc')->get();
+        if(is_null($request->session()->get('login_credential_token'))){
+            return to_route('login_credential.create');
+        }
+
+        $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'))
+            ->orderBy('created_at', 'asc')
+            ->get();
         return view('task.tasks', [
             'tasks' => $tasks
         ]);
@@ -23,6 +32,7 @@ class TaskController extends Controller
 
         $task = new Task;
         $task->name = $request->name;
+        $task->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
         $task->save();
         
         return to_route('tasks.index');

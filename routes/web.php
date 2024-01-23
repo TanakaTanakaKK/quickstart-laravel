@@ -11,7 +11,7 @@ use App\Http\Controllers\{
 Route::middleware(['auth.user'])->group(function () {
 
     Route::get('/', function () {
-        return to_route('tasks.index');
+        return to_route('login_credential.create');
     });
     
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
