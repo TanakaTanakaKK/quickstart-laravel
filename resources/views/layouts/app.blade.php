@@ -28,9 +28,9 @@
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    {{ cache('weather_info'.session('prefecture_number'))['prefecture'] }}
-                    <img src="{{ cache('weather_info'.session('prefecture_number'))['icon_url'] }}" >
-                    {{ cache('weather_info'.session('prefecture_number'))['current_temperature'] }}
+                    {{ Cache::get('weather_info'.session('prefecture_number'))['prefecture'] }}
+                    <img src="{{ Cache::get('weather_info'.session('prefecture_number'))['icon_url'] }}" >
+                    {{ Cache::get('weather_info'.session('prefecture_number'))['temperature'] }}
                 </div>
                 @endif
             </div>
