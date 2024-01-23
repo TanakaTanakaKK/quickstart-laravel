@@ -39,7 +39,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         return view('user.create');
     }
@@ -52,7 +52,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
 
         $image = new Imagick();
@@ -105,7 +105,7 @@ class UserController extends Controller
                 'building' => $request->building
             ]);
         }catch(Exception $e){
-            return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
 
         $authentication->status = AuthenticationStatus::COMPLETED;
@@ -262,7 +262,7 @@ class UserController extends Controller
     public function complete(Request $request)
     {     
         if(is_null($request->authentication_token) || is_null($request->session()->get('is_user_created'))){
-            return to_route('tasks.index');
+            return to_route('login_credential.create');
         }
 
         $authenticated_user = User::whereHas('authentication', function($query) use ($request) {

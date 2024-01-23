@@ -61,7 +61,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
-        'auth.user' => \App\Http\Middleware\LoginCredentialMiddleware::class,
+        'auth.user' => \App\Http\Middleware\LoginVerification::class,
         'weather' => \App\Http\Middleware\OpenWeatherMiddleware::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
