@@ -6,8 +6,8 @@ use App\Enums\Prefecture;
 use App\Models\LoginCredential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{
+    Cache,
     Http,
-    Cache
 };
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
