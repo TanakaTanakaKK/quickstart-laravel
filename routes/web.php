@@ -18,22 +18,22 @@ Route::middleware(['auth.user'])->group(function () {
     Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     
-    Route::prefix('/authentications')->group(function () {
-        Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
-        Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
-        Route::get('/complete/{authentication_token}', [AuthenticationController::class, 'complete'])->name('authentications.complete');
-    });
+});
 
-    Route::prefix('/users')->group(function () {
-        Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
-        Route::post('/store', [UserController::class, 'store'])->name('users.store');
-        Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
-    });
+Route::prefix('/authentications')->group(function () {
+    Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
+    Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
+    Route::get('/complete/{authentication_token}', [AuthenticationController::class, 'complete'])->name('authentications.complete');
+});
 
-    Route::prefix('/login_credential')->group(function () {
-        Route::get('/create', [LoginCredentialController::class, 'create'])->name('login_credential.create');
-        Route::post('/store', [LoginCredentialController::class, 'store'])->name('login_credential.store');
-        Route::get('/destroy', [LoginCredentialController::class, 'destroy'])->name('login_credential.destroy');
-    });
+Route::prefix('/users')->group(function () {
+    Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
+    Route::post('/store', [UserController::class, 'store'])->name('users.store');
+    Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+});
 
+Route::prefix('/login_credential')->group(function () {
+    Route::get('/create', [LoginCredentialController::class, 'create'])->name('login_credential.create');
+    Route::post('/store', [LoginCredentialController::class, 'store'])->name('login_credential.store');
+    Route::get('/destroy', [LoginCredentialController::class, 'destroy'])->name('login_credential.destroy');
 });

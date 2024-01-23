@@ -15,15 +15,14 @@ class LoginCredentialController extends Controller
 {
     public function create(Request $request)
     {
+        if(!is_null($request->session()->get('login_credential_token'))){
+            return to_route('tasks.index');
+        }
         return view('login_credential.create');
     }
 
     public function store(LoginCredentialRequest $request)
     {
-        if(!is_null($request->session()->get('login_credential_token'))){
-            $request->session()->forget('login_credential_token');
-        }
-
         $is_duplicated_login_credential_token = true;
         while($is_duplicated_login_credential_token){
             $login_credential_token = Str::random(rand(30, 50));
@@ -48,6 +47,6 @@ class LoginCredentialController extends Controller
             $request->session()->forget('login_credential_token');
         }
 
-        return to_route('tasks.index');
+        return to_route('login_credential.create');
     }
 }

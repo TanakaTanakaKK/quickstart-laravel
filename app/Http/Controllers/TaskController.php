@@ -12,10 +12,6 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        if(is_null($request->session()->get('login_credential_token'))){
-            return to_route('login_credential.create');
-        }
-
         $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'))
             ->orderBy('created_at', 'asc')
             ->get();

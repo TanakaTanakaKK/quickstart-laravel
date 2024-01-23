@@ -18,6 +18,8 @@ class LoginVerification
     {
         if(!is_null(session('login_credential_token')) && LoginCredential::where('token', session('login_credential_token'))->exists()){
             $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
+        }else{
+            return to_route('login_credential.create');
         }
         return $next($request);
     }
