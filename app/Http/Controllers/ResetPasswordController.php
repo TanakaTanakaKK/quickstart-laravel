@@ -28,9 +28,6 @@ class ResetPasswordController extends Controller
 
     public function store(UserEmailRequest $request)
     {
-        if(is_null(User::Where('email', $request->email)->first())){
-            return to_route('tasks.index');
-        }
         $is_duplicated_reset_password_token = true;
         while($is_duplicated_reset_password_token){
             $reset_password_token = Str::random(rand(30, 50));
@@ -74,7 +71,7 @@ class ResetPasswordController extends Controller
         }
 
         $reset_password->status = ResetPasswordStatus::COMPLETED;
-        $reset_password->users->password = Hash::make($request->password);
+        $reset_password->user->password = Hash::make($request->password);
         $reset_password->push();
 
         return to_route('reset_password.complete', $request->reset_password_token)->with(['is_password_updated' => true]);
