@@ -21,7 +21,7 @@ class ResetEmailController extends Controller
         }
 
         return view('reset_email.edit',[
-            'before_email' => $reset_email->users->email,
+            'before_email' => $reset_email->user->email,
             'after_email' => $reset_email->email
         ]);
     }
@@ -39,7 +39,7 @@ class ResetEmailController extends Controller
 
         try{
             $reset_email->status = ResetEmailStatus::COMPLETED;
-            $reset_email->users->email = $reset_email->email;
+            $reset_email->user->email = $reset_email->email;
             $reset_email->push();
         }catch(Exception $e){
             return to_route('tasks.index')->withErrors('更新に失敗しました。');
@@ -57,7 +57,7 @@ class ResetEmailController extends Controller
         $request->session()->forget('is_mail_reset_complete');
 
         return view('user.show', [
-            'user_info' => ResetEmail::where('token', $request->reset_email_token)->first()->users,
+            'user_info' => ResetEmail::where('token', $request->reset_email_token)->first()->user,
             'is_succeeded' => true,
             'is_completed_reset_email' => true
         ]);
