@@ -33,7 +33,7 @@ class OpenWeather
             $prefecture_japanese_name = Prefecture::getDescription($login_credential->user->prefecture);
 
             try{
-                $response = Http::get($url);
+                $response = Http::timeout(3)->get($url);
                 $data = $response->getBody();
                 $data = json_decode($data, true);
                 return [
