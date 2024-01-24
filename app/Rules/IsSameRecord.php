@@ -15,7 +15,7 @@ class IsSameRecord implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(LoginCredential::where('token', session('login_credential_token'))->first()->user->$attribute == $value){
+        if(LoginCredential::where('token', session('login_credential_token'))->first()->user->$attribute === $value){
             $fail('既に登録されている:attributeと同じです。');
         }
     }

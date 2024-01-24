@@ -159,7 +159,7 @@ class UserController extends Controller
 
             if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method'])){
 
-                if($data_name != 'image_file'){
+                if($data_name !== 'image_file'){
                     $user->$data_name = $data;
                     $updated_info_array[] = $data_name;
                 }else{
@@ -206,7 +206,7 @@ class UserController extends Controller
 
         if(count($updated_info_array) >= 1){
             $user->save();
-        }else if(count($updated_info_array) == 0 && is_null($request->email)){
+        }else if(count($updated_info_array) === 0 && is_null($request->email)){
             return to_route('users.show', $request->session()->get('login_credential_token'));
         }
 
