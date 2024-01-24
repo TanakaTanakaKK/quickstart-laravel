@@ -6,12 +6,16 @@ use App\Models\{
     User,
     Authentication
 };
+use Illuminate\Support\Facades\{
+    Hash,
+    Storage
+};
 use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Exception;
-use Carbon\Carbon;
+use Imagick;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -19,7 +23,7 @@ class UserController extends Controller
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
@@ -32,15 +36,48 @@ class UserController extends Controller
     {   
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', Carbon::now())
+            ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
             return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
+
+        $image = new Imagick();
+        $image->readImage($request->file('image_file'));
+        $archive_extension = config('mimetypes')[$image->getImageMimetype()];
         
+        $is_duplicated_archive_image_path = true;
+        while($is_duplicated_archive_image_path){
+            $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
+            $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+        }
+
+        if(!is_null($image->getImageProperties("exif:*"))){
+            $image->stripImage();
+        }
+
+        Storage::put('public/archive_images/'.$archive_image_path, $image);
+
+        $is_duplicated_thumbnail_image_path = true;
+        while($is_duplicated_thumbnail_image_path){
+            $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+            $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+        }
+
+        if($archive_extension !== '.webp'){
+            $image->setImageFormat('webp');
+        } 
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+
+        Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);
+        
+        $image->clear();
+
         try{
             User::create([
+                'thumbnail_image_path' => $thumbnail_image_path,
+                'archive_image_path' => $archive_image_path,
                 'email' => $authentication->email,
                 'password' => Hash::make($request->password),
                 'name' => $request->name,

@@ -85,6 +85,13 @@ class UserRequest extends FormRequest
                 'string',
                 'confirmed'
             ],
+            'image_file' => [
+                'required',
+                'file',
+                'image',
+                'mimes:jpg,gif,png,webp',
+                'max:2048'
+            ]
         ];
     }
     public function attributes(): array
@@ -101,6 +108,7 @@ class UserRequest extends FormRequest
             'address' => '市区町村',
             'block' => '番地',
             'password' => 'パスワード',
+            'image_file' => '画像ファイル'
         ];
     }
 }

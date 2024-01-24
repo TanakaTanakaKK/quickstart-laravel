@@ -15,14 +15,18 @@
                             <div class="panel-body">
                                 @include('common.info')
                                 <div class="form-group">
-                                    <label for="user-img" class="control-label">画像</label>
+                                    <label for="image_file" class="control-label">画像
+                                        <span class="badge text-danger">*</span>                                        
+                                    </label>
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <label class="btn btn-default border">
-                                                ファイルを選択<input type="file" name="user_img" style="display: none;">
+                                                ファイルを選択<input type="file" name="image_file" class="d-none" id="image_file" onchange=showFileName()
+                                                accept="image/png, image/jpeg, image/gif, image/webp">
                                             </label>
                                         </span>
                                     </div>
+                                        <p id='image_info'></p>
                                 </div>
                                 <div class="form-group">
                                     <label for="name" class="control-label">氏名
