@@ -53,7 +53,7 @@ class ResetPasswordController extends Controller
             ->where('expired_at', '>', now())
             ->first();
         if(is_null($reset_password)){
-            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
+            return to_route('task.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         return view('reset_password.edit');
@@ -67,7 +67,7 @@ class ResetPasswordController extends Controller
             ->first();
         
         if(is_null($reset_password)){
-            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
+            return to_route('task.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         $reset_password->status = ResetPasswordStatus::COMPLETED;
@@ -82,7 +82,7 @@ class ResetPasswordController extends Controller
         $reset_password = ResetPassword::where('token', $request->reset_password_token)->first();
 
         if(is_null($reset_password) && is_null($request->session()->get('is_reset_mail_send') || is_null($request->session()->get('is_password_updated')))){
-            return to_route('tasks.index');
+            return to_route('task.index');
         }
 
         $complete_message = match($reset_password->status){
@@ -98,7 +98,7 @@ class ResetPasswordController extends Controller
             return view('reset_password.complete', ['is_succeeded' => true])->with($complete_message);
         }
     
-        return to_route('tasks.index');
+        return to_route('task.index');
         
     }
 }

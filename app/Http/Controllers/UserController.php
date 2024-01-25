@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\{
     AuthenticationStatus,
-    ResetEmailStatus
+    ResetEmailStatus,
+    UserStatus
 };
 use App\Models\{
     Authentication,
@@ -102,7 +103,8 @@ class UserController extends Controller
                 'prefecture' => $request->prefecture,
                 'address' => $request->address,
                 'block' => $request->block,
-                'building' => $request->building
+                'building' => $request->building,
+                'status' => UserStatus::GENERAL 
             ]);
         }catch(Exception $e){
             return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
@@ -130,8 +132,8 @@ class UserController extends Controller
         if(!is_null($request->session()->get('email_for_reset_email'))){
             $complete_messages += array('email_for_reset_email' => $request->session()->get('email_for_reset_email'));
         }
-        if(!is_null($request->session()->get('updated_info_array'))){
-            $complete_messages += array('updated_info_array' => $request->session()->get('updated_info_array'));
+        if(!is_null($request->session()->get('user_updated_info_array'))){
+            $complete_messages += array('user_updated_info_array' => $request->session()->get('user_updated_info_array'));
         }
 
         return view('user.show')->with($complete_messages);
@@ -140,7 +142,7 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
-            return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
+            return to_route('task.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
         return view('user.edit', ['user_info' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
         
@@ -150,18 +152,18 @@ class UserController extends Controller
     {    
         $login_credential = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first();
         if(is_null($login_credential)){
-            return to_route('tasks.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
+            return to_route('task.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
         }
-        $updated_info_array = [];
+        $user_updated_info_array = [];
         $user = $login_credential->user;
 
         foreach($request->all() as $data_name => $data){
 
-            if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method'])){
+            if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method', 'user_status'])){
 
                 if($data_name !== 'image_file'){
                     $user->$data_name = $data;
-                    $updated_info_array[] = $data_name;
+                    $user_updated_info_array[] = $data_name;
                 }else{
                     $image = new Imagick();
                     $image->readImage($request->file('image_file'));
@@ -199,14 +201,14 @@ class UserController extends Controller
                     
                     $image->clear();
 
-                    $updated_info_array[] = 'image_file';
+                    $user_updated_info_array[] = 'image_file';
                 }
             }
         }
 
-        if(count($updated_info_array) >= 1){
+        if(count($user_updated_info_array) >= 1){
             $user->save();
-        }else if(count($updated_info_array) === 0 && is_null($request->email)){
+        }else if(count($user_updated_info_array) === 0 && is_null($request->email)){
             return to_route('users.show', $request->session()->get('login_credential_token'));
         }
 
@@ -243,8 +245,8 @@ class UserController extends Controller
                 'email_for_reset_email' => $request->email
             ];
             
-            if(count($updated_info_array) >= 1){
-                $complete_messages += array('updated_info_array' => $updated_info_array);
+            if(count($user_updated_info_array) >= 1){
+                $complete_messages += array('user_updated_info_array' => $user_updated_info_array);
             }
 
                 return to_route('users.show', $request->session()->get('login_credential_token'))
@@ -255,7 +257,7 @@ class UserController extends Controller
         return to_route('users.show', $request->session()->get('login_credential_token'))
             ->with([
                 'is_succeeded_updated' => true,
-                'updated_info_array' => $updated_info_array
+                'user_updated_info_array' => $user_updated_info_array
             ]);
     }
 

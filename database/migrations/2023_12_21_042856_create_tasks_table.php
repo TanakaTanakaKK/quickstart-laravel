@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
+            $table->timestamp('expired_at');
+            $table->string('detail');
+            $table->string('thumbnail_image_path')->unique();
+            $table->string('archive_image_path')->unique();
+            $table->integer('status');
             $table->timestamps();
         });
     }

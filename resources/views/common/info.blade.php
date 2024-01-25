@@ -41,17 +41,28 @@
             </ul>
         @endif
 
-        @if(isset($updated_info_array))
+        @if(isset($user_updated_info_array))
             <ul>
-            @foreach($updated_info_array as $updated_info)
+            @foreach($user_updated_info_array as $updated_info)
                 <li>{{ trans('validation.attributes.'.$updated_info) }}を更新しました。</li>
             @endforeach
             </ul>
         @endif
-        
+        @if(isset($task_updated_info_array))
+            <ul>
+            @foreach($task_updated_info_array as $updated_info)
+                <li>{{ trans('validation.task_attributes.'.$updated_info) }}を更新しました。</li>
+            @endforeach
+            </ul>
+        @endif
         @if(isset($user_add_messsage))
             <ul>
                 <li>{{ $user_add_messsage }}</li>
+            </ul>
+        @endif
+        @if(isset($created_task_name))
+            <ul>
+                <li>{{ $created_task_name }}をTask Listに登録しました。</li>
             </ul>
         @endif
     </div>

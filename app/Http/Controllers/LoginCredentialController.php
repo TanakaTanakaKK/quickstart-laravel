@@ -16,7 +16,7 @@ class LoginCredentialController extends Controller
     public function create(Request $request)
     {
         if(!is_null($request->session()->get('login_credential_token'))){
-            return to_route('tasks.index');
+            return to_route('task.index');
         }
         return view('login_credential.create');
     }
@@ -42,7 +42,7 @@ class LoginCredentialController extends Controller
 
         $request->session()->put('login_credential_token', $login_credential_token);
 
-        return to_route('tasks.index');
+        return to_route('task.index');
     }
     
     public function destroy(Request $request)

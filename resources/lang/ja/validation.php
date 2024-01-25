@@ -142,6 +142,9 @@ return [
         ],
         'birthday' => [
             'before' => '誕生日には、本日より前の日付をご利用ください。'
+        ],
+        'expired_at' => [
+            'after' => 'タスクの期限には、本日より後の日付を指定してください。'
         ]
     ],
 
@@ -169,6 +172,14 @@ return [
         'address' => '市区町村',
         'block' => '番地',
         'password' => 'パスワード',
-        'image_file' => '画像ファイル'
+        'image_file' => '画像ファイル',
     ],
+    
+    'task_attributes' => [
+        'expired_at' => 'タスクの期限',
+        'image_file' => 'タスクの画像ファイル',
+        'name' => 'タスクの名前',
+        'detail' => 'タスクの詳細',
+        'status' => 'タスクのステータス'
+    ]
 ];
