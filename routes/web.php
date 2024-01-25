@@ -26,7 +26,7 @@ Route::prefix('/authentications')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
-    Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+    Route::get('/complete', [UserController::class, 'complete'])->name('users.complete');
 });
 
 Route::prefix('/login_credential')->group(function () {

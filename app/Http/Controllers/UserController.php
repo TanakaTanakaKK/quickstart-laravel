@@ -99,25 +99,19 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete', $request->authentication_token)->with(['is_user_created' => true]);
+        return to_route('users.complete')->with(['is_user_created' => true]);
     }
 
     public function complete(Request $request)
     {     
-        if(is_null($request->authentication_token) || is_null($request->session()->get('is_user_created'))){
+        if(is_null($request->session()->get('is_user_created'))){
             return to_route('login_credential.create');
         }
-
-        $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
-            $query->where('token', $request->authentication_token)
-                ->where('expired_at', '>', now());
-        })->first();
 
         $request->session()->forget('is_user_created');
         
         return view('user.complete', [
-            'successful' => '会員登録が完了しました。',
-            'authenticated_user' => $authenticated_user
+            'successful' => '会員登録が完了しました。'
         ]);
     }
 }
