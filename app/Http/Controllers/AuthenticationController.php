@@ -41,19 +41,17 @@ class AuthenticationController extends Controller
 
         Mail::to($request->email)->send(new SendTokenMail($user_token));
 
-        return to_route('authentications.complete', $user_token)->with(['is_authentication_created' => true]);
+        return to_route('authentications.complete')->with(['is_authentication_created' => true]);
     }
 
     public function complete(Request $request)
     {
-        $authentication = Authentication::where('token', $request->authentication_token)->first();
-        if(is_null($authentication)){
-            return to_route('login_credential.create');
-        }elseif(is_null($request->session()->get('is_authentication_created'))){
+        if(is_null($request->session()->get('is_authentication_created'))){
             return to_route('tasks.index');
         }
 
         $request->session()->forget('is_authentication_created');
-        return view('authentication.complete')->with(['user_email' => $authentication->email]);
+        
+        return view('authentication.complete')->with(['is_sent_authentication_email' => true]);
     }
 }
