@@ -13,6 +13,11 @@
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
+        @if(isset($user_add_messsage))
+            <ul>
+                <li>{{ $user_add_messsage }}</li>
+            </ul>
+        @endif
         @if(isset($is_sent_authentication_email))
             <ul>
                 <li>{{ '認証メールを送信しました。15分以内に登録手続きをしてください。' }}</li>
@@ -42,11 +47,6 @@
             @foreach($updated_info_array as $updated_info)
                 <li>{{ trans('validation.attributes.'.$updated_info) }}を更新しました。</li>
             @endforeach
-            </ul>
-        @endif
-        @if(isset($user_add_messsage))
-            <ul>
-                <li>{{ $user_add_messsage }}</li>
             </ul>
         @endif
     </div>
