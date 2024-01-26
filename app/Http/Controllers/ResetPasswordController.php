@@ -53,7 +53,7 @@ class ResetPasswordController extends Controller
             ->where('expired_at', '>', now())
             ->first();
         if(is_null($reset_password)){
-            return to_route('task.index')->withErrors(['reset_error' => '無効なアクセスです。']);
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         return view('reset_password.edit');
@@ -67,7 +67,7 @@ class ResetPasswordController extends Controller
             ->first();
         
         if(is_null($reset_password)){
-            return to_route('task.index')->withErrors(['reset_error' => '無効なアクセスです。']);
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         $reset_password->status = ResetPasswordStatus::COMPLETED;

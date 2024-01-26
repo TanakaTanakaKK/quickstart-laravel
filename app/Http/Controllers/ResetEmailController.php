@@ -17,7 +17,7 @@ class ResetEmailController extends Controller
             ->first();
 
         if(is_null($reset_email)){
-            return to_route('task.index')->withErrors(['token_error' => 'トークンが無効です。']);
+            return to_route('login_credential.create')->withErrors(['token_error' => 'トークンが無効です。']);
         }
 
         return view('reset_email.edit',[
@@ -34,7 +34,7 @@ class ResetEmailController extends Controller
             ->first();
 
         if(is_null($reset_email)){
-            return to_route('task.index')->withErrors(['token_error' => 'トークンが無効です。']);
+            return to_route('login_credential.create')->withErrors(['token_error' => 'トークンが無効です。']);
         }
 
         try{
@@ -42,7 +42,7 @@ class ResetEmailController extends Controller
             $reset_email->user->email = $reset_email->email;
             $reset_email->push();
         }catch(Exception $e){
-            return to_route('task.index')->withErrors('更新に失敗しました。');
+            return to_route('login_credential.create')->withErrors('更新に失敗しました。');
         }
 
         return to_route('reset_email.complete', $request->reset_email_token)->with(['is_updated_email' => true]);
