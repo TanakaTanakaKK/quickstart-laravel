@@ -15,7 +15,7 @@
         <br><br>
         @if(isset($is_sent_authentication_email))
             <ul>
-                <li>{{ '認証メールを送信しました。15分以内に登録手続きをしてください。' }}</li>
+                <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
         @else
             <ul>
