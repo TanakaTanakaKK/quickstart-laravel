@@ -13,24 +13,25 @@
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
-        @if(isset($user_add_messsage))
+        @if(isset($is_user_created))
             <ul>
-                <li>{{ $user_add_messsage }}</li>
+                <li>会員登録が完了しました。</li>
             </ul>
         @endif
         @if(isset($is_sent_authentication_email))
             <ul>
                 <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
-        @elseif(isset($reset_password_email))
+        @endif
+        @if(isset($reset_password_email))
             <ul>
                 <li>{{ $reset_password_email}}宛にメールを送信しました。15分以内にパスワードの再設定をしてください。</li>
-            </ul>
+            </ul>    
         @endif
-        @if(isset($completed_reset_password))
-        <ul>
-            <li>{{ $completed_reset_password }}</li>
-        </ul>
+        @if(isset($is_updated_password))
+            <ul>
+                <li>パスワードを更新しました。</li>
+            </ul>
         @endif
         @if(isset($proposed_update_email))
             <ul>

@@ -111,7 +111,7 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete', $request->authentication_token)->with(['is_user_created' => true]);
+        return to_route('users.complete')->with(['is_user_created' => true]);
     }
 
     public function show(Request $request)
@@ -249,9 +249,8 @@ class UserController extends Controller
                 $complete_messages += array('updated_info_array' => $updated_info_array);
             }
 
-                return to_route('users.show', $request->session()->get('login_credential_token'))
-                    ->with($complete_messages);
-            
+            return to_route('users.show', $request->session()->get('login_credential_token'))
+                ->with($complete_messages);
         }
 
         return to_route('users.show', $request->session()->get('login_credential_token'))
@@ -275,7 +274,7 @@ class UserController extends Controller
         
         return view('user.complete', [
             'is_succeeded' => true,
-            'user_add_messsage' => '会員登録が完了しました。',
+            'is_user_created' => true,
             'authenticated_user' => $user
         ]);
     }
