@@ -20,11 +20,11 @@
         @endif
         @if(isset($is_sent_authentication_email))
             <ul>
-                <li>{{ '認証メールを送信しました。15分以内に登録手続きをしてください。' }}</li>
+                <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
-        @elseif(isset($email_for_reset_password))
+        @elseif(isset($reset_password_email))
             <ul>
-                <li>{{ $email_for_reset_password.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
+                <li>{{ $reset_password_email}}宛にメールを送信しました。15分以内にパスワードの再設定をしてください。</li>
             </ul>
         @endif
         @if(isset($completed_reset_password))
