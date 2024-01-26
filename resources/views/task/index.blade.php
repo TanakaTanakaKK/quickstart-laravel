@@ -50,7 +50,7 @@
                                 </th>
                             </thead>
                             <tbody>
-                                @if(count($tasks) == 0)
+                                @if(count($tasks) === 0)
                                     <tr>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
@@ -81,17 +81,17 @@
                                         <td class="table-text py-0 align-middle text-dark text-nowrap">
                                             <div>{{ \Carbon\Carbon::parse($task->expired_at)->format('Y年m月d日 H:i') }}</div>
                                         </td>
-                                        <td  class="py-0 align-middle">
+                                        <td class="py-0 align-middle">
                                             <a href="{{ route('task.show',$task->id) }}" class="btn btn-primary text-nowrap">
                                                 <i class="fa-solid fa-circle-info"></i>詳細
                                             </a>
                                         </td>
-                                        <td  class="py-0 align-middle">
+                                        <td class="py-0 align-middle">
                                             <a href="{{ route('task.edit',$task->id) }}" class="btn btn-primary text-nowrap">
                                                 <i class="fa-regular fa-pen-to-square"></i>編集
                                             </a>
                                         </td>
-                                        <td  class="align-middle">
+                                        <td class="align-middle">
                                             <button type="submit" class="btn btn-danger text-nowrap delete_button" data-name="{{ $task->name }}" value="{{ $task->id }}">
                                                 <i class="fa fa-trash"></i>削除
                                             </button>

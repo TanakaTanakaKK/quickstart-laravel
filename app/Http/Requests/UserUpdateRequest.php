@@ -98,7 +98,7 @@ class UserUpdateRequest extends FormRequest
                 'image',
                 'mimes:jpg,gif,png,webp',
                 'max:2048',
-            ]
+            ],
         ];
     }
 

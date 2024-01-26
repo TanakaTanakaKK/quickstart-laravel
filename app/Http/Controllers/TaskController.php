@@ -26,7 +26,8 @@ class TaskController extends Controller
         if($request->user_status === UserStatus::ADMIN){
             $tasks = Task::orderBy('expired_at', 'asc')->get();
         }else{
-            $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id')) 
+            $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+            $tasks = Task::where('user_id', $user_id) 
                 ->orderBy('expired_at', 'asc')
                 ->get();
         }
@@ -104,9 +105,9 @@ class TaskController extends Controller
 
     public function show(Request $request, Task $task)
     {
-        if($request->user_status !== UserStatus::ADMIN  &&
-        $task->user_id !== LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id')){
-            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
+        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
         if(is_null($request->session()->get('is_succeeded'))){
@@ -124,8 +125,9 @@ class TaskController extends Controller
 
     public function edit(Request $request, Task $task)
     {
-        if($request->user_status !== UserStatus::ADMIN  &&
-        $task->user_id !== LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id')){
+        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+        
+        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
 
@@ -136,6 +138,11 @@ class TaskController extends Controller
 
     public function update(TaskUpdateRequest $request, Task $task)
     {
+        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
+        }
+
         $task_updated_info_array = [];
         foreach($request->all() as $data_name => $data){
         
@@ -224,7 +231,9 @@ class TaskController extends Controller
 
     public function destroy(Request $request, Task $task)
     {
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id')){
+        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+
+        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 

@@ -135,7 +135,7 @@ class UserController extends Controller
         }
         if(!is_null($request->session()->get('user_updated_info_array'))){
             $complete_messages += array('user_updated_info_array' => $request->session()->get('user_updated_info_array'));
-            $request->session()->forget('updated_info_array');
+            $request->session()->forget('user_updated_info_array');
         }
 
         return view('user.show')->with($complete_messages);

@@ -98,7 +98,6 @@ class ResetPasswordController extends Controller
             return view('reset_password.complete', ['is_succeeded' => true])->with($complete_message);
         }
     
-        return to_route('task.index');
-        
+        return to_route('login_credential.create');
     }
 }
