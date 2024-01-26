@@ -45,7 +45,7 @@ class TaskRequest extends FormRequest
     {
         return [
             'name' => 'タスク名',
-            'detail' => 'タスクの詳細',
+            'detail' => 'タスクの内容',
             'status' => 'タスクのステータス',
             'expired_at' => 'タスクの期限',
             'image_file' => '画像ファイル'

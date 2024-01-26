@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="form-group row mt-0 mx-0">
-                            <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">詳細</label>
+                            <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">内容</label>
                             <div class="col-md-6">
                                 <textarea name="detail" id="detail" class="form-control border" rows="2">{{ $task->detail }}</textarea>
                             </div>

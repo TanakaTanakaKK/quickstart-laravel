@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="form-group row my-2 mx-0">
-                    <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">詳細</label>
+                    <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">内容</label>
                     <div class="col-md-6">
                         <div class="border rounded pl-2">
                             <p class="my-1 mx-1">{{ $task->detail }}</p>

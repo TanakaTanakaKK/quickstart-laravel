@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="form-group row mt-0 mx-0">
-                            <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">詳細
+                            <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">内容
                                 <span class="badge text-danger">*</span>   
                             </label>
                             <div class="col-md-6">
