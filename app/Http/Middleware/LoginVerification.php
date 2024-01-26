@@ -16,11 +16,14 @@ class LoginVerification
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!is_null(session('login_credential_token')) && LoginCredential::where('token', session('login_credential_token'))->exists()){
-            $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
-        }else{
+        $login_credential_token = session('login_credential_token');
+
+        if(is_null($login_credential_token) && !LoginCredential::where('token', $login_credential_token)->exists()){
             return to_route('login_credential.create');
         }
+
+        $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
+
         return $next($request);
     }    
     

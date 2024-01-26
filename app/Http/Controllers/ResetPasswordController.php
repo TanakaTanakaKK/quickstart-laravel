@@ -43,7 +43,7 @@ class ResetPasswordController extends Controller
 
         Mail::to($request->email)->send(new ResetPasswordMail($reset_password_token));
 
-        return to_route('reset_password.complete', $reset_password_token)->with(['is_reset_mail_send' => true]);
+        return to_route('reset_password.complete', $reset_password_token)->with(['is_reset_mail_sent' => true]);
     }
 
     public function edit(Request $request)
@@ -81,17 +81,17 @@ class ResetPasswordController extends Controller
     {
         $reset_password = ResetPassword::where('token', $request->reset_password_token)->first();
 
-        if(is_null($reset_password) && is_null($request->session()->get('is_reset_mail_send') || is_null($request->session()->get('is_password_updated')))){
+        if(is_null($reset_password) && is_null($request->session()->get('is_reset_mail_sent') || is_null($request->session()->get('is_password_updated')))){
             return to_route('tasks.index');
         }
 
         $complete_message = match($reset_password->status){
             ResetPasswordStatus::MAIL_SENT => ['reset_password_email' => $reset_password->email],
-            ResetPasswordStatus::COMPLETED => ['successful' => 'ログインパスワードの変更が完了しました。'],
+            ResetPasswordStatus::COMPLETED => ['is_updated_password' => true],
             default => null
         };
         
-        $request->session()->forget('is_reset_mail_send'); 
+        $request->session()->forget('is_reset_mail_sent'); 
         $request->session()->forget('is_password_updated');
 
         if(!is_null($complete_message)){
