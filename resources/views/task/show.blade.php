@@ -16,9 +16,15 @@
                     </div>
                 </div>
                 <div class="form-group row my-2 mx-0">
+                    <label for="name" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">タスク名</label>
+                    <div class="col-md-6">
+                        <p class="form-control mb-0">{{ $task->name }}</p>
+                    </div>
+                </div>
+                <div class="form-group row my-2 mx-0">
                     <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">詳細</label>
                     <div class="col-md-6">
-                        <div class="border rounded">
+                        <div class="border rounded pl-2">
                             <p class="my-1 mx-1">{{ $task->detail }}</p>
                         </div>
                     </div>

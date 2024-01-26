@@ -30,7 +30,6 @@ class TaskUpdateRequest extends FormRequest
             ],
             'expired_at' => [
                 'nullable',
-                'after:today',
                 'date'
             ],
             'status' => [

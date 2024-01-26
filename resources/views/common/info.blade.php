@@ -13,29 +13,32 @@
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
-        @if(isset($user_email))
+        @if(isset($is_user_created))
             <ul>
-                <li>{{ $user_email.'宛にメールを送信しました。15分以内に登録手続きをしてください。' }}</li>
-            </ul>
-        @elseif(isset($email_for_reset_password))
-            <ul>
-                <li>{{ $email_for_reset_password.'宛にメールを送信しました。15分以内にパスワードの再設定をしてください。' }}</li>
+                <li>会員登録が完了しました。</li>
             </ul>
         @endif
-
-        @if(isset($completed_reset_password))
-        <ul>
-            <li>{{ $completed_reset_password }}</li>
-        </ul>
-        @endif
-        
-        @if(isset($email_for_reset_email))
+        @if(isset($is_sent_authentication_email))
             <ul>
-                <li>{{ $email_for_reset_email }}宛にメールを送信しました。<br>メールアドレスを更新するには、15分以内にリンクにアクセスしてください。</li>
+                <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
         @endif
-
-        @if(isset($is_completed_reset_email))
+        @if(isset($reset_password_email))
+            <ul>
+                <li>{{ $reset_password_email}}宛にメールを送信しました。15分以内にパスワードの再設定をしてください。</li>
+            </ul>    
+        @endif
+        @if(isset($is_updated_password))
+            <ul>
+                <li>パスワードを更新しました。</li>
+            </ul>
+        @endif
+        @if(isset($proposed_update_email))
+            <ul>
+                <li>{{ $proposed_update_email }}宛にメールを送信しました。<br>メールアドレスを更新するには、15分以内にリンクにアクセスしてください。</li>
+            </ul>
+        @endif
+        @if(isset($is_updated_email))
             <ul>
                 <li>メールアドレスを{{ $user_info->email }}に更新しました。</li>
             </ul>
@@ -53,11 +56,6 @@
             @foreach($task_updated_info_array as $updated_info)
                 <li>{{ trans('validation.task_attributes.'.$updated_info) }}を更新しました。</li>
             @endforeach
-            </ul>
-        @endif
-        @if(isset($user_add_messsage))
-            <ul>
-                <li>{{ $user_add_messsage }}</li>
             </ul>
         @endif
         @if(isset($created_task_name))
