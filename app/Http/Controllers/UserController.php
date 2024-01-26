@@ -127,11 +127,13 @@ class UserController extends Controller
             'is_succeeded' => true
         ];
         
-        if(!is_null($request->session()->get('email_for_reset_email'))){
-            $complete_messages += array('email_for_reset_email' => $request->session()->get('email_for_reset_email'));
+        if(!is_null($request->session()->get('proposed_update_email'))){
+            $complete_messages += array('proposed_update_email' => $request->session()->get('proposed_update_email'));
+            $request->session()->forget('proposed_update_email');
         }
         if(!is_null($request->session()->get('updated_info_array'))){
             $complete_messages += array('updated_info_array' => $request->session()->get('updated_info_array'));
+            $request->session()->forget('updated_info_array');
         }
 
         return view('user.show')->with($complete_messages);
@@ -240,7 +242,7 @@ class UserController extends Controller
 
             $complete_messages = [
                 'is_succeeded_updated' => true,
-                'email_for_reset_email' => $request->email
+                'proposed_update_email' => $request->email
             ];
             
             if(count($updated_info_array) >= 1){
@@ -261,13 +263,12 @@ class UserController extends Controller
 
     public function complete(Request $request)
     {     
-        if(is_null($request->authentication_token) || is_null($request->session()->get('is_user_created'))){
+        if(is_null($request->session()->get('is_user_created'))){
             return to_route('login_credential.create');
         }
 
-        $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
-            $query->where('token', $request->authentication_token)
-                ->where('expired_at', '>', now());
+        $user = User::whereHas('authentication', function($query) use ($request) {
+            $query->where('token', $request->authentication_token);
         })->first();
 
         $request->session()->forget('is_user_created');
@@ -275,7 +276,7 @@ class UserController extends Controller
         return view('user.complete', [
             'is_succeeded' => true,
             'user_add_messsage' => '会員登録が完了しました。',
-            'authenticated_user' => $authenticated_user
+            'authenticated_user' => $user
         ]);
     }
 }
