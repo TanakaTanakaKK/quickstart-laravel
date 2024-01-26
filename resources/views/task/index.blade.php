@@ -30,16 +30,18 @@
                         <table class="table table-striped task-table">
                             <thead>
                                 @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
-                                <th class="border-top-0 col-2 text-nowrap">画像</th>
-                                <th class="border-top-0 col-3 text-nowrap">タスク名</th>
-                                <th class="border-top-0 col-2 text-nowrap">ユーザー名</th>
-                                <th class="border-top-0 col-3 text-nowrap">期限</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">画像</th>
+                                <th class="border-top-0 col-3 text-nowrap text-center">タスク名</th>
+                                <th class="border-top-0 col-2 text-nowrap text-center">ユーザー名</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
+                                <th class="border-top-0 col-3 text-nowrap text-center">期限</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
                                 @else
-                                <th class="border-top-0 col-2 text-nowrap">画像</th>
-                                <th class="border-top-0 col-4 text-nowrap">タスク名</th>
-                                <th class="border-top-0 col-4 text-nowrap">期限</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">画像</th>
+                                <th class="border-top-0 col-4 text-nowrap text-center">タスク名</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
+                                <th class="border-top-0 col-4 text-nowrap text-center">期限</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
                                 @endif
@@ -61,6 +63,7 @@
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
                                     </tr>
                                 @else
                                 @foreach($tasks as $task)
@@ -78,6 +81,9 @@
                                             <div>{{ $task->user->name }}</div>
                                         </td>
                                         @endif
+                                        <td class="table-text py-0 align-middle text-dark text-nowrap">
+                                            <div>{{ \App\Enums\TaskStatus::getDescription($task->status) }}</div>
+                                        </td>
                                         <td class="table-text py-0 align-middle text-dark text-nowrap">
                                             <div>{{ \Carbon\Carbon::parse($task->expired_at)->format('Y年m月d日 H:i') }}</div>
                                         </td>
