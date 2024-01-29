@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     ResetPasswordController,
     ResetEmailController,
     TaskController,
+    TaskCommentController,
     UserController,
 };
 
@@ -23,6 +24,10 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
         Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
         Route::post('/search', [TaskController::class, 'search'])->name('task.search');
+    });
+    Route::prefix('/task_comment')->group(function () {
+        Route::post('/store', [TaskCommentController::class, 'store'])->name('task_comment.store');
+        Route::delete('/{task_comment}', [TaskCommentController::class, 'destroy'])->name('task_comment.destroy');
     });
     Route::prefix('/users')->group(function () {
         Route::get('/{login_credential_token}', [UserController::class, 'show'])->name('users.show');

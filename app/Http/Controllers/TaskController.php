@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     Task,
+    TaskComment,
     LoginCredential,
 };
 use Illuminate\Http\Request;
@@ -114,9 +115,14 @@ class TaskController extends Controller
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
+        $task_comments = TaskComment::where('task_id', $task->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
         if(is_null($request->session()->get('is_succeeded'))){
             return view('task.show', [
-                'task' => $task
+                'task' => $task,
+                'comments' => $task_comments
             ]);
         }
 
@@ -124,7 +130,7 @@ class TaskController extends Controller
         $request->session()->forget('is_succeeded');
         $complete_messages += array('task_updated_info_array' => $request->session()->get('task_updated_info_array'));
         $request->session()->forget('task_updated_info_array');
-        return view('task.show')->with($complete_messages);
+        return view('task.show')->with($complete_messages,$task_comments);
     }
 
     public function edit(Request $request, Task $task)
