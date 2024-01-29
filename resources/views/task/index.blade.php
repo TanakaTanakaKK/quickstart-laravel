@@ -29,8 +29,8 @@
                     <div class="card-body pr-3 pl-3 overflow-auto">
                         <table class="table table-striped task-table">
                             <thead>
-                                @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
-                                <th class="border-top-0 col-1 text-nowrap text-center">画像</th>
+                                @can('isAdmin')
+                                <th class="border-top-0 col-2 text-nowrap text-center">画像</th>
                                 <th class="border-top-0 col-3 text-nowrap text-center">タスク名</th>
                                 <th class="border-top-0 col-2 text-nowrap text-center">ユーザー名</th>
                                 <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
@@ -44,7 +44,7 @@
                                 <th class="border-top-0 col-4 text-nowrap text-center">期限</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
-                                @endif
+                                @endcan
                                 <th class="border-top-0 col-1">
                                     <a href="{{ route('task.create') }}" class="btn btn-primary text-nowrap">
                                         <i class="fa-solid fa-plus"></i>作成
@@ -56,9 +56,9 @@
                                     <tr>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
-                                        @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
+                                        @can('isAdmin')
                                         <td>&nbsp;</td>
-                                        @endif
+                                        @endcan
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
@@ -68,36 +68,36 @@
                                 @else
                                 @foreach($tasks as $task)
                                     <tr>
-                                        <td class="table-text py-0 align-middle text-dark">
+                                        <td class="table-text py-0 align-middle text-dark text-center">
                                             <div class="image-field">
                                                 <img src="{{ asset('/storage/task/thumbnail_images/'.$task->thumbnail_image_path) }}" class="w-50">
                                             </div>
                                         </td>
-                                        <td class="table-text py-0 align-middle text-dark">
+                                        <td class="table-text py-0 align-middle text-dark text-center">
                                             <div>{{ $task->name }}</div>
                                         </td>
-                                        @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
-                                        <td class="table-text py-0 align-middle text-dark">
+                                        @can('isAdmin')
+                                        <td class="table-text py-0 align-middle text-dark text-center">
                                             <div>{{ $task->user->name }}</div>
                                         </td>
-                                        @endif
-                                        <td class="table-text py-0 align-middle text-dark text-nowrap">
+                                        @endcan
+                                        <td class="table-text py-0 align-middle text-dark text-nowrap text-center">
                                             <div>{{ \App\Enums\TaskStatus::getDescription($task->status) }}</div>
                                         </td>
-                                        <td class="table-text py-0 align-middle text-dark text-nowrap">
+                                        <td class="table-text py-0 align-middle text-dark text-nowrap text-center">
                                             <div>{{ \Carbon\Carbon::parse($task->expired_at)->format('Y年m月d日 H:i') }}</div>
                                         </td>
-                                        <td class="py-0 align-middle">
+                                        <td class="py-0 align-middle text-center">
                                             <a href="{{ route('task.show',$task->id) }}" class="btn btn-primary text-nowrap">
                                                 <i class="fa-solid fa-circle-info"></i>詳細
                                             </a>
                                         </td>
-                                        <td class="py-0 align-middle">
+                                        <td class="py-0 align-middle text-center">
                                             <a href="{{ route('task.edit',$task->id) }}" class="btn btn-primary text-nowrap">
                                                 <i class="fa-regular fa-pen-to-square"></i>編集
                                             </a>
                                         </td>
-                                        <td class="align-middle">
+                                        <td class="align-middle text-center">
                                             <button type="submit" class="btn btn-danger text-nowrap delete_button" data-name="{{ $task->name }}" value="{{ $task->id }}">
                                                 <i class="fa fa-trash"></i>削除
                                             </button>

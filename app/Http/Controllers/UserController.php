@@ -161,7 +161,7 @@ class UserController extends Controller
 
         foreach($request->all() as $data_name => $data){
 
-            if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method', 'user_status'])){
+            if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method'])){
 
                 if($data_name !== 'image_file'){
                     $user->$data_name = $data;

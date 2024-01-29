@@ -46,7 +46,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-muted border text-muted text-nowrap overflow-auto">
         <div class="container">
             <div class="navbar-header">
-                @if(is_null(session('login_credential_token')))
+                @if(!Auth::check())
                 <a class="navbar-brand text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>

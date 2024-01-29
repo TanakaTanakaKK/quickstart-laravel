@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserStatus;
 use App\Models\{
     Task,
     LoginCredential,
@@ -18,18 +17,24 @@ use App\Http\Requests\{
 use Exception;
 use Imagick;
 use Carbon\Carbon;
+use Gate;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        if($request->user_status === UserStatus::ADMIN){
+
+        if(Gate::allows('isAdmin')){
+
             $tasks = Task::orderBy('expired_at', 'asc')->get();
-        }else{
+
+        }elseif(auth()->user()->can('viewAny', Task::class)){
+
             $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
             $tasks = Task::where('user_id', $user_id) 
                 ->orderBy('expired_at', 'asc')
                 ->get();
+
         }
 
         if(!is_null($request->session()->get('created_task_name'))){
@@ -105,8 +110,7 @@ class TaskController extends Controller
 
     public function show(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('view', $task)){
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
@@ -125,9 +129,7 @@ class TaskController extends Controller
 
     public function edit(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('update', $task)){
             return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
 
@@ -138,15 +140,14 @@ class TaskController extends Controller
 
     public function update(TaskUpdateRequest $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
-            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('update', $task)){
+            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
 
         $task_updated_info_array = [];
         foreach($request->all() as $data_name => $data){
         
-            if(!is_null($data) && !in_array($data_name, ['_token', '_method', 'user_status'])){
+            if(!is_null($data) && !in_array($data_name, ['_token', '_method'])){
 
                 if($data === $task->$data_name || 
                 $data_name === 'expired_at' && Carbon::parse($task->expired_at)->format('Y-m-d\TH:i') === $request->expired_at){
@@ -211,29 +212,27 @@ class TaskController extends Controller
 
     public function search(TaskSearchWordRequest $request)
     {
-        if($request->user_status === UserStatus::ADMIN){
+        if(Gate::allows('isAdmin')){
             $tasks = Task::where('name', 'LIKE', '%'.$request->search_word.'%')
-            ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
-            ->orderBy('updated_at', 'asc')
-            ->get();
+                ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
+                ->orderBy('updated_at', 'asc')
+                ->get();
         }else{
             $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'))
-            ->where('name', 'LIKE', '%'.$request->search_word.'%')
-            ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
-            ->orderBy('updated_at', 'asc')
-            ->get();
+                ->where('name', 'LIKE', '%'.$request->search_word.'%')
+                ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
+                ->orderBy('updated_at', 'asc')
+                ->get();
         }
 
-        return view('task.index',[
+        return view('task.index', [
             'tasks' => $tasks
         ]);
     }
 
     public function destroy(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('delete', $task)){
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 

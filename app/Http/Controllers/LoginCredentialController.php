@@ -40,6 +40,12 @@ class LoginCredentialController extends Controller
             'ip' => $request->ip()
         ]);
 
+        $user = User::whereHas('loginCredentials', function($query) use ($login_credential_token) {
+            $query->where('token', $login_credential_token);
+        })->first();
+
+        auth()->login($user);
+
         $request->session()->put('login_credential_token', $login_credential_token);
 
         return to_route('task.index');
@@ -51,7 +57,8 @@ class LoginCredentialController extends Controller
             $request->session()->forget('login_credential_token');
         }
 
-        Cache::forget('weather_info');
+        session()->flush();
+        auth()->logout();
 
         return to_route('login_credential.create');
     }
