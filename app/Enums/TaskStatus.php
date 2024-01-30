@@ -7,14 +7,14 @@ use BenSampo\Enum\Enum;
 final class TaskStatus extends Enum
 {
     const PLANNED = 0;
-    const STARTED = 1;
+    const IN_PROGRESS = 1;
     const COMPLETED = 2;
 
     public static function getDescription(mixed $value): string
     {
         return match ($value) {
             self::PLANNED => '新規',
-            self::STARTED => '着手中',
+            self::IN_PROGRESS => '着手',
             self::COMPLETED => '終了',
             default => '不明'
         };
