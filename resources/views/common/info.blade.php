@@ -17,10 +17,6 @@
             <ul>
                 <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
-        @elseif(isset($reset_password_email))
-            <ul>
-                <li>{{ $reset_password_email}}宛にメールを送信しました。15分以内にパスワードの再設定をしてください。</li>
-            </ul>
         @else
             <ul>
                 <li>{{ $successful }}</li>

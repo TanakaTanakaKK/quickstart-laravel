@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class ResetPasswordStatus extends Enum
+final class PasswordResetStatus extends Enum
 {
     const MAIL_SENT = 0;
     const COMPLETED = 1;

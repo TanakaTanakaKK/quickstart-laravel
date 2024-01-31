@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthenticationController,
     LoginCredentialController,
-    ResetPasswordController,
+    PasswordResetAuthenticationController,
     TaskController,
     UserController
 };
@@ -27,7 +27,9 @@ Route::prefix('/authentications')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
-    Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+    Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
+    Route::get('/{password_reset_token}', [UserController::class, 'edit'])->name('users.edit');
+    Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
 });
 
 Route::prefix('/login_credential')->group(function () {
@@ -36,10 +38,16 @@ Route::prefix('/login_credential')->group(function () {
     Route::get('/destroy', [LoginCredentialController::class, 'destroy'])->name('login_credential.destroy');
 });
 
-Route::prefix('/reset_password')->group(function () {
-    Route::get('/create', [ResetPasswordController::class, 'create'])->name('reset_password.create');
-    Route::post('/store', [ResetPasswordController::class, 'store'])->name('reset_password.store');
-    Route::get('/edit/{reset_password_token}', [ResetPasswordController::class, 'edit'])->name('reset_password.edit');
-    Route::patch('/update', [ResetPasswordController::class, 'update'])->name('reset_password.update');
-    Route::get('/complete/{reset_password_token}', [ResetPasswordController::class, 'complete'])->name('reset_password.complete');   
+// Route::prefix('/password_reset')->group(function () {
+//     Route::get('/create', [ResetPasswordController::class, 'create'])->name('password_reset.create');
+//     Route::post('/store', [ResetPasswordController::class, 'store'])->name('password_reset.store');
+//     Route::get('/edit/{password_reset_token}', [ResetPasswordController::class, 'edit'])->name('password_reset.edit');
+//     Route::patch('/update', [ResetPasswordController::class, 'update'])->name('password_reset.update');
+//     Route::get('/complete', [ResetPasswordController::class, 'complete'])->name('password_reset.complete');   
+// });
+
+Route::prefix('/password_reset_authentication')->group(function () {
+    Route::get('/create', [PasswordResetAuthenticationController::class, 'create'])->name('password_reset_authentication.create');
+    Route::post('', [PasswordResetAuthenticationController::class, 'store'])->name('password_reset_authentication.store');
+    Route::get('/complete', [PasswordResetAuthenticationController::class, 'complete'])->name('password_reset_authentication.complete');
 });

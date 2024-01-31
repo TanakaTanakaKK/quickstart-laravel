@@ -7,10 +7,10 @@
                     パスワードリセット
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('reset_password.update') }}" method="POST">
+                    <form action="{{ route('users.update', $user_id) }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <input type="hidden" name="reset_password_token" value="{{ request()->reset_password_token }}">
+                        <input type="hidden" name="password_reset_token" value="{{ $password_reset_token }}">
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
                                 @include('common.info')

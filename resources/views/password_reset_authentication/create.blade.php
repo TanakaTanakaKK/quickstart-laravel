@@ -7,7 +7,7 @@
                     パスワードリセット
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('reset_password.store') }}" method="POST">
+                    <form action="{{ route('password_reset_authentication.store') }}" method="POST">
                         @csrf
                         <div class="mt-0 mx-0">
                             <div class="panel-body">

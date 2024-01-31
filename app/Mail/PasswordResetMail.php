@@ -10,14 +10,14 @@ use Illuminate\Mail\Mailables\{
 };
 use Illuminate\Queue\SerializesModels;
 
-class ResetPasswordMail extends Mailable
+class PasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $reset_password_token)
+    public function __construct(public string $password_reset_token)
     {
         //
     }
