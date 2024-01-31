@@ -18,11 +18,10 @@ use Illuminate\Support\Facades\{
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\{
-    ResetNewPasswordRequest,
+    PasswordResetRequest,
     UserRequest,
 };
 use Exception;
-use Illuminate\Auth\Events\PasswordReset;
 use Imagick;
 
 class UserController extends Controller
@@ -127,7 +126,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(ResetNewPasswordRequest $request)
+    public function update(PasswordResetRequest $request)
     {
         $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
             ->where('status',  PasswordResetStatus::MAIL_SENT)
@@ -144,23 +143,19 @@ class UserController extends Controller
         $password_reset_authentication->status = PasswordResetStatus::COMPLETED;
         $password_reset_authentication->save();
 
-        return to_route('users.complete',$user->id)->with(['is_password_reset' => true]);
+        return to_route('password_reset_authentication.complete')->with(['is_password_reset' => true]);
     }
 
     public function complete(Request $request, User $user)
     {     
         if(!is_null($request->session()->get('is_user_created'))){
             $request->session()->forget('is_user_created');
-            $successful = '会員登録が完了しました。';
-        }elseif(!is_null($request->session()->get('is_password_reset'))){
-            $request->session()->forget('is_password_reset');
-            $successful = 'パスワードのリセットが完了しました。';
         }else{
             return to_route('login_credential.create');
         }
 
         return view('user.complete', [
-            'successful' => $successful,
+            'successful' => '会員登録が完了しました。',
             'authenticated_user' => $user
         ]);
     }

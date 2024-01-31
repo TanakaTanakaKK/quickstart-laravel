@@ -38,14 +38,6 @@ Route::prefix('/login_credential')->group(function () {
     Route::get('/destroy', [LoginCredentialController::class, 'destroy'])->name('login_credential.destroy');
 });
 
-// Route::prefix('/password_reset')->group(function () {
-//     Route::get('/create', [ResetPasswordController::class, 'create'])->name('password_reset.create');
-//     Route::post('/store', [ResetPasswordController::class, 'store'])->name('password_reset.store');
-//     Route::get('/edit/{password_reset_token}', [ResetPasswordController::class, 'edit'])->name('password_reset.edit');
-//     Route::patch('/update', [ResetPasswordController::class, 'update'])->name('password_reset.update');
-//     Route::get('/complete', [ResetPasswordController::class, 'complete'])->name('password_reset.complete');   
-// });
-
 Route::prefix('/password_reset_authentication')->group(function () {
     Route::get('/create', [PasswordResetAuthenticationController::class, 'create'])->name('password_reset_authentication.create');
     Route::post('', [PasswordResetAuthenticationController::class, 'store'])->name('password_reset_authentication.store');

@@ -37,17 +37,22 @@ class PasswordResetAuthenticationController extends Controller
 
         Mail::to($request->email)->send(new PasswordResetMail($password_reset_token));
 
-        return to_route('password_reset_authentication.complete', $password_reset_token)->with(['is_sent_authentication_email' => true]);
+        return to_route('password_reset_authentication.complete')->with(['is_sent_authentication_email' => true]);
     }
 
     public function complete(Request $request)
     {
-        if(is_null($request->session()->get('is_sent_authentication_email'))){
+        if(!is_null($request->session()->get('is_sent_authentication_email'))){
+            $request->session()->forget('is_sent_authentication_email');
+            $password_reset_message = '認証メールを送信しました。15分以内に登録手続きをしてください。';
+        }elseif(!is_null($request->session()->get('is_password_reset'))){
+            $request->session()->forget('is_password_reset');
+            $password_reset_message = 'パスワードの変更が完了しました。';
+        }else{
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('is_sent_authentication_email');
 
-        return view('password_reset.complete', ['is_sent_authentication_email' => true]);
+        return view('password_reset.complete', ['password_reset_message' => $password_reset_message]);
     }
 }

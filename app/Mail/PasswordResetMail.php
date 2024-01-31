@@ -32,7 +32,7 @@ class PasswordResetMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.reset_password_mail',
+            view: 'emails.password_reset_mail',
         );
     }
 
