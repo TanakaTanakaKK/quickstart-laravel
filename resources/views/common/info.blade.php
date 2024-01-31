@@ -23,12 +23,11 @@
                 <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
             </ul>
         @endif
-        @if(isset($reset_password_email))
+        @if(isset($password_reset_message))
             <ul>
-                <li>{{ $reset_password_email}}宛にメールを送信しました。15分以内にパスワードの再設定をしてください。</li>
-            </ul>    
-        @endif
-        @if(isset($is_updated_password))
+                <li>{{ $password_reset_message }}</li>
+            </ul>
+        @else
             <ul>
                 <li>パスワードを更新しました。</li>
             </ul>

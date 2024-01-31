@@ -11,7 +11,7 @@
         <div class="container">
             <div class="navbar-header">
                 @if(is_null(session('login_credential_token')))
-                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create', ['type' => \App\Enums\AuthenticationType::PASSWORD_RESET]) }}">
                 会員登録
                 </a>
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.create') }}">
@@ -21,9 +21,9 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
+                {{-- <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
                 アカウント
-                </a>
+                </a> --}}
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
                 ログアウト
                 </a>

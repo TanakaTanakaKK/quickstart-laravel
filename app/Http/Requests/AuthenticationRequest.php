@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AuthenticationType;
+use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuthenticationRequest extends FormRequest
@@ -20,6 +22,11 @@ class AuthenticationRequest extends FormRequest
                 'unique:users,email',
                 'max:255',
                 'string'
+            ],
+            'type' => [
+                'required',
+                'integer',
+                new EnumValue(AuthenticationType::class, false)
             ]
         ];
     }
