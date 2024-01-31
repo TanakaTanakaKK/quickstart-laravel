@@ -53,6 +53,6 @@ class PasswordResetAuthenticationController extends Controller
         }
 
 
-        return view('password_reset.complete', ['password_reset_message' => $password_reset_message]);
+        return view('password_reset_authentication.complete', ['password_reset_message' => $password_reset_message]);
     }
 }
