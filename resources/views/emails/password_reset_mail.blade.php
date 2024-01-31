@@ -9,6 +9,6 @@
 <body>
     下記リンクへ進んでパスワードを再設定してください。
     <br><br>
-    <a href="{{ route('users.edit', $password_reset_authentication_token) }}">{{ route('users.edit', $password_reset_authentication_token) }}</a>
+    <a href="{{ route('users.edit', $password_reset_token) }}">{{ route('users.edit', $password_reset_token) }}</a>
 </body>
 </html>
