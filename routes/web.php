@@ -28,7 +28,7 @@ Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
-    Route::get('/{password_reset_token}', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('/{password_reset_authentication_token}', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
 });
 

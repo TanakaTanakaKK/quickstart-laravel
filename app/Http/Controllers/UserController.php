@@ -128,7 +128,7 @@ class UserController extends Controller
 
     public function update(PasswordResetRequest $request)
     {
-        $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
+        $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_authentication_token)
             ->where('status',  PasswordResetStatus::MAIL_SENT)
             ->where('expired_at', '>', now())
             ->first();
