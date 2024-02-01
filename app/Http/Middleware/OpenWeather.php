@@ -51,6 +51,7 @@ class OpenWeather
                 
             }catch(Exception $e){
             }
+            
             return $result;
         });
         
