@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class ResetEmailStatus extends Enum
+final class PasswordResetStatus extends Enum
 {
     const MAIL_SENT = 0;
     const COMPLETED = 1;
@@ -13,7 +13,8 @@ final class ResetEmailStatus extends Enum
     {
         return match ($value) {
             self::MAIL_SENT => 'メール送信完了',
-            self::COMPLETED => '更新完了'
+            self::COMPLETED => '編集完了',
+            default => '不明'
         };
     }
 }

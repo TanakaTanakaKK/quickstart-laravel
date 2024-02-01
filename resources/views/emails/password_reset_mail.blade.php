@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
-    下記リンクへ進んでパスワードを再設定してください。
+    下記リンクへアクセスしてパスワードを再設定してください。
     <br><br>
-    <a href="{{ route('reset_password.edit', $reset_password_token) }}">{{ route('reset_password.edit', $reset_password_token) }}</a>
+    <a href="{{ route('users.edit_password', $authentication_token) }}">{{ route('users.edit_password', $authentication_token) }}</a>
 </body>
 </html>

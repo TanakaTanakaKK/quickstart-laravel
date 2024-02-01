@@ -1,12 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Library;
-
-use Illuminate\Support\Facades\Facade;
-
-class Functions extends Facade
-{
-    public static function get_request_ip() {
+if(!function_exists('get_request_ip')){
+    
+    function get_request_ip() {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ipArray = array_map('trim', explode(',', $_SERVER["HTTP_X_FORWARDED_FOR"]));
             $ip = $ipArray[0];

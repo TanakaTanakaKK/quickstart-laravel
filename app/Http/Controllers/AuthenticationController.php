@@ -2,59 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AuthenticationStatus;
-use App\Models\Authentication;
+use App\Enums\{
+    AuthenticationStatus,
+    AuthenticationType
+};
+use App\Models\{
+    Authentication,
+    LoginCredential
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Http\Requests\AuthenticationRequest;
-use App\Mail\SendTokenMail;
+use App\Mail\{
+    EmailResetMail,
+    SendTokenMail,
+    PasswordResetMail
+};
+use Exception;
 
 class AuthenticationController extends Controller
 {
     public function create(Request $request)
     {
-        return view('authentication.create');
+        return view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]);
+    }
+
+    public function create_password(Request $request)
+    {
+        return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
+    }
+
+    public function create_email(Request $request)
+    {
+        return view('authentication.create', ['authentication_type' => AuthenticationType::EMAIL_RESET]);
     }
 
     public function store(AuthenticationRequest $request)
     {
-        $user_token = Str::random(rand(30, 50));
-        $authentication = Authentication::where('email', $request->email)
-            ->where('status', AuthenticationStatus::MAIL_SENT)
-            ->first();
-
-        $expired_at = now()->addMinutes(15);
-
-        if(!is_null($authentication)){
-            $authentication->token = $user_token;
-            $authentication->expired_at = $expired_at;
-            $authentication->save();
-        }else{
-            Authentication::create([
-                'token' => $user_token,
-                'email' => $request->email,
-                'status' => AuthenticationStatus::MAIL_SENT,
-                'expired_at' => $expired_at
-            ]);
+        $is_duplicated_authentication_token = true;
+        while($is_duplicated_authentication_token){
+            $authentication_token = Str::random(rand(30, 50));
+            $is_duplicated_authentication_token = Authentication::where('token', $authentication_token)->exists();
         }
 
-        Mail::to($request->email)->send(new SendTokenMail($user_token));
+        try{
+            $authentication = Authentication::create([
+                'token' => $authentication_token,
+                'email' => $request->email,
+                'status' => AuthenticationStatus::MAIL_SENT,
+                'expired_at' => now()->addMinutes(15),
+                'type' => $request->authentication_type
+            ]);
+        }catch(Exception $e){
+            dd('dadada');
+            return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
+        }
 
-        return to_route('authentications.complete')->with(['is_authentication_created' => true]);
+        if((int)$request->authentication_type === AuthenticationType::USER_REGISTER){
+            Mail::to($request->email)->send(new SendTokenMail($authentication_token));
+            $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内に登録手続きをしてください。';
+
+        }elseif((int)$request->authentication_type === AuthenticationType::PASSWORD_RESET){
+            Mail::to($request->email)->send(new PasswordResetMail($authentication_token));
+            $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にパスワードの再設定をしてください。';
+
+        }elseif((int)$request->authentication_type === AuthenticationType::EMAIL_RESET){
+            $authentication->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+            $authentication->save();
+            Mail::to($request->email)->send(new EmailResetMail($authentication_token));
+            $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
+        }
+        return to_route('authentications.complete')->with([
+            'is_sent_authentication_mail' => true,
+            'authentication_message' => $authentication_message
+        ]);
     }
 
     public function complete(Request $request)
     {
-        if(is_null($request->session()->get('is_authentication_created'))){
+        if(is_null($request->session()->get('is_sent_authentication_mail'))){
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('is_authentication_created');
+        $request->session()->forget('is_sent_authentication_mail');
+        $authentication_message = $request->session()->get('authentication_message');
+        $request->session()->forget('authentication_message');
                     
         return view('authentication.complete', [
             'is_succeeded' => true,
-            'is_sent_authentication_email' => true
+            'authentication_message' => $authentication_message
         ]);
     }
 }

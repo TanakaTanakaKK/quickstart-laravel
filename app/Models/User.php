@@ -33,24 +33,13 @@ class User extends Model
         return $this->hasOne(Authentication::class, 'email', 'email');
     }
 
-    public function resetPasswords(): HasMany
-    {
-        return $this->hasMany(ResetPassword::class, 'email', 'email');    
-    }
-
     public function loginCredentials(): HasMany
     {
         return $this->hasMany(LoginCredential::class, 'user_id', 'id');
     }
 
-    public function resetEmails() : HasMany
-    {
-        return $this->hasMany(ResetEmail::class, 'user_id', 'id');
-    }
-    
     public function tasks()
     {
         return $this->hasMany(Task::class, 'user_id', 'id');
     }
-
 }
