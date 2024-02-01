@@ -53,7 +53,7 @@ class UserRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     $phone_number = str_replace('-', '', $value);
-                    if (!User::where('phone_number', $phone_number)->exists()) {
+                    if (User::where('phone_number', $phone_number)->exists()) {
                         $fail('既にこの:attributeは使用されています。');
                     }
                 }
