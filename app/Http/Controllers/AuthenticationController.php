@@ -52,27 +52,27 @@ class AuthenticationController extends Controller
                 'email' => $request->email,
                 'status' => AuthenticationStatus::MAIL_SENT,
                 'expired_at' => now()->addMinutes(15),
-                'type' => $request->type
+                'type' => $request->authentication_type
             ]);
         }catch(Exception $e){
+            dd('dadada');
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
 
-        if((int)$request->type === AuthenticationType::USER_REGISTER){
+        if((int)$request->authentication_type === AuthenticationType::USER_REGISTER){
             Mail::to($request->email)->send(new SendTokenMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内に登録手続きをしてください。';
 
-        }elseif((int)$request->type === AuthenticationType::PASSWORD_RESET){
+        }elseif((int)$request->authentication_type === AuthenticationType::PASSWORD_RESET){
             Mail::to($request->email)->send(new PasswordResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にパスワードの再設定をしてください。';
 
-        }elseif((int)$request->type === AuthenticationType::EMAIL_RESET){
+        }elseif((int)$request->authentication_type === AuthenticationType::EMAIL_RESET){
             $authentication->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
             $authentication->save();
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
         }
-        
         return to_route('authentications.complete')->with([
             'is_sent_authentication_mail' => true,
             'authentication_message' => $authentication_message

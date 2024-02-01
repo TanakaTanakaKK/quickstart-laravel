@@ -17,7 +17,7 @@ class EmailResetRequest extends FormRequest
             'email' => [
                 'required',
                 'email:filter',
-                'exists:users,email',
+                'unique:users,email',
                 'max:255',
                 'string'
             ]

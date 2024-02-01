@@ -24,7 +24,7 @@ class AuthenticationRequest extends FormRequest
                     'max:255',
                     'string'
                 ],
-                'type' => [
+                'authentication_type' => [
                     'required',
                     'integer',
                     new EnumValue(AuthenticationType::class, false)
@@ -39,7 +39,7 @@ class AuthenticationRequest extends FormRequest
                     'max:255',
                     'string'
                 ],
-                'type' => [
+                'authentication_type' => [
                     'required',
                     'integer',
                     new EnumValue(AuthenticationType::class, false)
