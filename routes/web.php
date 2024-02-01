@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     AuthenticationController,
     LoginCredentialController,
     TaskController,
-    UserController,
+    UserController
 };
 
 Route::group(['middleware' => ['auth.user', 'weather']], function () {
