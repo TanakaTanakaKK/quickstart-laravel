@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\{
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\{
+    EmailResetRequest,
     PasswordResetRequest,
-    UserEmailRequest,
     UserRequest,
     UserUpdateRequest,
 };
@@ -218,7 +218,7 @@ class UserController extends Controller
         return to_route('users.complete', $user->id)->with(['is_updated_user_info' => true]);
     }
 
-    public function update_email(UserEmailRequest $request, User $user)
+    public function update_email(EmailResetRequest $request, User $user)
     {
         $authentication = Authentication::where('email', $request->email)
             ->where('status',  AuthenticationStatus::MAIL_SENT)

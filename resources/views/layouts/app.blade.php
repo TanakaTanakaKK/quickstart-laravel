@@ -21,7 +21,7 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show') }}">
                 アカウント
                 </a> 
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">

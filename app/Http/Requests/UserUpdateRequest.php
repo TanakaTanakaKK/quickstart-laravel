@@ -52,8 +52,8 @@ class UserUpdateRequest extends FormRequest
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
                 'string',
                 function ($attribute, $value, $fail) {
-                    $phone_number = str_replace('-', '', $this->phone_number);
-                    if (!User::where('phone_number', $phone_number)->exists() && User::where('id', $this->user_id)->value('phone_number') !== $phone_number) {
+                    $phone_number = str_replace('-', '', $value);
+                    if (User::where('phone_number', '!==', User::where('id', $this->user_id)->value('phone_number'))->where('phone_number', $phone_number)->exists()) {
                         $fail('既にこの:attributeは使用されています。');
                     }
                 }

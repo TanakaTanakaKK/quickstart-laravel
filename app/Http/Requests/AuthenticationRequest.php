@@ -15,7 +15,7 @@ class AuthenticationRequest extends FormRequest
      */
     public function rules(): array
     {
-        if((int)$this->type === AuthenticationType::USER_REGISTER || (int)$this->type === AuthenticationType::EMAIL_RESET){
+        if((int)$this->authentication_type === AuthenticationType::USER_REGISTER || (int)$this->authentication_type === AuthenticationType::EMAIL_RESET){
             return [
                 'email' => [
                     'required',
@@ -30,7 +30,7 @@ class AuthenticationRequest extends FormRequest
                     new EnumValue(AuthenticationType::class, false)
                 ]
             ];
-        }elseif((int)$this->type === AuthenticationType::PASSWORD_RESET){
+        }elseif((int)$this->authentication_type === AuthenticationType::PASSWORD_RESET){
             return [
                 'email' => [
                     'required',

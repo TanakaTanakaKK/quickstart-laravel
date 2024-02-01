@@ -18,17 +18,18 @@ Route::middleware(['auth.user'])->group(function () {
     Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::prefix('/users')->group(function () {
-        Route::get('/{login_credential_token}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::get('/{authentication_token}/edit_email', [UserController::class, 'edit_email'])->name('users.edit_email');
         Route::patch('/{user}/email', [UserController::class, 'update_email'])->name('users.update_email');
         Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
     });
+
+    Route::get('authentications/create/email', [AuthenticationController::class, 'create_email'])->name('authentications.create_email');
 });
 
 Route::prefix('/authentications')->group(function () {
     Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
-    Route::get('/create/email', [AuthenticationController::class, 'create_email'])->name('authentications.create_email');
     Route::get('/create/password', [AuthenticationController::class, 'create_password'])->name('authentications.create_password');
     Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
     Route::get('/complete', [AuthenticationController::class, 'complete'])->name('authentications.complete');
