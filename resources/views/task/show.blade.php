@@ -5,7 +5,7 @@
     <div class="col-sm-offset-2 col-sm-8 mx-auto">
         <div class="card border rounded">
             <div class="card-header py-2">
-            {{ $task->name }}
+            タスク詳細画面
             </div>
             <div class="card-body">
                 @include('common.info')

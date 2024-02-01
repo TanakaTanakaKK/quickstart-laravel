@@ -7,10 +7,8 @@ use App\Models\{
     LoginCredential
 };
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Http\Requests\LoginCredentialRequest;
-use App\Library\Functions;
 
 class LoginCredentialController extends Controller
 {
@@ -38,7 +36,7 @@ class LoginCredentialController extends Controller
             'user_id' => User::where('email', $request->email)->value('id'),
             'token' => $login_credential_token,
             'agent' => $request->header('User-Agent'),
-            'ip' => Functions::get_request_ip()
+            'ip' => get_request_ip()
         ]);
 
         $user = User::whereHas('loginCredentials', function($query) use ($login_credential_token) {

@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body col-sm-12">
                     @include('common.info')
-                    <form action="{{ route('task.search') }}" method="POST">
+                    <form action="{{ route('task.index') }}" method="GET">
                         @csrf
                         <div class="form-group row mt-0 mx-0">
                             <label for="search_word" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">Task</label>
