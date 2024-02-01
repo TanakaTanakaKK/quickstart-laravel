@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
-    下記リンクへアクセスしてEメールアドレスを更新してください。
+    下記リンクへアクセスしてEメールアドレスを再設定してください。
     <br><br>
     <a href="{{ route('users.edit_email', $authentication_token) }}">{{ route('users.edit_email', $authentication_token) }}</a>
 </body>

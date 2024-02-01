@@ -40,7 +40,7 @@
                             <div class="panel-body">
                                 @include('common.info')
                                 <input type="hidden" name="authentication_type" value="{{ $authentication_type }}">
-                                <label for="email-form" class="col-form-label font-weight-bold">Eメールアドレス</label>
+                                <label for="email-form" class="col-form-label font-weight-bold">登録しているEメールアドレス</label>
                                 <div class="form-group col-md-12 px-0">
                                     <input type="text" name="email" class="form-control" id="email-form">
                                 </div>
@@ -57,7 +57,7 @@
                 </div>
                 @elseif((int)$authentication_type === \App\Enums\AuthenticationType::EMAIL_RESET)
                 <div class="card-header py-2">
-                    メールアドレス変更
+                    メールアドレスの更新
                 </div>
                 <div class="card-body">
                     <form action="{{ route('authentications.store') }}" method="POST">
@@ -66,7 +66,7 @@
                             <div class="panel-body">
                                 @include('common.info')
                                 <input type="hidden" name="authentication_type" value="{{ $authentication_type }}">
-                                <label for="email-form" class="col-form-label font-weight-bold">新しいメールアドレス</label>
+                                <label for="email-form" class="col-form-label font-weight-bold">新しく設定するメールアドレス</label>
                                 <div class="form-group col-md-12 px-0">
                                     <input type="text" name="email" class="form-control" id="email-form">
                                 </div>
