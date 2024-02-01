@@ -17,7 +17,7 @@ class PasswordResetMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $password_reset_token)
+    public function __construct(public string $authentication_token)
     {
         //
     }

@@ -7,10 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
-    アカウントのメールアドレスが更新されました
-    <br>
-    下記リンクへアクセスしてください。
+    下記リンクへアクセスしてEメールアドレスを更新してください。
     <br><br>
-    <a href="{{ route('reset_email.edit', $reset_email_token) }}">{{ route('reset_email.edit', $reset_email_token) }}</a>
+    <a href="{{ route('users.edit_email', $authentication_token) }}">{{ route('users.edit_email', $authentication_token) }}</a>
 </body>
 </html>

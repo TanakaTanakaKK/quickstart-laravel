@@ -18,122 +18,137 @@
                         <table class="table table-striped px-0">
                             <tbody>
                                 <tr>
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
+                                        プロフィール
+                                    </td>
                                     <td class="py-1 align-middle">
+                                        <div class="text-right">
+                                            <a href="{{ route('users.edit', $user->id) }}" class="text-light btn btn-primary  text-nowrap">編集</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3 col-md-4 py-1 align-middle">
                                         <div>画像</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <img src="{{ asset('/storage/thumbnail_images/'.$user_info->thumbnail_image_path) }}" class="w-25 h-25">
+                                        <img src="{{ asset('/storage/thumbnail_images/'.$user->thumbnail_image_path) }}" class="w-25 h-25">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>氏名</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->name }}</div>
+                                        <div>{{ $user->name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>氏名(カナ)</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->kana_name }}</div>
+                                        <div>{{ $user->kana_name }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
-                                        <div>メールアドレス</div>
-                                    </td>
-                                    <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->email }}</div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>ニックネーム</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->nickname }}</div>
+                                        <div>{{ $user->nickname }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>性別</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ \App\Enums\Gender::getDescription($user_info->gender) }}</div>
+                                        <div>{{ \App\Enums\Gender::getDescription($user->gender) }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>生年月日</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->birthday }}</div>
+                                        <div>{{ $user->birthday }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>電話番号</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->phone_number }}</div>
+                                        <div>{{ $user->phone_number }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>郵便番号</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->postal_code }}</div>
+                                        <div>{{ $user->postal_code }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>都道府県</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ \App\Enums\Prefecture::getDescription($user_info->prefecture) }}</div>
+                                        <div>{{ \App\Enums\Prefecture::getDescription($user->prefecture) }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>市区町村</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->address }}</div>
+                                        <div>{{ $user->address }}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>番地</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->block }}</div>
+                                        <div>{{ $user->block }}</div>
                                     </td>
                                 </tr>
-                                @if(isset($user_info->building))
+                                @if(isset($user->building))
                                 <tr>
-                                    <td class="py-1 align-middle">
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
                                         <div>建物</div>
                                     </td>
                                     <td  class="py-1 align-middle">
-                                        <div>{{ $user_info->building }}</div>
+                                        <div>{{ $user->building }}</div>
                                     </td>
                                 </tr>
                                 @endif
                             <tbody>
+                            <br>
+                        </table>
+                    </div>
+                    <div class="table-responsive py-5">
+                        <table class="table table-striped px-0">
+                            <tbody>
+                                <tr>
+                                    <td class="col-sm-3 col-md-4  py-1 align-middle">
+                                        <div>メールアドレス</div>
+                                    </td>
+                                    <td  class="py-1 align-middle">
+                                        <div>{{ $user->email }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-right">
+                                            <a href="{{ route('authentications.create_email') }}" class="text-light btn btn-primary  text-nowrap">編集</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>  
-                <div class="card-body px-0 py-0">
-                    <div class="text-right">
-                        <button class="btn border">
-                            <a href="{{ route('users.edit', session('login_credential_token')) }}" class="text-dark">編集</a>
-                        </button>
-                    </div>
-                </div>    
             </div>
         </div>
     </div>

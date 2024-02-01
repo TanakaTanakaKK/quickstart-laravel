@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use BenSampo\Enum\Rules\EnumValue;
+use App\Models\User;
 use App\Enums\{
     Prefecture,
     Gender
 };
-use App\Rules\IsSameRecord;
+use Illuminate\Foundation\Http\FormRequest;
+use BenSampo\Enum\Rules\EnumValue;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -21,68 +21,60 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => [
-                'nullable',
+                'required',
                 'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
                 'max:30',
                 'string',
-                new IsSameRecord($this)
             ],
             'kana_name' => [
-                'nullable',
+                'required',
                 'regex:/^[ァ-ヶ]+$/u',
                 'max:30',
                 'string',
-                new IsSameRecord($this)
-            ],
-            'email' => [
-                'nullable',
-                'email:filter',
-                'unique:users,email',
-                'max:255',
-                'string',
             ],
             'nickname' => [
-                'nullable',
+                'required',
                 'max:30',
                 'string',
-                new IsSameRecord($this)
             ],
             'gender' => [
-                'nullable',
+                'required',
                 'integer',
                 new EnumValue(Gender::class,false),
-                new IsSameRecord($this)
             ],
             'birthday' => [
-                'nullable',
+                'required',
                 'before:today',
                 'date',
-                new IsSameRecord($this)
             ],
             'phone_number' => [
-                'nullable',
+                'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
-                'unique:users,phone_number',
                 'string',
-                new IsSameRecord($this)
+                function ($attribute, $value, $fail) {
+                    $phone_number = str_replace('-', '', $this->phone_number);
+                    if (!User::where('phone_number', $phone_number)->exists() && User::where('id', $this->user_id)->value('phone_number') !== $phone_number) {
+                        $fail('既にこの:attributeは使用されています。');
+                    }
+                }
             ],
             'postal_code' => [
-                'nullable',
+                'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
                 'string',
             ],
             'prefecture' => [
-                'nullable',
+                'required',
                 'integer',
                 new EnumValue(Prefecture::class,false),
             ],
             'address' => [
-                'nullable',
+                'required',
                 'max:128',
                 'string',
             ],
             'block' => [
-                'nullable',
+                'required',
                 'max:128',
                 'string',
             ],
@@ -90,7 +82,6 @@ class UserUpdateRequest extends FormRequest
                 'nullable',
                 'max:128',
                 'string',
-                new IsSameRecord($this)
             ],
             'image_file' => [
                 'nullable',

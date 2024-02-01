@@ -13,6 +13,7 @@ class UserEmailRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this->email);
         return [
             'email' => [
                 'required',

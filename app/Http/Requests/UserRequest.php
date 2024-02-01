@@ -6,6 +6,7 @@ use App\Enums\{
     Prefecture,
     Gender
 };
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
 
@@ -49,8 +50,13 @@ class UserRequest extends FormRequest
             'phone_number' => [
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
-                'unique:users,phone_number',
-                'string'
+                'string',
+                function ($attribute, $value, $fail) {
+                    $phone_number = str_replace('-', '', $this->phone_number);
+                    if (!User::where('phone_number', $phone_number)->exists()) {
+                        $fail('既にこの:attributeは使用されています。');
+                    }
+                }
             ],
             'postal_code' => [
                 'required',

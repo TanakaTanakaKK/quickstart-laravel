@@ -14,7 +14,7 @@ class SendTokenMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public string $user_token)
+    public function __construct(public string $authentication_token)
     {
     }
 
