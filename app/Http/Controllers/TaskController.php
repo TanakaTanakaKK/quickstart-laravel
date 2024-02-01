@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserStatus;
 use App\Models\{
     Task,
-    LoginCredential,
+    LoginCredential
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -126,17 +126,9 @@ class TaskController extends Controller
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
-        if(is_null($request->session()->get('is_succeeded'))){
-            return view('task.show', [
-                'task' => $task
-            ]);
-        }
-
-        $complete_messages = ['task' => $task, 'is_succeeded' => true];
-        $request->session()->forget('is_succeeded');
-        $complete_messages += array('task_updated_info_array' => $request->session()->get('task_updated_info_array'));
-        $request->session()->forget('task_updated_info_array');
-        return view('task.show')->with($complete_messages);
+        return view('task.show', [
+            'task' => $task
+        ]);
     }
 
     public function edit(Request $request, Task $task)

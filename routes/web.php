@@ -15,11 +15,11 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
     Route::prefix('/task')->group(function () {
         Route::get('', [TaskController::class, 'index'])->name('task.index');
         Route::get('/create', [TaskController::class, 'create'])->name('task.create');
-        Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
         Route::post('/store', [TaskController::class, 'store'])->name('task.store');
         Route::get('/show/{task}', [TaskController::class, 'show'])->name('task.show');
         Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
+        Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
     });
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'show'])->name('users.show');
