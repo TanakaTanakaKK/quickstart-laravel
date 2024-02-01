@@ -52,8 +52,6 @@ class LoginCredentialController extends Controller
             $request->session()->forget('login_credential_token');
         }
 
-        Cache::forget('weather_info');
-
         return to_route('login_credential.create');
     }
 }
