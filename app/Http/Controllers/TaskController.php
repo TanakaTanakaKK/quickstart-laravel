@@ -17,30 +17,46 @@ use App\Http\Requests\{
 };
 use Exception;
 use Imagick;
-use Carbon\Carbon;
 
 class TaskController extends Controller
 {
-    public function index(Request $request)
+    public function index(TaskSearchWordRequest $request)
     {
-        if($request->user_status === UserStatus::ADMIN){
-            $tasks = Task::orderBy('expired_at', 'asc')->get();
+        if(is_null($request->query('search_word'))){
+            if($request->user_status === UserStatus::ADMIN){
+                $tasks = Task::orderBy('expired_at', 'asc')->get();
+            }else{
+                $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+                $tasks = Task::where('user_id', $user_id) 
+                    ->orderBy('expired_at', 'asc')
+                    ->get();
+            }
         }else{
-            $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-            $tasks = Task::where('user_id', $user_id) 
-                ->orderBy('expired_at', 'asc')
-                ->get();
+            if($request->user_status === UserStatus::ADMIN){
+                $tasks = Task::where('name', 'LIKE', '%'.$request->query('search_word').'%')
+                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
+                    ->orderBy('expired_at', 'asc')
+                    ->get();
+            }else{
+                $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+                $tasks = Task::where('user_id', $user_id) 
+                    ->where('name', 'LIKE', '%'.$request->query('search_word').'%')
+                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
+                    ->orderBy('expired_at', 'asc')
+                    ->get();
+            }
         }
 
-        if(!is_null($request->session()->get('created_task_name'))){
-            $created_task_name = $request->session()->get('created_task_name');
-            $request->session()->forget('created_task_name');
+        if(!is_null($request->session()->get('task_message'))){
+            $task_message = $request->session()->get('task_message');
+            $request->session()->forget('task_message');
             return view('task.index', [
                 'tasks' => $tasks,
                 'is_succeeded' => true,
-                'created_task_name' => $created_task_name
+                'task_message' => $task_message
             ]);
         }
+
         return view('task.index', [
             'tasks' => $tasks
         ]);
@@ -53,7 +69,7 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request)
     {
-        if(!is_null($request->session()->get('created_task_name'))){
+        if(!is_null($request->session()->get('task_message'))){
             return to_route('task.index');
         }
         $image = new Imagick();
@@ -100,7 +116,7 @@ class TaskController extends Controller
         }catch(Exception $e){
             return to_route('task.index')->withErrors(['task_error' => 'タスクの登録に失敗しました。']);
         }
-        return to_route('task.index')->with(['created_task_name' => $request->name]);
+        return to_route('task.index')->with(['task_message' => $request->name.'をTask Listに登録しました。']);
     }
 
     public function show(Request $request, Task $task)
@@ -126,7 +142,6 @@ class TaskController extends Controller
     public function edit(Request $request, Task $task)
     {
         $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        
         if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
@@ -143,90 +158,55 @@ class TaskController extends Controller
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
-        $task_updated_info_array = [];
-        foreach($request->all() as $data_name => $data){
-        
-            if(!is_null($data) && !in_array($data_name, ['_token', '_method', 'user_status'])){
-
-                if($data === $task->$data_name || 
-                $data_name === 'expired_at' && Carbon::parse($task->expired_at)->format('Y-m-d\TH:i') === $request->expired_at){
-                    continue;
-                }
-
-                if($data_name !== 'image_file'){
-                    $task->$data_name = $data;
-                    $task_updated_info_array[] = $data_name;
-                }else{
-                    $image = new Imagick();
-                    $image->readImage($request->file('image_file'));
-                    $archive_extension = config('mimetypes')[$image->getImageMimetype()];
-            
-                    $is_duplicated_archive_image_path = true;
-                    while($is_duplicated_archive_image_path){
-                        $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
-                        $is_duplicated_archive_image_path = Task::where('archive_image_path', $archive_image_path)->exists();
-                    }
-            
-                    if(!is_null($image->getImageProperties("exif:*"))){
-                        $image->stripImage();
-                    }
-            
-                    Storage::put('public/task/archive_images/'.$archive_image_path, $image);
-                    Storage::delete('public/task/archive_images/'.$task->archive_image_path);
-                    $task->archive_image_path = $archive_image_path;
-
-                    $is_duplicated_thumbnail_image_path = true;
-                    while($is_duplicated_thumbnail_image_path){
-                        $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-                        $is_duplicated_thumbnail_image_path = Task::where('thumbnail_image_path', $thumbnail_image_path)->exists();
-                    }
-            
-                    if($archive_extension !== '.webp'){
-                        $image->setImageFormat('webp');
-                    } 
-                    $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-            
-                    Storage::put('public/task/thumbnail_images/'.$thumbnail_image_path, $image);
-                    Storage::delete('public/task/thumbnail_images/'.$task->thumbnail_image_path);
-                    $task->thumbnail_image_path = $thumbnail_image_path;
-
-                    $image->clear();
-
-                    $task_updated_info_array[] = 'image_file';
-                }
+        if(!is_null($request->image_file)){
+            $image = new Imagick();
+            $image->readImage($request->file('image_file'));
+            $archive_extension = config('mimetypes')[$image->getImageMimetype()];
+    
+            $is_duplicated_archive_image_path = true;
+            while($is_duplicated_archive_image_path){
+                $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
+                $is_duplicated_archive_image_path = Task::where('archive_image_path', $archive_image_path)->exists();
             }
+    
+            if(!is_null($image->getImageProperties("exif:*"))){
+                $image->stripImage();
+            }
+    
+            Storage::put('public/task/archive_images/'.$archive_image_path, $image);
+            Storage::delete('public/task/archive_images/'.$task->archive_image_path);
+
+            $is_duplicated_thumbnail_image_path = true;
+            while($is_duplicated_thumbnail_image_path){
+                $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+                $is_duplicated_thumbnail_image_path = Task::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            }
+    
+            if($archive_extension !== '.webp'){
+                $image->setImageFormat('webp');
+            } 
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+    
+            Storage::put('public/task/thumbnail_images/'.$thumbnail_image_path, $image);
+            Storage::delete('public/task/thumbnail_images/'.$task->thumbnail_image_path);
+
+            $image->clear();
+
+            $task->archive_image_path = $archive_image_path;
+            $task->thumbnail_image_path = $thumbnail_image_path;
         }
-        if(count($task_updated_info_array) >= 1){
+
+        try{
+            $task->name = $request->name;
+            $task->detail = $request->detail;
+            $task->expired_at = $request->expired_at;
+            $task->status = $request->status;
             $task->save();
-        }else{
-            return to_route('task.show', $task->id);
+        }catch(Exception $e){
+            return to_route('task.show', $task->id)->withErrors(['task_error' => 'タスクの更新に失敗しました。']);
         }
-
-        return to_route('task.show', $task->id)
-            ->with([
-                'is_succeeded' => true,
-                'task_updated_info_array' => $task_updated_info_array
-            ]);
-    }
-
-    public function search(TaskSearchWordRequest $request)
-    {
-        if($request->user_status === UserStatus::ADMIN){
-            $tasks = Task::where('name', 'LIKE', '%'.$request->search_word.'%')
-            ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
-            ->orderBy('updated_at', 'asc')
-            ->get();
-        }else{
-            $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'))
-            ->where('name', 'LIKE', '%'.$request->search_word.'%')
-            ->orWhere('detail', 'LIKE', '%'.$request->search_word.'%')
-            ->orderBy('updated_at', 'asc')
-            ->get();
-        }
-
-        return view('task.index',[
-            'tasks' => $tasks
-        ]);
+        
+        return to_route('task.show', $task->id);
     }
 
     public function destroy(Request $request, Task $task)

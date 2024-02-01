@@ -20,7 +20,6 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
         Route::get('/show/{task}', [TaskController::class, 'show'])->name('task.show');
         Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
-        Route::post('/search', [TaskController::class, 'search'])->name('task.search');
     });
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'show'])->name('users.show');

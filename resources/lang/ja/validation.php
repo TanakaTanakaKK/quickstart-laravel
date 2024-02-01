@@ -172,14 +172,6 @@ return [
         'address' => '市区町村',
         'block' => '番地',
         'password' => 'パスワード',
-        'image_file' => '画像ファイル',
+        'image_file' => '画像ファイル'
     ],
-    
-    'task_attributes' => [
-        'expired_at' => 'タスクの期限',
-        'image_file' => 'タスクの画像ファイル',
-        'name' => 'タスクの名前',
-        'detail' => 'タスクの内容',
-        'status' => 'タスクのステータス'
-    ]
 ];

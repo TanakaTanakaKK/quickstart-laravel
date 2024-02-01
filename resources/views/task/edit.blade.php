@@ -46,7 +46,7 @@
                             <label for="status" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">ステータス</label>
                             <div class="col-md-6">
                                 <select name="status" id="status" class="form-control border">
-                                    <option value="" selected hidden>{{ \App\Enums\TaskStatus::getDescription($task->status) }}</option>
+                                    <option value="{{ $task->status }}" selected hidden>{{ \App\Enums\TaskStatus::getDescription($task->status) }}</option>
                                     @foreach(\App\Enums\TaskStatus::asSelectArray() as $key => $task_status)
                                             <option value="{{ $key }}">{{ $task_status }}</option>
                                     @endforeach

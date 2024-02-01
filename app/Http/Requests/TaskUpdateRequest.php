@@ -19,21 +19,21 @@ class TaskUpdateRequest extends FormRequest
                 'max:2048'
             ],
             'name' => [
-                'nullable',
+                'required',
                 'max:128',
                 'string',
             ],
             'detail' => [
-                'nullable',
+                'required',
                 'max:128',
                 'string'
             ],
             'expired_at' => [
-                'nullable',
+                'required',
                 'date'
             ],
             'status' => [
-                'nullable',
+                'required',
                 'integer',
                 new EnumValue(TaskStatus::class, false)
             ],
