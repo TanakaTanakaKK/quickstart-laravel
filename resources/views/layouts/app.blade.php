@@ -57,10 +57,10 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('task.index') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session('login_credential_token')) }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show') }}">
                 アカウント
-                </a>
-                <a class="navbar-brand text-muted" href="{{ route('login_credential.destroy') }}">
+                </a> 
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetNewPasswordRequest extends FormRequest
+class EmailResetRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,13 +14,12 @@ class ResetNewPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => [
+            'email' => [
                 'required',
-                'string',
-                'min:8',
+                'email:filter',
+                'unique:users,email',
                 'max:255',
-                'regex:/^[!-~]+$/',
-                'confirmed'
+                'string'
             ]
         ];
     }
@@ -28,7 +27,7 @@ class ResetNewPasswordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'password' => 'パスワード'
+            'email' => 'メールアドレス',
         ];
     }
 }

@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{{ route('users.update', session('login_credential_token')) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="card-body px-0 py-0">
@@ -34,7 +34,7 @@
                                             <div>氏名</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="name" class="form-control" placeholder="{{ $user_info->name }}">
+                                            <input type="text" name="name" class="form-control" value="{{ $user->name }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -42,15 +42,7 @@
                                             <div>氏名(カナ)</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="kana_name" class="form-control" placeholder="{{ $user_info->kana_name }}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-1 align-middle">
-                                            <div>メールアドレス</div>
-                                        </td>
-                                        <td  class="py-1 align-middle">
-                                            <input type="text" name="email" class="form-control" placeholder="{{ $user_info->email }}">
+                                            <input type="text" name="kana_name" class="form-control" value="{{ $user->kana_name }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -58,7 +50,7 @@
                                             <div>ニックネーム</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="nickname" class="form-control" placeholder="{{ $user_info->nickname }}">
+                                            <input type="text" name="nickname" class="form-control" value="{{ $user->nickname }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -66,8 +58,8 @@
                                             <div>性別</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <select name="gender" class="form-control border text-muted" id="gender" onclick="deleteColorClass(this)">
-                                                <option selected hidden value="">{{ \App\Enums\Gender::getDescription($user_info->gender) }}</option>
+                                            <select name="gender" class="form-control border" id="gender">
+                                                <option selected hidden value="{{ $user->gender }}">{{ \App\Enums\Gender::getDescription($user->gender) }}</option>
                                                 @foreach(\App\Enums\Gender::asSelectArray() as $key => $gender)
                                                     <option value="{{ $key }}">{{ $gender }}</option>
                                                 @endforeach
@@ -79,7 +71,7 @@
                                             <div>生年月日</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="date" name="birthday" class="form-control text-muted" onclick="deleteColorClass(this)">
+                                            <input type="date" name="birthday" class="form-control" value="{{ $user->birthday }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -87,7 +79,7 @@
                                             <div>電話番号</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="phone_number" class="form-control" placeholder="{{ $user_info->phone_number }}">
+                                            <input type="text" name="phone_number" class="form-control" value="{{ $user->phone_number }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -95,7 +87,7 @@
                                             <div>郵便番号</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="postal_code" class="form-control" placeholder="{{ $user_info->postal_code }}" id="postal_code" oninput="searchPostal()" >
+                                            <input type="text" name="postal_code" class="form-control" value="{{ $user->postal_code }}" id="postal_code" oninput="searchPostal()" >
                                         </td>
                                     </tr>
                                     <tr>
@@ -103,8 +95,8 @@
                                             <div>都道府県</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <select name="prefecture" class="form-control border text-muted" id="prefecture" onchange="deleteColorClass(this)">
-                                                <option selected hidden value="">{{ \App\Enums\Prefecture::getDescription($user_info->prefecture) }}</option>
+                                            <select name="prefecture" class="form-control border" id="prefecture">
+                                                <option selected hidden value="{{ $user->prefecture }}">{{ \App\Enums\Prefecture::getDescription($user->prefecture) }}</option>
                                                 @foreach(\App\Enums\Prefecture::asSelectArray() as $key => $prefecture)
                                                     <option value="{{ $key }}">{{ $prefecture }}</option>
                                                 @endforeach
@@ -116,7 +108,7 @@
                                             <div>市区町村</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="address" class="form-control" placeholder="{{ $user_info->address }}" id="address">
+                                            <input type="text" name="address" class="form-control" value="{{ $user->address }}" id="address">
                                         </td>
                                     </tr>
                                     <tr>
@@ -124,7 +116,7 @@
                                             <div>番地</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="block" class="form-control" placeholder="{{ $user_info->block }}">
+                                            <input type="text" name="block" class="form-control" value="{{ $user->block }}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -132,7 +124,7 @@
                                             <div>建物</div>
                                         </td>
                                         <td  class="py-1 align-middle">
-                                            <input type="text" name="building" class="form-control" placeholder="{{ $user_info->building }}">
+                                            <input type="text" name="building" class="form-control" value="{{ $user->building }}">
                                         </td>
                                     </tr>
                                 <tbody>

@@ -4,27 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Enums\{
     AuthenticationStatus,
-    ResetEmailStatus,
-    UserStatus
+    AuthenticationType,
+    UserStatus,
 };
 use App\Models\{
     Authentication,
     LoginCredential,
-    ResetEmail,
     User
 };
 use Illuminate\Support\Facades\{
     Hash,
     Storage,
-    Mail
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Requests\{
+    EmailResetRequest,
+    PasswordResetRequest,
     UserRequest,
-    UserUpdateRequest
+    UserUpdateRequest,
 };
-use App\Mail\ResetEmailAddressMail;
 use Exception;
 use Imagick;
 
@@ -49,13 +48,13 @@ class UserController extends Controller
     {   
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status', AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::USER_REGISTER)
             ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
             return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
-
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
         $archive_extension = config('mimetypes')[$image->getImageMimetype()];
@@ -88,7 +87,7 @@ class UserController extends Controller
         $image->clear();
 
         try{
-            User::create([
+            $user_id = User::create([
                 'thumbnail_image_path' => $thumbnail_image_path,
                 'archive_image_path' => $archive_image_path,
                 'email' => $authentication->email,
@@ -105,7 +104,7 @@ class UserController extends Controller
                 'block' => $request->block,
                 'building' => $request->building,
                 'status' => UserStatus::GENERAL 
-            ]);
+            ])->id;
         }catch(Exception $e){
             return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
@@ -113,171 +112,180 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete')->with(['is_user_created' => true]);
+        return to_route('users.complete',$user_id)->with(['is_user_created' => true]);
     }
 
     public function show(Request $request)
     {
-        if(is_null($request->session()->get('is_succeeded_updated'))){
-            return view('user.show', ['user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->user]);
-        }
 
-        $request->session()->forget('is_succeeded_updated');
+        return view('user.show', ['user' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
         
-        $complete_messages = [
-            'user_info' => LoginCredential::where('token', $request->login_credential_token)->first()->user,
-            'is_succeeded' => true
-        ];
-        
-        if(!is_null($request->session()->get('proposed_update_email'))){
-            $complete_messages += array('proposed_update_email' => $request->session()->get('proposed_update_email'));
-            $request->session()->forget('proposed_update_email');
-        }
-        if(!is_null($request->session()->get('user_updated_info_array'))){
-            $complete_messages += array('user_updated_info_array' => $request->session()->get('user_updated_info_array'));
-            $request->session()->forget('user_updated_info_array');
-        }
-
-        return view('user.show')->with($complete_messages);
     }
 
-    public function edit(Request $request)
+    public function edit(Request $request, User $user)
     {
-        if(is_null(LoginCredential::where('token', $request->session()->get('login_credential_token'))->first())){
-            return to_route('task.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
+        return view('user.edit', [
+            'user' => $user
+        ]);
+    }
+
+    public function edit_password(Request $request)
+    {
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::PASSWORD_RESET)
+            ->where('expired_at', '>', now())
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('tasks.index');
         }
-        return view('user.edit', ['user_info' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
+
+        return view('user.edit_password', [
+            'user_id' => User::where('email', $authentication->email)->value('id'),
+            'authentication_token' => $authentication->token
+        ]);
+    }
+
+    public function edit_email(Request $request)
+    {
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::EMAIL_RESET)
+            ->where('expired_at', '>', now())
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('tasks.index');
+        }
+
+        return view('user.edit_email', [
+            'user_id' => $authentication->user_id,
+            'user_email' => $authentication->email,
+        ]);
+    }
+
+    public function update(UserUpdateRequest $request, User $user)
+    {
+        if(!is_null($request->image_file)){
+            $image = new Imagick();
+            $image->readImage($request->file('image_file'));
+            $archive_extension = config('mimetypes')[$image->getImageMimetype()];
+
+            $is_duplicated_archive_image_path = true;
+            while($is_duplicated_archive_image_path){
+                $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_extension;
+                $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
+            }
+                
+            if(!is_null($image->getImageProperties("exif:*"))){
+                $image->stripImage();
+            }
+
+            Storage::put('public/archive_images/'.$archive_image_path, $image);
+            Storage::delete('public/archive_images/'.$user->archive_image_path);
+
+            $is_duplicated_thumbnail_image_path = true;
+            while($is_duplicated_thumbnail_image_path){
+                $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+                $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            }
+
+            if($archive_extension !== '.webp'){
+                $image->setImageFormat('webp');
+            } 
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+                        
+            Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);                    
+            Storage::delete('public/thumbnail_images/'.$user->thumbnail_image_path);
+
+            $image->clear();
+
+            $user->thmbnail_image_path = $thumbnail_image_path;
+            $user->archive_image_path = $archive_image_path;
+        }
+
+        $user->name = $request->name;
+        $user->kana_name = $request->kana_name;
+        $user->gender = $request->gender;
+        $user->birthday = $request->birthday;
+        $user->phone_number = str_replace('-', '', $request->phone_number);
+        $user->postal_code = str_replace('-', '', $request->postal_code);
+        $user->prefecture = $request->prefecture;
+        $user->address = $request->address;
+        $user->block = $request->block;
+        $user->building = $request->building;
+        $user->save();
+
+        return to_route('users.complete', $user->id)->with(['is_updated_user_info' => true]);
+    }
+
+    public function update_email(EmailResetRequest $request, User $user)
+    {
+        $authentication = Authentication::where('email', $request->email)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::EMAIL_RESET)
+            ->where('expired_at', '>', now())
+            ->where('user_id', $user->id)
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
+        }
         
+        $user->email = $request->email;
+        $user->save();
+        $authentication->status = AuthenticationStatus::COMPLETED;
+        $authentication->save();
+
+        return to_route('users.complete', $user->id)->with(['is_email_reset' => true]);
     }
 
-    public function update(UserUpdateRequest $request)
-    {    
-        $login_credential = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first();
-        if(is_null($login_credential)){
-            return to_route('task.index')->withErrors(['register_error' => 'ログインセッションが切れました。']);
+    public function update_password(PasswordResetRequest $request, User $user)
+    {
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('expired_at', '>', now())
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
-        $user_updated_info_array = [];
-        $user = $login_credential->user;
+        
+        $user->password = Hash::make($request->password);
+        $user->save();
+        $authentication->status = AuthenticationStatus::COMPLETED;
+        $authentication->save();
 
-        foreach($request->all() as $data_name => $data){
-
-            if(!is_null($data) && !in_array($data_name, ['email', '_token', '_method', 'user_status'])){
-
-                if($data_name !== 'image_file'){
-                    $user->$data_name = $data;
-                    $user_updated_info_array[] = $data_name;
-                }else{
-                    $image = new Imagick();
-                    $image->readImage($request->file('image_file'));
-                    $archive_extension = config('mimetypes')[$image->getImageMimetype()];
-                    
-                    $is_duplicated_archive_image_path = true;
-                    while($is_duplicated_archive_image_path){
-                        $archive_image_path = Str::random(rand(20, 50)).'.'.$archive_extension;
-                        $is_duplicated_archive_image_path = User::where('archive_image_path', $archive_image_path)->exists();
-                    }
-            
-                    if(!is_null($image->getImageProperties("exif:*"))){
-                        $image->stripImage();
-                    }
-
-                    Storage::put('public/archive_images/'.$archive_image_path, $image);
-                    Storage::delete('public/archive_images/'.$user->archive_image_path);
-                    $user->archive_image_path = $archive_image_path;
-                    
-
-                    $is_duplicated_thumbnail_image_path = true;
-                    while($is_duplicated_thumbnail_image_path){
-                        $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
-                        $is_duplicated_thumbnail_image_path = User::where('thumbnail_image_path', $thumbnail_image_path)->exists();
-                    }
-
-                    if($archive_extension !== '.webp'){
-                        $image->setImageFormat('webp');
-                    } 
-                    $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
-                    
-                    Storage::put('public/thumbnail_images/'.$thumbnail_image_path, $image);                    
-                    Storage::delete('public/thumbnail_images/'.$user->thumbnail_image_path);
-                    $user->thumbnail_image_path = $thumbnail_image_path;
-                    
-                    $image->clear();
-
-                    $user_updated_info_array[] = 'image_file';
-                }
-            }
-        }
-
-        if(count($user_updated_info_array) >= 1){
-            $user->save();
-        }else if(count($user_updated_info_array) === 0 && is_null($request->email)){
-            return to_route('users.show', $request->session()->get('login_credential_token'));
-        }
-
-        if(!is_null($request->email)){
-            $is_duplicated_reset_email_token = true;
-            while($is_duplicated_reset_email_token){
-                $reset_email_token = Str::random(rand(30,50));
-                $is_duplicated_reset_email_token = ResetEmail::where('token', $reset_email_token)->exists();
-            }
-
-            Mail::to($request->email)->send(new ResetEmailAddressMail($reset_email_token));
-
-            $reset_email = ResetEmail::where('user_id', $user->email)
-                ->where('expired_at', '>', now())
-                ->where('status', ResetEmailStatus::MAIL_SENT)
-                ->first();
-            
-            if(!is_null($reset_email)){
-                $reset_email->token = $reset_email_token;
-                $reset_email->expired_at = now()->addMinute(15);
-                $reset_email->save();
-            }else{
-                ResetEmail::create([
-                    'email' => $request->email,
-                    'token' => $reset_email_token,
-                    'user_id' => $user->id,
-                    'status' => ResetEmailStatus::MAIL_SENT,
-                    'expired_at' => now()->addMinute(15)
-                ]);
-            }
-
-            $complete_messages = [
-                'is_succeeded_updated' => true,
-                'proposed_update_email' => $request->email
-            ];
-            
-            if(count($user_updated_info_array) >= 1){
-                $complete_messages += array('user_updated_info_array' => $user_updated_info_array);
-            }
-
-            return to_route('users.show', $request->session()->get('login_credential_token'))
-                ->with($complete_messages);
-        }
-
-        return to_route('users.show', $request->session()->get('login_credential_token'))
-            ->with([
-                'is_succeeded_updated' => true,
-                'user_updated_info_array' => $user_updated_info_array
-            ]);
+        return to_route('users.complete', $user->id)->with(['is_password_reset' => true]);
     }
 
-    public function complete(Request $request)
+    public function complete(Request $request, User $user)
     {     
-        if(is_null($request->session()->get('is_user_created'))){
+        if(!is_null($request->session()->get('is_user_created'))){
+            $user_message = 'ユーザー登録が完了しました。';
+            $request->session()->forget('is_user_created');
+
+        }elseif(!is_null($request->session()->get('is_password_reset'))){
+            $user_message = 'パスワードを更新しました。';
+            $request->session()->forget('is_password_reset');
+
+        }elseif(!is_null($request->session()->get('is_email_reset'))){
+            $user_message = 'メールアドレスを更新しました。';
+            $request->session()->forget('is_email_reset');
+
+        }elseif(!is_null($request->session()->get('is_updated_user_info'))){
+            $user_message = 'プロフィールを更新しました。';
+            $request->session()->get('is_updated_user_info');
+
+        }else{
             return to_route('login_credential.create');
         }
 
-        $user = User::whereHas('authentication', function($query) use ($request) {
-            $query->where('token', $request->authentication_token);
-        })->first();
-
-        $request->session()->forget('is_user_created');
-        
         return view('user.complete', [
             'is_succeeded' => true,
-            'is_user_created' => true,
-            'authenticated_user' => $user
+            'user_message' => $user_message,
+            'user' => $user
         ]);
     }
 }
