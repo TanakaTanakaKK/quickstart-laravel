@@ -224,6 +224,7 @@ class UserController extends Controller
             ->where('status',  AuthenticationStatus::MAIL_SENT)
             ->where('type', AuthenticationType::EMAIL_RESET)
             ->where('expired_at', '>', now())
+            ->where('user_id', $user->id)
             ->first();
 
         if(is_null($authentication)){
