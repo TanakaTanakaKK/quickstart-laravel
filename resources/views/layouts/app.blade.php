@@ -64,9 +64,9 @@
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    {{ Cache::get('weather_info'.session('prefecture_number'))['prefecture'] }}
-                    <img src="{{ Cache::get('weather_info'.session('prefecture_number'))['icon_url'] }}">
-                    {{ Cache::get('weather_info'.session('prefecture_number'))['temperature'] }}
+                    {{ Cache::get('weather_info'.auth()->user()->prefecture)['prefecture'] }}
+                    <img src="{{ Cache::get('weather_info'.auth()->user()->prefecture)['icon_url'] }}">
+                    {{ Cache::get('weather_info'.auth()->user()->prefecture)['temperature'] }}
                 </div>
                 @endif
             </div>

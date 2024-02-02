@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{
-    Task,
-    LoginCredential
+    Task
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -105,7 +104,7 @@ class TaskController extends Controller
         try{
             Task::create([
                 'name' => $request->name,
-                'user_id' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'),
+                'user_id' => auth()->id(),
                 'expired_at' => $request->expired_at,
                 'detail' => $request->detail,
                 'thumbnail_image_path' => $thumbnail_image_path,

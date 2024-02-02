@@ -22,18 +22,14 @@ class OpenWeather
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $login_credential = LoginCredential::where('token', session('login_credential_token'))->first();
-
-        if(is_null(session('login_credential_token')) || is_null($login_credential)){
-            Cache::forget('weather_info'.$login_credential->user->prefecture);
+        if(!auth()->check()){
+            Cache::forget('weather_info'.auth()->user()->prefecture);
             return to_route('login_credential.create');
         }
-        
-        session()->put('prefecture_number',$login_credential->user->prefecture);
 
-        Cache::remember('weather_info'.$login_credential->user->prefecture, 10800, function() use($login_credential){
-            $url = config('services.open_weather.url').Prefecture::getKey($login_credential->user->prefecture).'&appid='.config('services.open_weather.key');
-            $prefecture_description = Prefecture::getDescription($login_credential->user->prefecture);
+        Cache::remember('weather_info'.auth()->user()->prefecture, 10800, function() {
+            $url = config('services.open_weather.url').Prefecture::getKey(auth()->user()->prefecture).'&appid='.config('services.open_weather.key');
+            $prefecture_description = Prefecture::getDescription(auth()->user()->prefecture);
 
             $result = [
                 'prefecture' => '',

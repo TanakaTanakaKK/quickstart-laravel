@@ -6,10 +6,7 @@ use App\Enums\{
     AuthenticationStatus,
     AuthenticationType
 };
-use App\Models\{
-    Authentication,
-    LoginCredential
-};
+use App\Models\Authentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -68,7 +65,7 @@ class AuthenticationController extends Controller
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にパスワードの再設定をしてください。';
 
         }elseif((int)$request->authentication_type === AuthenticationType::EMAIL_RESET){
-            $authentication->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+            $authentication->user_id = auth()->id();
             $authentication->save();
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';

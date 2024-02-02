@@ -118,7 +118,7 @@ class UserController extends Controller
     public function show(Request $request)
     {
 
-        return view('user.show', ['user' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
+        return view('user.show', ['user' => auth()->user()]);
         
     }
 
