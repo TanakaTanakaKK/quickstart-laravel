@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Enums\Prefecture;
-use App\Models\LoginCredential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{
     Cache,
