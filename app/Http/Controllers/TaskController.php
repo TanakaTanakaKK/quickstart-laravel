@@ -142,7 +142,7 @@ class TaskController extends Controller
                     'name' => $data[CsvTaskColumn::NAME],
                     'detail' => $data[CsvTaskColumn::DETAIL],
                     'expired_at' => $data[CsvTaskColumn::EXPIRED_AT],
-                    'status' => TaskStatus::getValue(CsvTaskColumn::STATUS)
+                    'status' => TaskStatus::getValue($data[CsvTaskColumn::STATUS])
                 ]);
                 $succeeded_task_count ++;
 
