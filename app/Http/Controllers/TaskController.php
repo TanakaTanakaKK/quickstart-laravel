@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\TaskStatus;
+use App\Enums\{
+    CsvTaskColumn,
+    TaskStatus
+};
 use App\Models\{
     Task,
     TaskComment,
@@ -136,10 +139,10 @@ class TaskController extends Controller
             try{
                 Task::create([
                     'user_id' => auth()->id(),
-                    'name' => $data[0],
-                    'detail' => $data[1],
-                    'expired_at' => $data[2],
-                    'status' => TaskStatus::getValue($data[3])
+                    'name' => $data[CsvTaskColumn::NAME],
+                    'detail' => $data[CsvTaskColumn::DETAIL],
+                    'expired_at' => $data[CsvTaskColumn::EXPIRED_AT],
+                    'status' => TaskStatus::getValue(CsvTaskColumn::STATUS)
                 ]);
                 $succeeded_task_count ++;
 
