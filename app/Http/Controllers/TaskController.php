@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Models\{
     Task,
     TaskComment,
@@ -72,6 +73,7 @@ class TaskController extends Controller
         if(!is_null($request->session()->get('task_message'))){
             return to_route('task.index');
         }
+
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
         $archive_extension = config('mimetypes')[$image->getImageMimetype()];
@@ -117,6 +119,47 @@ class TaskController extends Controller
             return to_route('task.index')->withErrors(['task_error' => 'タスクの登録に失敗しました。']);
         }
         return to_route('task.index')->with(['task_message' => $request->name.'をTask Listに登録しました。']);
+    }
+
+    public function store_csv(Request $request)
+    {
+        
+        if($request->hasFile('csv_file')){
+            if($request->csv_file->getClientOriginalExtension() !== 'csv'){
+                return to_route('task.index')->withErrors(['extension_error' => 'CSVファイルのみを選択して下さい。']);
+            }
+            $csv_file = explode("\n", file_get_contents($request->csv_file));
+                
+            $failure_task_count = 0;
+            $task_table_columns = ['名前', '期限', '内容', 'ステータス'];
+            foreach($csv_file as $key => $data){
+                $data = explode(',', $data);
+                $csv_file[$key] = $data;
+                if($key === 0){
+                    foreach($csv_file[0] as $key => $data_name){
+                        if($task_table_columns[$key] !== $data_name){
+                            dd($task_table_columns[$key],$data_name);
+                            return to_route('task.index')->withErrors(['extension_error' => '正しい形式ではありません。']);
+                        }
+                    }
+                    continue;
+                }
+                try{
+                    Task::create([
+                        'name' => $data[0],
+                        'expired_at' => $data[1],
+                        'detail' => $data[2],
+                        'status' => TaskStatus::getDescription($data[3])
+                    ]);
+                }catch(Exception $e){
+                    ++$failure_task_count;
+                }
+            }
+
+            if($failure_task_count >= 1){
+                return to_route('task.index')->withErrors(['csv_error' => 'CSVファイルの'.$failure_task_count.'件のタスクが登録に失敗しました。']);
+            }
+        }
     }
 
     public function show(Request $request, Task $task)

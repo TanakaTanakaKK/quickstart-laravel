@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     LoginCredentialController,
     TaskController,
     TaskCommentController,
+    TaskCsvController,
     UserController,
 };
 
@@ -21,6 +22,7 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
         Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
         Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+        Route::post('/store/csv', [TaskController::class, 'store_csv'])->name('task.store_csv');
     });
     Route::prefix('/task_comment')->group(function () {
         Route::post('/store', [TaskCommentController::class, 'store'])->name('task_comment.store');
