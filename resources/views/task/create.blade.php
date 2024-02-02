@@ -18,7 +18,7 @@
                             <div class="input-group col-md-6">
                                 <span class="input-group-btn w-100">
                                     <label for="image_file" class="btn btn-default border text-left form-control">
-                                        ファイルを選択<input type="file" name="image_file" class="d-none" id="image_file" onchange=showFileName()
+                                        画像ファイルを選択してください<input type="file" name="image_file" class="d-none" id="image_file" onchange=showImageFileName()
                                         accept="image/png, image/jpeg, image/gif, image/webp">
                                     </label>
                                     <p id='image_info'></p>
@@ -72,6 +72,34 @@
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="card-header py-2">
+                    CSVからタスクを登録
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <form action="{{ route('task.store_csv') }}" enctype="multipart/form-data" method="POST">
+                            @csrf
+                            <div class="form-group row my-1 mx-0">
+                                <label for="csv_file" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">CSVファイル</label>
+                                <div class="input-group col-md-6">
+                                    <span class="input-group-btn w-100">
+                                        <label for="csv_file" class="btn btn-default border text-left form-control">
+                                            <p id="csv_name">CSVファイルを選択してください</p><input type="file" name="csv_file" class="d-none" id="csv_file"accept="text/csv"
+                                            onchange=showCsvFileName()>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="rounded col-md-6 offset-md-3 text-right ">
+                                    <button type="submit" class="btn btn-default border text-nowrap">
+                                        <i class="fa fa-btn fa-plus"></i>Add Task
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -19,4 +19,14 @@ final class TaskStatus extends Enum
             default => '不明'
         };
     }
+
+    public static function getValue(string $key):mixed
+    {
+        return match ($key) {
+            '新規' => self::PLANNED,
+            '着手' => self::IN_PROGRESS,
+            '終了' => self::COMPLETED,
+            default => null
+        };
+    }
 }

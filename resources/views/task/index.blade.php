@@ -43,15 +43,7 @@
                                 <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
                                 <th class="border-top-0 col-4 text-nowrap text-center">期限</th>
                                 <th class="border-top-0 col-1">&nbsp;</th>
-                                <th class="border-top-0 col-1">
-                                    <form action="{{ route('task.store_csv') }}" enctype="multipart/form-data" method="POST">
-                                        @csrf
-                                        <input type="file" name="csv_file" id="csv_file" class="btn">
-                                        <button>
-                                            go
-                                        </button>
-                                    </form>
-                                </th>
+                                <th class="border-top-0 col-1">&nbsp;</th>
                                 @endcan
                                 <th class="border-top-0 col-1">
                                     <a href="{{ route('task.create') }}" class="btn btn-primary text-nowrap">
@@ -78,7 +70,8 @@
                                     <tr>
                                         <td class="table-text py-0 align-middle text-dark text-center">
                                             <div class="image-field">
-                                                <img src="{{ asset('/storage/task/thumbnail_images/'.$task->thumbnail_image_path) }}" class="w-50">
+                                                <img src="{{ asset('/storage/task/thumbnail_images/'.$task->thumbnail_image_path) }}" class="w-50"
+                                                onerror="this.onerror=null;this.src='{{ asset('/storage/task/thumbnail_images/default.webp') }}';">
                                             </div>
                                         </td>
                                         <td class="table-text py-0 align-middle text-dark text-center">
