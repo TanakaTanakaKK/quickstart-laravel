@@ -9,17 +9,17 @@
         </ul>
     </div>
 @endif
-@if(isset($successful) || isset($password_reset_message))
+@if(isset($is_succeeded))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
-        @if(isset($password_reset_message))
+        @if(isset($authentication_message))
             <ul>
-                <li>{{ $password_reset_message }}</li>
+                <li>{{ $authentication_message }}</li>
             </ul>
-        @else
+        @elseif(isset($user_message))
             <ul>
-                <li>{{ $successful }}</li>
+                <li>{{ $user_message }}</li>
             </ul>
         @endif
     </div>

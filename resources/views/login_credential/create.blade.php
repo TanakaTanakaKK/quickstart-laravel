@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="rounded text-right">
-                                        <a href="{{ route('password_reset_authentication.create') }}">
+                                        <a href="{{ route('authentications.create_password') }}">
                                             <small>パスワードをリセット</small>
                                         </a>
                                     </div>

@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Enums\{
     AuthenticationStatus,
-    PasswordResetStatus,
+    AuthenticationType,
 };
 use App\Models\{
     Authentication,
-    PasswordResetAuthentication,
     User
 };
 use Illuminate\Support\Facades\{
@@ -111,52 +110,59 @@ class UserController extends Controller
 
     public function editPassword(Request $request)
     {
-        $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
-            ->where('status',  PasswordResetStatus::MAIL_SENT)
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::PASSWORD_RESET)
             ->where('expired_at', '>', now())
             ->first();
 
-        if(is_null($password_reset_authentication)){
+        if(is_null($authentication)){
             return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
-        return view('user.edit', [
-            'user_id' => User::where('id', $password_reset_authentication->user_id)->first(),
-            'password_reset_token' => $password_reset_authentication->token
+        return view('user.edit_password', [
+            'user_id' => User::where('email', $authentication->email)->value('id'),
+            'authentication_token' => $authentication->token
         ]);
     }
 
-    public function updatePassword(PasswordResetRequest $request)
+    public function updatePassword(PasswordResetRequest $request, User $user)
     {
-        $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
-            ->where('status',  PasswordResetStatus::MAIL_SENT)
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', now())
             ->first();
-        if(is_null($password_reset_authentication)){
+
+        if(is_null($authentication)){
             return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
-        $user = User::where('id', $password_reset_authentication->user_id)->first();
         $user->password = Hash::make($request->password);
         $user->save();
+        $authentication->status = AuthenticationStatus::COMPLETED;
+        $authentication->save();
 
-        $password_reset_authentication->status = PasswordResetStatus::COMPLETED;
-        $password_reset_authentication->save();
-
-        return to_route('password_reset_authentication.complete')->with(['is_password_reset' => true]);
+        return to_route('users.complete', $user->id)->with(['is_password_reset' => true]);
     }
 
     public function complete(Request $request, User $user)
     {     
+
         if(!is_null($request->session()->get('is_user_created'))){
+            $user_message = 'ユーザー登録が完了しました。';
             $request->session()->forget('is_user_created');
+
+        }elseif(!is_null($request->session()->get('is_password_reset'))){
+            $user_message = 'パスワードを更新しました。';
+            $request->session()->forget('is_password_reset');
         }else{
             return to_route('login_credential.create');
         }
 
         return view('user.complete', [
-            'successful' => '会員登録が完了しました。',
-            'authenticated_user' => $user
+            'is_succeeded' => '会員登録が完了しました。',
+            'user_message' => $user_message,
+            'user' => $user
         ]);
     }
 }

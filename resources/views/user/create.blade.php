@@ -26,7 +26,7 @@
                                             </label>
                                         </span>
                                     </div>
-                                        <p id='image_info'></p>
+                                    <p id='image_info'></p>
                                 </div>
                                 <div class="form-group">
                                     <label for="name" class="control-label">氏名
@@ -117,7 +117,7 @@
                                 <div class="form-group">
                                     <div class="text-right">
                                         <button type="submit" class="btn border">
-                                            <i class="fa-solid fa-user-plus"></i>会員登録
+                                            <i class="fa-solid fa-user-plus"></i> 会員登録
                                         </button>
                                     </div>
                                 </div>

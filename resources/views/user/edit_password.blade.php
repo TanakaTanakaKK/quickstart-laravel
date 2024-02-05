@@ -1,3 +1,4 @@
+<script src="{{ asset('/functions.js') }}" defer></script>
 @extends('layouts.app')
 @section('content')
     <div class="container mt-4">
@@ -7,10 +8,10 @@
                     パスワードリセット
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('users.update', $user_id) }}" method="POST">
+                    <form action="{{ route('users.update_password', $user_id) }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <input type="hidden" name="password_reset_token" value="{{ $password_reset_token }}">
+                        <input type="hidden" name="authentication_token" value="{{ $authentication_token }}">
                         <div class="mt-0 mx-0">
                             <div class="panel-body">
                                 @include('common.info')
@@ -35,5 +36,5 @@
                 </div>
             </div>  
         </div>
-    </div>
+    </div> 
 @endsection
