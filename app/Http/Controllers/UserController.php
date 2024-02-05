@@ -112,10 +112,10 @@ class UserController extends Controller
         return to_route('users.complete',$user_id)->with(['is_user_created' => true]);
     }
 
-    public function show(Request $request)
+    public function show(Request $request, User $user)
     {
 
-        return view('user.show', ['user' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user]);
+        return view('user.show', ['user' => $user]);
         
     }
 
