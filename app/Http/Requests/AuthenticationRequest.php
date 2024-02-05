@@ -19,7 +19,8 @@ class AuthenticationRequest extends FormRequest
             AuthenticationType::EMAIL_RESET, AuthenticationType::USER_REGISTER => 'unique:users,email',
             AuthenticationType::PASSWORD_RESET => 'exists:users,email',
             default => ''
-        };
+            };
+            
             return [
                 'email' => [
                     'required',

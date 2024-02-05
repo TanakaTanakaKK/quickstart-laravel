@@ -25,12 +25,15 @@ class AuthenticationController extends Controller
 {
     public function create(Request $request)
     {
-        return match ((int)$request->authentication_type) {
-            AuthenticationType::USER_REGISTER => view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]),
-            AuthenticationType::PASSWORD_RESET => view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]),
-            AuthenticationType::EMAIL_RESET => view('authentication.create', ['authentication_type' => AuthenticationType::EMAIL_RESET]),
-            default => to_route('login_credential.create')
-        };        
+        $authentication_type = (int)$request->authentication_type;
+        
+        if (!in_array($authentication_type, AuthenticationType::getValues())) {
+            to_route('login_credential.create');
+        }
+        
+        return view('authentication.create', [
+            'authentication_type' => $authentication_type,
+        ]);
     }
 
     public function store(AuthenticationRequest $request)
