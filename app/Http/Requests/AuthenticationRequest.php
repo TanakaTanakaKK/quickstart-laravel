@@ -46,7 +46,6 @@ class AuthenticationRequest extends FormRequest
                 ]
             ];
         }
-        
     }
 
     public function attributes(): array

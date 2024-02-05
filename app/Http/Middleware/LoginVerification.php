@@ -23,6 +23,10 @@ class LoginVerification
         if(is_null(session('login_credential_token')) || is_null($login_credential)){
             return to_route('login_credential.create');
         }
+        if(is_null($request->session()->get('user_id'))){
+            $request->session()->put(['user_id' => $login_credential->user_id]);
+        }
+
         $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
 
         if($login_credential->user->status == UserStatus::ADMIN){
