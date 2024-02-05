@@ -18,9 +18,7 @@ Route::middleware(['auth.user'])->group(function () {
 });
 
 Route::prefix('/authentications')->group(function () {
-    Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
-    Route::get('/create/password', [AuthenticationController::class, 'createPassword'])->name('authentications.create_password');
-
+    Route::get('/create/{authentication_type}', [AuthenticationController::class, 'create'])->name('authentications.create');
     Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
     Route::get('/complete', [AuthenticationController::class, 'complete'])->name('authentications.complete');
 });

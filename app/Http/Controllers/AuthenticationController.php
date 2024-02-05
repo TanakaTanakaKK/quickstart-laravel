@@ -21,12 +21,10 @@ class AuthenticationController extends Controller
 {
     public function create(Request $request)
     {
-        return view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]);
-    }
-
-    public function createPassword(Request $request)
-    {
-        return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
+        return match ((int)$request->authentication_type) {
+            AuthenticationType::USER_REGISTER => view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]),
+            AuthenticationType::PASSWORD_RESET => view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET])
+        };        
     }
 
     public function store(AuthenticationRequest $request)
@@ -38,7 +36,7 @@ class AuthenticationController extends Controller
         }
 
         try{
-            $authentication = Authentication::create([
+            Authentication::create([
                 'token' => $authentication_token,
                 'email' => $request->email,
                 'status' => AuthenticationStatus::MAIL_SENT,

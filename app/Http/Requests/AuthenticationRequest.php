@@ -15,14 +15,18 @@ class AuthenticationRequest extends FormRequest
      */
     public function rules(): array
     {
-        if((int)$this->authentication_type === AuthenticationType::USER_REGISTER){
+        $email_validation = match ((int)$this->authentication_type) {
+            AuthenticationType::USER_REGISTER => 'unique:users,email',
+            AuthenticationType::PASSWORD_RESET => 'exists:users,email',
+            default => ''
+        };
             return [
                 'email' => [
                     'required',
                     'email:filter',
-                    'unique:users,email',
                     'max:255',
-                    'string'
+                    'string',
+                    $email_validation
                 ],
                 'authentication_type' => [
                     'required',
@@ -30,22 +34,6 @@ class AuthenticationRequest extends FormRequest
                     new EnumValue(AuthenticationType::class, false)
                 ]
             ];
-        }elseif((int)$this->authentication_type === AuthenticationType::PASSWORD_RESET){
-            return [
-                'email' => [
-                    'required',
-                    'email:filter',
-                    'exists:users,email',
-                    'max:255',
-                    'string'
-                ],
-                'authentication_type' => [
-                    'required',
-                    'integer',
-                    new EnumValue(AuthenticationType::class, false)
-                ]
-            ];
-        }
     }
 
     public function attributes(): array
