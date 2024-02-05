@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use App\Enums\{
     Prefecture,
     Gender
