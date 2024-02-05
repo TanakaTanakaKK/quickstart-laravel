@@ -71,7 +71,10 @@ class AuthenticationController extends Controller
             $authentication->save();
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
+        }else{
+            return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
+
         return to_route('authentications.complete')->with([
             'is_sent_authentication_mail' => true,
             'authentication_message' => $authentication_message

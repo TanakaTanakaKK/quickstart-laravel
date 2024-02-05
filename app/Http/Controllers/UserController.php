@@ -130,6 +130,28 @@ class UserController extends Controller
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status',  AuthenticationStatus::MAIL_SENT)
             ->where('type', AuthenticationType::PASSWORD_RESET)
+    public function editPassword(Request $request)
+    {
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
+            ->where('type', AuthenticationType::PASSWORD_RESET)
+            ->where('expired_at', '>', now())
+            ->first();
+
+        if(is_null($authentication)){
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
+        }
+
+        return view('user.edit_password', [
+            'user_id' => User::where('email', $authentication->email)->value('id'),
+            'authentication_token' => $authentication->token
+        ]);
+    }
+
+    public function updatePassword(PasswordResetRequest $request, User $user)
+    {
+        $authentication = Authentication::where('token', $request->authentication_token)
+            ->where('status',  AuthenticationStatus::MAIL_SENT)
             ->where('expired_at', '>', now())
             ->first();
 
@@ -258,6 +280,7 @@ class UserController extends Controller
 
     public function complete(Request $request, User $user)
     {     
+
         if(!is_null($request->session()->get('is_user_created'))){
             $user_message = 'ユーザー登録が完了しました。';
             $request->session()->forget('is_user_created');
@@ -272,7 +295,7 @@ class UserController extends Controller
 
         }elseif(!is_null($request->session()->get('is_updated_user_info'))){
             $user_message = 'プロフィールを更新しました。';
-            $request->session()->get('is_updated_user_info');
+            $request->session()->forget('is_updated_user_info');
 
         }else{
             return to_route('login_credential.create');
