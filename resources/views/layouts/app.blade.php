@@ -11,7 +11,7 @@
         <div class="container">
             <div class="navbar-header">
                 @if(is_null(session('login_credential_token')))
-                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create', \App\Enums\AuthenticationType::USER_REGISTER) }}">
                 会員登録
                 </a>
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.create') }}">
