@@ -130,33 +130,11 @@ class UserController extends Controller
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status',  AuthenticationStatus::MAIL_SENT)
             ->where('type', AuthenticationType::PASSWORD_RESET)
-    public function editPassword(Request $request)
-    {
-        $authentication = Authentication::where('token', $request->authentication_token)
-            ->where('status',  AuthenticationStatus::MAIL_SENT)
-            ->where('type', AuthenticationType::PASSWORD_RESET)
             ->where('expired_at', '>', now())
             ->first();
 
         if(is_null($authentication)){
-            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
-        }
-
-        return view('user.edit_password', [
-            'user_id' => User::where('email', $authentication->email)->value('id'),
-            'authentication_token' => $authentication->token
-        ]);
-    }
-
-    public function updatePassword(PasswordResetRequest $request, User $user)
-    {
-        $authentication = Authentication::where('token', $request->authentication_token)
-            ->where('status',  AuthenticationStatus::MAIL_SENT)
-            ->where('expired_at', '>', now())
-            ->first();
-
-        if(is_null($authentication)){
-            return to_route('tasks.index');
+            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         return view('user.edit_password', [
@@ -174,7 +152,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index');
+            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);;
         }
 
         return view('user.edit_email', [
