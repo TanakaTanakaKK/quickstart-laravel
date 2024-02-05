@@ -113,7 +113,7 @@
                                         <div>{{ $user->block }}</div>
                                     </td>
                                 </tr>
-                                @if(isset($user->building))
+                                @if(!is_null($user->building))
                                 <tr>
                                     <td class="py-1 align-middle">
                                         <div>建物</div>

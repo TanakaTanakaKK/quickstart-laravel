@@ -7,11 +7,18 @@ use App\Enums\{
     Prefecture,
     Gender
 };
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
 
 class UserUpdateRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'phone_number' => str_replace('-', '', $this->phone_number)
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -51,12 +58,7 @@ class UserUpdateRequest extends FormRequest
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
                 'string',
-                function ($attribute, $value, $fail) {
-                    $phone_number = str_replace('-', '', $value);
-                    if (User::where('phone_number', '!==', User::where('id', $this->user_id)->value('phone_number'))->where('phone_number', $phone_number)->exists()) {
-                        $fail('既にこの:attributeは使用されています。');
-                    }
-                }
+                Rule::uniqure('users')->ignore($this->user->id),
             ],
             'postal_code' => [
                 'required',
