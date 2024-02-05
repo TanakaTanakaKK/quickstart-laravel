@@ -173,7 +173,7 @@ class TaskController extends Controller
             return to_route('task.show', $task->id)->withErrors(['task_error' => 'タスクの更新に失敗しました。']);
         }
         
-        return to_route('task.show', $task->id);
+        return to_route('task.show', $task);
     }
 
     public function destroy(Request $request, Task $task)

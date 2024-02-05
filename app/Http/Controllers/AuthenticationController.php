@@ -86,11 +86,9 @@ class AuthenticationController extends Controller
             return to_route('tasks.index');
         }
 
-        $authentication_message = $request->session()->get('authentication_message');
-
         return view('authentication.complete', [
             'is_succeeded' => true,
-            'authentication_message' => $authentication_message
+            'authentication_message' => $request->session()->get('authentication_message')
         ]);
     }
 }
