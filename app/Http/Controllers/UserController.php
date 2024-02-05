@@ -26,8 +26,6 @@ use App\Http\Requests\{
 use Exception;
 use Imagick;
 
-
-
 class UserController extends Controller
 {
     public function create(Request $request)
@@ -127,7 +125,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit_password(Request $request)
+    public function editPassword(Request $request)
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status',  AuthenticationStatus::MAIL_SENT)
@@ -145,7 +143,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit_email(Request $request)
+    public function editEmail(Request $request)
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status',  AuthenticationStatus::MAIL_SENT)
@@ -218,7 +216,7 @@ class UserController extends Controller
         return to_route('users.complete', $user->id)->with(['is_updated_user_info' => true]);
     }
 
-    public function update_email(EmailResetRequest $request, User $user)
+    public function updateEmail(EmailResetRequest $request, User $user)
     {
         $authentication = Authentication::where('email', $request->email)
             ->where('status',  AuthenticationStatus::MAIL_SENT)
@@ -239,7 +237,7 @@ class UserController extends Controller
         return to_route('users.complete', $user->id)->with(['is_email_reset' => true]);
     }
 
-    public function update_password(PasswordResetRequest $request, User $user)
+    public function updatePassword(PasswordResetRequest $request, User $user)
     {
         $authentication = Authentication::where('token', $request->authentication_token)
             ->where('status',  AuthenticationStatus::MAIL_SENT)

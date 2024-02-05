@@ -28,7 +28,7 @@ class AuthenticationController extends Controller
         return view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]);
     }
 
-    public function create_password(Request $request)
+    public function createPassword(Request $request)
     {
         return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
     }
@@ -55,7 +55,6 @@ class AuthenticationController extends Controller
                 'type' => $request->authentication_type
             ]);
         }catch(Exception $e){
-            dd('dadada');
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
 

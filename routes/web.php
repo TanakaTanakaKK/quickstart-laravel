@@ -18,8 +18,8 @@ Route::middleware(['auth.user'])->group(function () {
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-        Route::get('/{authentication_token}/edit_email', [UserController::class, 'edit_email'])->name('users.edit_email');
-        Route::patch('/{user}/email', [UserController::class, 'update_email'])->name('users.update_email');
+        Route::get('/{authentication_token}/edit_email', [UserController::class, 'editEmail'])->name('users.edit_email');
+        Route::patch('/{user}/email', [UserController::class, 'updateEmail'])->name('users.update_email');
         Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
     });
 
@@ -28,7 +28,7 @@ Route::middleware(['auth.user'])->group(function () {
 
 Route::prefix('/authentications')->group(function () {
     Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
-    Route::get('/create/password', [AuthenticationController::class, 'create_password'])->name('authentications.create_password');
+    Route::get('/create/password', [AuthenticationController::class, 'createPassword'])->name('authentications.create_password');
     Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
     Route::get('/complete', [AuthenticationController::class, 'complete'])->name('authentications.complete');
 });
@@ -36,8 +36,8 @@ Route::prefix('/authentications')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
-    Route::get('/{authentication_token}/edit_password', [UserController::class, 'edit_password'])->name('users.edit_password');
-    Route::patch('/{user}/password', [UserController::class, 'update_password'])->name('users.update_password');
+    Route::get('/{authentication_token}/edit_password', [UserController::class, 'editPassword'])->name('users.edit_password');
+    Route::patch('/{user}/password', [UserController::class, 'updatePassword'])->name('users.update_password');
     Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
 });
 
