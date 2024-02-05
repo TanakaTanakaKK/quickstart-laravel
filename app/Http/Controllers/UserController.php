@@ -135,7 +135,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);
         }
 
         return view('user.edit_password', [
@@ -153,7 +153,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['reset_error' => '無効なアクセスです。']);;
+            return to_route('login_credential.create')->withErrors(['reset_error' => '無効なアクセスです。']);;
         }
 
         return view('user.edit_email', [
