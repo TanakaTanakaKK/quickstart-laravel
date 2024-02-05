@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\{
     Task
 };
@@ -21,37 +22,21 @@ class TaskController extends Controller
 {
     public function index(TaskSearchWordRequest $request)
     {
+        $tasks = Task::when(!is_null($request->query('search_word')), function($query) use($request) {
+            return $query->where('name', 'LIKE', '%'.$request->query('search_word').'%')
+                ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%');
 
-        if(is_null($request->query('search_word'))){
-            if(Gate::allows('isAdmin')){
-                $tasks = Task::orderBy('expired_at', 'asc')->get();
-            }else{
-                $tasks = Task::where('user_id', auth()->id()) 
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }
-        }else{
-            if(Gate::allows('isAdmin')){
-                $tasks = Task::where('name', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }else{
-                $tasks = Task::where('user_id', auth()->id()) 
-                    ->where('name', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }
-        }
+        })->when(!Gate::allows('isAdmin'), function($query) {
+            return $query->where('user_id', auth()->id());
+            
+        })->orderBy('expired_at', 'asc')
+        ->get();
 
         if(!is_null($request->session()->get('task_message'))){
-            $task_message = $request->session()->get('task_message');
-            $request->session()->forget('task_message');
             return view('task.index', [
                 'tasks' => $tasks,
                 'is_succeeded' => true,
-                'task_message' => $task_message
+                'task_message' => $request->session()->get('task_message')
             ]);
         }
 
@@ -114,7 +99,10 @@ class TaskController extends Controller
         }catch(Exception $e){
             return to_route('task.index')->withErrors(['task_error' => 'タスクの登録に失敗しました。']);
         }
-        return to_route('task.index')->with(['task_message' => $request->name.'をTask Listに登録しました。']);
+
+        $request->session()->flash('task_message', $request->name.'をTask Listに登録しました。');
+
+        return to_route('task.index');
     }
 
     public function show(Request $request, Task $task)
@@ -193,7 +181,7 @@ class TaskController extends Controller
             return to_route('task.show', $task->id)->withErrors(['task_error' => 'タスクの更新に失敗しました。']);
         }
         
-        return to_route('task.show', $task->id);
+        return to_route('task.show', $task);
     }
 
     public function destroy(Request $request, Task $task)

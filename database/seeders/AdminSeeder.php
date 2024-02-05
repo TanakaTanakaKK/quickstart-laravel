@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Enums\{
     Gender,
     Prefecture,
-    UserStatus
+    UserRole
 };
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,7 +35,7 @@ class AdminSeeder extends Seeder
             'prefecture' => Prefecture::OSAKA,
             'address' => 'テスト',
             'block' => '1-1-1',
-            'status' => UserStatus::ADMIN
+            'role' => UserRole::ADMIN
         ]);
     }
 }
