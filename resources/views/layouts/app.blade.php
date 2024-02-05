@@ -47,7 +47,7 @@
         <div class="container">
             <div class="navbar-header">
                 @if(!Auth::check())
-                <a class="navbar-brand text-muted" href="{{ route('authentications.create') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create', \App\Enums\AuthenticationType::USER_REGISTER) }}">
                 会員登録
                 </a>
                 <a class="navbar-brand text-muted" href="{{ route('login_credential.create') }}">
@@ -57,16 +57,16 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('task.index') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show') }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session()->get('user_id')) }}">
                 アカウント
                 </a> 
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
                 ログアウト
                 </a>
                 <div class="navbar-brand text-muted">
-                    {{ Cache::get('weather_info'.session('prefecture_number'))['prefecture'] }}
-                    <img src="{{ Cache::get('weather_info'.session('prefecture_number'))['icon_url'] }}">
-                    {{ Cache::get('weather_info'.session('prefecture_number'))['temperature'] }}
+                    {{ Cache::get('weather_info'.auth()->user()->prefecture)['prefecture'] }}
+                    <img src="{{ Cache::get('weather_info'.auth()->user()->prefecture)['icon_url'] }}">
+                    {{ Cache::get('weather_info'.auth()->user()->prefecture)['temperature'] }}
                 </div>
                 @endif
             </div>

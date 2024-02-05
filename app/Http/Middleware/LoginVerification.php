@@ -2,11 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserStatus;
-use App\Models\{
-    LoginCredential,
-    User
-};
+use App\Enums\UserRole;
+use App\Enums\Prefecture;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
@@ -20,14 +17,16 @@ class LoginVerification
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $login_credential = LoginCredential::where('token', session('login_credential_token'))->first();
 
-        if(is_null(session('login_credential_token')) || is_null($login_credential) || !auth()->check()){
+        if(!auth()->check()){
             session()->flush();
             return to_route('login_credential.create');
         }
-        $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
-
+        
+        if(!is_null($request->task) && $request->task->user_id !== auth()->id() && !Gate::allows('isAdmin')){
+            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
+        }
+        
         return $next($request);
     }    
 }

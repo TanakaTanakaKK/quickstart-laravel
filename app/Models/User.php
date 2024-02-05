@@ -26,7 +26,7 @@ class User extends Authenticatable
         'address',
         'block',
         'building',
-        'status'
+        'role'
     ];
     
     public function authentication()
@@ -36,12 +36,12 @@ class User extends Authenticatable
 
     public function loginCredentials(): HasMany
     {
-        return $this->hasMany(LoginCredential::class, 'user_id', 'id');
+        return $this->hasMany(LoginCredential::class);
     }
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'user_id', 'id');
+        return $this->hasMany(Task::class);
     }
 
     public function taskComments()

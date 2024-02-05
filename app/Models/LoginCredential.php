@@ -12,13 +12,12 @@ class LoginCredential extends Model
 
     protected $fillable = [
         'user_id',
-        'token',
         'agent',
         'ip'
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
 }
