@@ -35,11 +35,11 @@ class User extends Model
 
     public function passwordResetAuthentications(): HasMany
     {
-        return $this->hasMany(PasswordResetAuthentication::class, 'user_id', 'id');    
+        return $this->hasMany(PasswordResetAuthentication::class);    
     }
     
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'user_id', 'id');
+        return $this->hasMany(Task::class);
     }
 }

@@ -109,7 +109,7 @@ class UserController extends Controller
         return to_route('users.complete',$user_id)->with(['is_user_created' => true]);
     }
 
-    public function edit(Request $request)
+    public function editPassword(Request $request)
     {
         $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
             ->where('status',  PasswordResetStatus::MAIL_SENT)
@@ -126,7 +126,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(PasswordResetRequest $request)
+    public function updatePassword(PasswordResetRequest $request)
     {
         $password_reset_authentication = PasswordResetAuthentication::where('token', $request->password_reset_token)
             ->where('status',  PasswordResetStatus::MAIL_SENT)
