@@ -23,7 +23,8 @@ class AuthenticationController extends Controller
     {
         return match ((int)$request->authentication_type) {
             AuthenticationType::USER_REGISTER => view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]),
-            AuthenticationType::PASSWORD_RESET => view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET])
+            AuthenticationType::PASSWORD_RESET => view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]),
+            default => to_route('login_credential.create')
         };        
     }
 
