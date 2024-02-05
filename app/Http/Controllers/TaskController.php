@@ -35,12 +35,10 @@ class TaskController extends Controller
         ->get();
 
         if(!is_null($request->session()->get('task_message'))){
-            $task_message = $request->session()->get('task_message');
-            $request->session()->forget('task_message');
             return view('task.index', [
                 'tasks' => $tasks,
                 'is_succeeded' => true,
-                'task_message' => $task_message
+                'task_message' => $request->session()->get('task_message')
             ]);
         }
 
