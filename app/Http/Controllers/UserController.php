@@ -36,7 +36,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         return view('user.create');
     }
@@ -50,7 +50,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
 
         $image = new Imagick();
@@ -104,7 +104,7 @@ class UserController extends Controller
                 'role' => UserRole::GENERAL 
             ])->id;
         }catch(Exception $e){
-            return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
 
         $authentication->status = AuthenticationStatus::COMPLETED;
@@ -116,8 +116,9 @@ class UserController extends Controller
 
     public function show(Request $request, User $user)
     {
-
-        return view('user.show', ['user' => $user]);
+        return view('user.show', [
+            'user' => $user
+        ]);
         
     }
 
@@ -235,6 +236,7 @@ class UserController extends Controller
         
         $user->email = $request->email;
         $user->save();
+        
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
 
