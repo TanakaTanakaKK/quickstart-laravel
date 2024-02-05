@@ -74,7 +74,7 @@ class AuthenticationController extends Controller
         }else{
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
-
+        
         return to_route('authentications.complete')->with([
             'is_sent_authentication_mail' => true,
             'authentication_message' => $authentication_message
