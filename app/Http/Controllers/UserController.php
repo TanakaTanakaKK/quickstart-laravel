@@ -13,7 +13,7 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\{
     Hash,
-    Storage,
+    Storage
 };
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -52,6 +52,7 @@ class UserController extends Controller
         if(is_null($authentication)){
             return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
+
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
         $archive_extension = config('mimetypes')[$image->getImageMimetype()];
@@ -85,22 +86,22 @@ class UserController extends Controller
 
         try{
             $user_id = User::create([
-                'thumbnail_image_path' => $thumbnail_image_path,
-                'archive_image_path' => $archive_image_path,
-                'email' => $authentication->email,
-                'password' => Hash::make($request->password),
-                'name' => $request->name,
-                'kana_name' => $request->kana_name,
-                'nickname' => $request->nickname,
-                'gender' => $request->gender,
-                'birthday' => $request->birthday,
-                'phone_number' => str_replace('-', '', $request->phone_number),
-                'postal_code' => str_replace('-', '', $request->postal_code),
-                'prefecture' => $request->prefecture,
-                'address' => $request->address,
-                'block' => $request->block,
-                'building' => $request->building
-            ])->id;
+                    'thumbnail_image_path' => $thumbnail_image_path,
+                    'archive_image_path' => $archive_image_path,
+                    'email' => $authentication->email,
+                    'password' => Hash::make($request->password),
+                    'name' => $request->name,
+                    'kana_name' => $request->kana_name,
+                    'nickname' => $request->nickname,
+                    'gender' => $request->gender,
+                    'birthday' => $request->birthday,
+                    'phone_number' => str_replace('-', '', $request->phone_number),
+                    'postal_code' => str_replace('-', '', $request->postal_code),
+                    'prefecture' => $request->prefecture,
+                    'address' => $request->address,
+                    'block' => $request->block,
+                    'building' => $request->building
+                ])->id;
         }catch(Exception $e){
             return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
