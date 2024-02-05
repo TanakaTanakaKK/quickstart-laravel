@@ -13,6 +13,12 @@ use BenSampo\Enum\Rules\EnumValue;
 
 class UserUpdateRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'phone_number' => str_replace('-', '', $this->phone_number)
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
