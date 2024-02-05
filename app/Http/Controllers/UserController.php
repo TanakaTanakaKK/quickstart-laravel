@@ -233,6 +233,7 @@ class UserController extends Controller
         
         $user->email = $request->email;
         $user->save();
+        
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
 
