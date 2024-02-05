@@ -160,7 +160,7 @@ class UserController extends Controller
         }
 
         return view('user.complete', [
-            'is_succeeded' => '会員登録が完了しました。',
+            'is_succeeded' => true,
             'user_message' => $user_message,
             'user' => $user
         ]);

@@ -17,7 +17,8 @@
             <ul>
                 <li>{{ $authentication_message }}</li>
             </ul>
-        @elseif(isset($user_message))
+        @endif
+        @if(isset($user_message))
             <ul>
                 <li>{{ $user_message }}</li>
             </ul>
