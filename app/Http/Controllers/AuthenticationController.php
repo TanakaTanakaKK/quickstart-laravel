@@ -90,7 +90,7 @@ class AuthenticationController extends Controller
         $request->session()->forget('is_sent_authentication_mail');
         $authentication_message = $request->session()->get('authentication_message');
         $request->session()->forget('authentication_message');
-                    
+
         return view('authentication.complete', [
             'is_succeeded' => true,
             'authentication_message' => $authentication_message
