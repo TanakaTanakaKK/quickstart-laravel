@@ -33,7 +33,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         return view('user.create');
     }
@@ -46,7 +46,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
 
         $image = new Imagick();
