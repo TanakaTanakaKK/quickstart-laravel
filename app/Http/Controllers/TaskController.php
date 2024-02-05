@@ -27,8 +27,10 @@ class TaskController extends Controller
         $tasks = Task::when(!is_null($request->query('search_word')), function($query) use($request) {
             return $query->where('name', 'LIKE', '%'.$request->query('search_word').'%')
                 ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%');
+
         })->when($user->role !== UserRole::ADMIN, function($query) use($user) {
             return $query->where('user_id', $user->id);
+            
         })->orderBy('expired_at', 'asc')
         ->get();
 
@@ -116,11 +118,6 @@ class TaskController extends Controller
 
     public function edit(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
-            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
-        }
-
         return view('task.edit', [
             'task' => $task
         ]);
@@ -128,11 +125,6 @@ class TaskController extends Controller
 
     public function update(TaskUpdateRequest $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
-            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
-        }
-
         if(!is_null($request->image_file)){
             $image = new Imagick();
             $image->readImage($request->file('image_file'));
@@ -186,12 +178,6 @@ class TaskController extends Controller
 
     public function destroy(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-
-        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
-            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
-        }
-
         $task->delete();
         return to_route('task.index');
     }

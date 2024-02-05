@@ -34,14 +34,12 @@
                                 <th class="border-top-0 col-3 text-nowrap">タスク名</th>
                                 <th class="border-top-0 col-2 text-nowrap">ユーザー名</th>
                                 <th class="border-top-0 col-3 text-nowrap">期限</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
+                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
                                 @else
                                 <th class="border-top-0 col-2 text-nowrap">画像</th>
                                 <th class="border-top-0 col-4 text-nowrap">タスク名</th>
                                 <th class="border-top-0 col-4 text-nowrap">期限</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
+                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
                                 @endif
                                 <th class="border-top-0 col-1">
                                     <a href="{{ route('task.create') }}" class="btn btn-primary text-nowrap">
@@ -52,15 +50,11 @@
                             <tbody>
                                 @if($tasks->isEmpty())
                                     <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td colspan="2">&nbsp;</td>
                                         @if(session('user_role') === \App\Enums\UserRole::ADMIN)
                                         <td>&nbsp;</td>
                                         @endif
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td colspan="4">&nbsp;</td>
                                     </tr>
                                 @else
                                 @foreach($tasks as $task)

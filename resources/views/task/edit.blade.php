@@ -9,7 +9,7 @@
                 </div>
                 <div class="card-body">
                     @include('common.info')
-                    <form action="{{ route('task.update', $task->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('task.update', $task) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
                         <div class="form-group row my-1 mx-0">
