@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
         return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
     }
 
-    public function create_email(Request $request)
+    public function createEmail(Request $request)
     {
         return view('authentication.create', ['authentication_type' => AuthenticationType::EMAIL_RESET]);
     }

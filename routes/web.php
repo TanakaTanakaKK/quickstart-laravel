@@ -16,14 +16,13 @@ Route::middleware(['auth.user'])->group(function () {
     Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::prefix('/users')->group(function () {
-        Route::get('/', [UserController::class, 'show'])->name('users.show');
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         Route::get('/{authentication_token}/edit_email', [UserController::class, 'editEmail'])->name('users.edit_email');
         Route::patch('/{user}/email', [UserController::class, 'updateEmail'])->name('users.update_email');
         Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
     });
-
-    Route::get('authentications/create/email', [AuthenticationController::class, 'create_email'])->name('authentications.create_email');
+    Route::get('authentications/create/email', [AuthenticationController::class, 'createEmail'])->name('authentications.create_email');
 });
 
 Route::prefix('/authentications')->group(function () {
