@@ -46,6 +46,6 @@ class User extends Authenticatable
 
     public function taskComments()
     {
-        return $this->hasMany(TaskComment::class, 'user_id', 'id');
+        return $this->hasMany(TaskComment::class);
     }
 }

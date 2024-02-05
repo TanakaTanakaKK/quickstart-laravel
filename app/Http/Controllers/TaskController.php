@@ -111,20 +111,10 @@ class TaskController extends Controller
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
-        $task_comments = TaskComment::where('task_id', $task->id)
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        if(is_null($task_comments)){
-            return view('task.show', [
-                'task' => $task
-            ]);
-        }else{
-            return view('task.show', [
-                'task' => $task,
-                'comments' => $task_comments
-            ]);
-        }
+        return view('task.show', [
+            'task' => $task->load('taskComments.user'),
+        ]);
+        
     }
 
     public function edit(Request $request, Task $task)

@@ -26,6 +26,6 @@ class Task extends Model
 
     public function taskComments()
     {
-        return $this->hasMany(TaskComment::class, 'task_id', 'id');
+        return $this->hasMany(TaskComment::class);
     } 
 }
