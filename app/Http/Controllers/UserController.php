@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     User,
-    Authentication
+    Authentication,
 };
 use Illuminate\Support\Facades\{
     Hash,
@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\{
 use App\Enums\AuthenticationStatus;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Exception;
 use Imagick;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -27,7 +27,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
         return view('user.create');
     }
@@ -40,7 +40,7 @@ class UserController extends Controller
             ->first();
 
         if(is_null($authentication)){
-            return to_route('tasks.index')->withErrors(['status_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['status_error' => '会員登録に失敗しました。']);
         }
 
         $image = new Imagick();
@@ -93,7 +93,7 @@ class UserController extends Controller
                 'building' => $request->building
             ]);
         }catch(Exception $e){
-            return to_route('tasks.index')->withErrors(['register_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
 
         $authentication->status = AuthenticationStatus::COMPLETED;
@@ -104,18 +104,19 @@ class UserController extends Controller
 
     public function complete(Request $request)
     {     
-        if(is_null($request->authentication_token) || is_null($request->session()->get('is_user_created'))){
-            return to_route('tasks.index');
+        if(is_null($request->session()->get('is_user_created'))){
+            return to_route('login_credential.create');
         }
 
-        $authenticated_user = User::whereHas('authentication', function($query) use ($request) {
+        $user = User::whereHas('authentication', function($query) use ($request) {
             $query->where('token', $request->authentication_token);
         })->first();
 
         $request->session()->forget('is_user_created');
+        
         return view('user.complete', [
             'successful' => '会員登録が完了しました。',
-            'authenticated_user' => $authenticated_user
+            'authenticated_user' => $user
         ]);
     }
 }
