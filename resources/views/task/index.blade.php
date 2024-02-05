@@ -29,7 +29,7 @@
                     <div class="card-body pr-3 pl-3 overflow-auto">
                         <table class="table table-striped task-table">
                             <thead>
-                                @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
+                                @if(session('user_role') === \App\Enums\UserRole::ADMIN)
                                 <th class="border-top-0 col-2 text-nowrap">画像</th>
                                 <th class="border-top-0 col-3 text-nowrap">タスク名</th>
                                 <th class="border-top-0 col-2 text-nowrap">ユーザー名</th>
@@ -50,11 +50,11 @@
                                 </th>
                             </thead>
                             <tbody>
-                                @if(count($tasks) === 0)
+                                @if($tasks->isEmpty())
                                     <tr>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
-                                        @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
+                                        @if(session('user_role') === \App\Enums\UserRole::ADMIN)
                                         <td>&nbsp;</td>
                                         @endif
                                         <td>&nbsp;</td>
@@ -73,7 +73,7 @@
                                         <td class="table-text py-0 align-middle text-dark">
                                             <div>{{ $task->name }}</div>
                                         </td>
-                                        @if(request()->user_status === \App\Enums\UserStatus::ADMIN)
+                                        @if(session('user_role') === \App\Enums\UserRole::ADMIN)
                                         <td class="table-text py-0 align-middle text-dark">
                                             <div>{{ $task->user->name }}</div>
                                         </td>

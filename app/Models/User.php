@@ -26,7 +26,7 @@ class User extends Model
         'address',
         'block',
         'building',
-        'status'
+        'role'
     ];
     
     public function authentication()

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserStatus;
+use App\Enums\UserRole;
 use App\Models\{
     Task,
     LoginCredential
@@ -22,30 +22,15 @@ class TaskController extends Controller
 {
     public function index(TaskSearchWordRequest $request)
     {
-        if(is_null($request->query('search_word'))){
-            if($request->user_status === UserStatus::ADMIN){
-                $tasks = Task::orderBy('expired_at', 'asc')->get();
-            }else{
-                $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-                $tasks = Task::where('user_id', $user_id) 
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }
-        }else{
-            if($request->user_status === UserStatus::ADMIN){
-                $tasks = Task::where('name', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }else{
-                $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-                $tasks = Task::where('user_id', $user_id) 
-                    ->where('name', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%')
-                    ->orderBy('expired_at', 'asc')
-                    ->get();
-            }
-        }
+        $user = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user;
+        
+        $tasks = Task::when(!is_null($request->query('search_word')), function($query) use($request) {
+            return $query->where('name', 'LIKE', '%'.$request->query('search_word').'%')
+                ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%');
+        })->when($user->role !== UserRole::ADMIN, function($query) use($user) {
+            return $query->where('user_id', $user->id);
+        })->orderBy('expired_at', 'asc')
+        ->get();
 
         if(!is_null($request->session()->get('task_message'))){
             $task_message = $request->session()->get('task_message');
@@ -116,16 +101,14 @@ class TaskController extends Controller
         }catch(Exception $e){
             return to_route('task.index')->withErrors(['task_error' => 'タスクの登録に失敗しました。']);
         }
-        return to_route('task.index')->with(['task_message' => $request->name.'をTask Listに登録しました。']);
+
+        $request->session()->flash('task_message', $request->name.'をTask Listに登録しました。');
+
+        return to_route('task.index');
     }
 
     public function show(Request $request, Task $task)
     {
-        $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
-            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
-        }
-
         return view('task.show', [
             'task' => $task
         ]);
@@ -134,7 +117,7 @@ class TaskController extends Controller
     public function edit(Request $request, Task $task)
     {
         $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
 
@@ -146,7 +129,7 @@ class TaskController extends Controller
     public function update(TaskUpdateRequest $request, Task $task)
     {
         $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 
@@ -205,7 +188,7 @@ class TaskController extends Controller
     {
         $user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
 
-        if($request->user_status !== UserStatus::ADMIN  && $task->user_id !== $user_id){
+        if($request->user_role !== UserRole::ADMIN  && $task->user_id !== $user_id){
             return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
         }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserStatus;
+use App\Enums\UserRole;
 use App\Enums\Prefecture;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +29,10 @@ class LoginVerification
 
         $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
 
-        if($login_credential->user->status == UserStatus::ADMIN){
-            $request->merge(['user_status' => UserStatus::ADMIN]);
+        if($login_credential->user->role === UserRole::ADMIN){
+            $request->session()->put(['user_role' => UserRole::ADMIN]);
         }
-
+        
         return $next($request);
     }    
     

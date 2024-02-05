@@ -75,10 +75,9 @@ class AuthenticationController extends Controller
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
         
-        return to_route('authentications.complete')->with([
-            'is_sent_authentication_mail' => true,
-            'authentication_message' => $authentication_message
-        ]);
+        $request->session()->flash('is_sent_authentication_mail', true);
+        $request->session()->flash('authentication_message', $authentication_message);
+        return to_route('authentications.complete');
     }
 
     public function complete(Request $request)
@@ -87,9 +86,7 @@ class AuthenticationController extends Controller
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('is_sent_authentication_mail');
         $authentication_message = $request->session()->get('authentication_message');
-        $request->session()->forget('authentication_message');
 
         return view('authentication.complete', [
             'is_succeeded' => true,
