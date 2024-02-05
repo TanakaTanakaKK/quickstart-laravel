@@ -99,7 +99,7 @@ class UserController extends Controller
                     'building' => $request->building
                 ])->id;
         }catch(Exception $e){
-            return to_route('authentications.create')->withErrors(['register_error' => '会員登録に失敗しました。']);
+            return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
 
         $authentication->status = AuthenticationStatus::COMPLETED;
