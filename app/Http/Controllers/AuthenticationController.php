@@ -28,12 +28,12 @@ class AuthenticationController extends Controller
         return view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]);
     }
 
-    public function create_password(Request $request)
+    public function createPassword(Request $request)
     {
         return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
     }
 
-    public function create_email(Request $request)
+    public function createEmail(Request $request)
     {
         return view('authentication.create', ['authentication_type' => AuthenticationType::EMAIL_RESET]);
     }
@@ -55,7 +55,6 @@ class AuthenticationController extends Controller
                 'type' => $request->authentication_type
             ]);
         }catch(Exception $e){
-            dd('dadada');
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
 
@@ -72,7 +71,10 @@ class AuthenticationController extends Controller
             $authentication->save();
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
+        }else{
+            return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
+        
         return to_route('authentications.complete')->with([
             'is_sent_authentication_mail' => true,
             'authentication_message' => $authentication_message
@@ -88,7 +90,7 @@ class AuthenticationController extends Controller
         $request->session()->forget('is_sent_authentication_mail');
         $authentication_message = $request->session()->get('authentication_message');
         $request->session()->forget('authentication_message');
-                    
+
         return view('authentication.complete', [
             'is_succeeded' => true,
             'authentication_message' => $authentication_message
