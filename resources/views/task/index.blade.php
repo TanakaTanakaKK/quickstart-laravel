@@ -25,24 +25,43 @@
                         </div>
                     </form>
                 </div>
-                <div class="card border rounded">
-                    <div class="card-body pr-3 pl-3 overflow-auto">
+                    <div class="card-body px-3 py-0 overflow-auto text-right">
+                        <div class="mx-2">
+                                    <form action="{{ route('task.index') }}" method="GET">
+                                        @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
+                                        <input type="hidden" name="expired" value="expired">
+                                        <button class="btn btn-danger text-nowrap px-3 mx-1">
+                                            <i class="fa-solid fa-eye-slash"></i> 期限切れタスクに切替
+                                        @else
+                                        <input type="hidden" name="active" value="active">
+                                        <button class="btn btn-primary text-nowrap px-3 mx-1">
+                                            <i class="fa-solid fa-eye"></i> 有効なタスクに切替
+                                        @endif
+                                        </button>
+                                    </form>
+                                </div>
+                    </div>
+                    <div class="card-body px-3 pt-0 overflow-auto">
                         <table class="table table-striped task-table">
                             <thead>
                                 @can('isAdmin')
                                 <th class="border-top-0 col-2 text-nowrap text-center">画像</th>
-                                <th class="border-top-0 col-3 text-nowrap text-center">タスク名</th>
-                                <th class="border-top-0 col-2 text-nowrap text-center">ユーザー名</th>
-                                <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
-                                <th class="border-top-0 col-3 text-nowrap text-center">期限</th>
-                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
+                                <th class="border-top-0 col-3 text-nowrap text-center">@sortablelink('name', 'タスク名')</th>
+                                <th class="border-top-0 col-2 text-nowrap text-center">@sortablelink('user_id', 'ユーザー')</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">@sortablelink('satus', 'ステータス')</th>
+                                <th class="border-top-0 col-3 text-nowrap text-center">@sortablelink('expired_at', '期限')</th>
                                 @else
                                 <th class="border-top-0 col-1 text-nowrap text-center">画像</th>
-                                <th class="border-top-0 col-4 text-nowrap text-center">タスク名</th>
-                                <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
-                                <th class="border-top-0 col-4 text-nowrap text-center">期限</th>
-                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
+                                <th class="border-top-0 col-4 text-nowrap text-center">@sortablelink('name', 'タスク名')</th>
+                                <th class="border-top-0 col-1 text-nowrap text-center">@sortablelink('satus', 'ステータス')</th>
+                                <th class="border-top-0 col-4 text-nowrap text-center">@sortablelink('expired_at', '期限')</th>
                                 @endcan
+                                <th class="border-top-0 col-1">&nbsp;</th>
+                                <th class="border-top-0 col-1">
+                                    <a href="{{ route('task.export_csv') }}" class="btn btn-primary text-nowrap" download>
+                                        <i class="fa-solid fa-file-export"></i>出力
+                                    </a>
+                                </th>
                                 <th class="border-top-0 col-1">
                                     <a href="{{ route('task.create') }}" class="btn btn-primary text-nowrap">
                                         <i class="fa-solid fa-plus"></i>作成
@@ -56,7 +75,7 @@
                                         @can('isAdmin')
                                         <td>&nbsp;</td>
                                         @endcan
-                                        <td colspan="4">&nbsp;</td>
+                                        <td colspan="5">&nbsp;</td>
                                     </tr>
                                 @else
                                 @foreach($tasks as $task)
@@ -79,7 +98,11 @@
                                             <div>{{ \App\Enums\TaskStatus::getDescription($task->status) }}</div>
                                         </td>
                                         <td class="table-text py-0 align-middle text-dark text-nowrap text-center">
+                                            @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
                                             <div>{{ \Carbon\Carbon::parse($task->expired_at)->format('Y年m月d日 H:i') }}</div>
+                                            @else
+                                            <div class="text-danger">{{ \Carbon\Carbon::parse($task->expired_at)->format('Y年m月d日 H:i') }}</div>
+                                            @endif
                                         </td>
                                         <td class="py-0 align-middle text-center">
                                             <a href="{{ route('task.show',$task->id) }}" class="btn btn-primary text-nowrap">
@@ -101,6 +124,19 @@
                                 @endif
                             </tbody>
                         </table>
+                        <div class="container-fluid">
+                            <div class="row justify-content-md-center">
+                                <div class="align-center col">
+                                    &nbsp;
+                                </div>
+                                <div class="align-center col">
+                                    {{ $tasks->links('pagination::bootstrap-4') }}
+                                </div>
+                                <div class="align-center col">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
