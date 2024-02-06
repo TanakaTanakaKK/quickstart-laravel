@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('status');
+            $table->integer('role');
             $table->string('name');
             $table->string('archive_image_path')->unique();
             $table->string('thumbnail_image_path')->unique();

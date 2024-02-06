@@ -13,7 +13,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
-class AdminSeeder extends Seeder
+class TestUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,21 +21,21 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'admin@example.com',
-            'password' => Hash::make('testtest'),
-            'name' => '管理者',
+            'email' => 'samplesample@example.com',
+            'password' => Hash::make('kenta0604'),
+            'name' => 'テストユーザー',
             'kana_name' => 'カンリシャ',
             'nickname' => 'test',
-            'thumbnail_image_path' => 'test',
-            'archive_image_path' => 'test',    
+            'thumbnail_image_path' => 'testq',
+            'archive_image_path' => 'tesq',    
             'gender' => Gender::OTHER,
             'birthday' => Carbon::parse('2000-2-2'),
-            'phone_number' => '09099999999',
+            'phone_number' => '08019999999',
             'postal_code' => '0000000',
             'prefecture' => Prefecture::OSAKA,
             'address' => 'テスト',
             'block' => '1-1-1',
-            'role' => UserRole::ADMIN
+            'role' => UserRole::GENERAL
         ]);
     }
 }

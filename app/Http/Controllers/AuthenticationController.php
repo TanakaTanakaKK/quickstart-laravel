@@ -6,10 +6,7 @@ use App\Enums\{
     AuthenticationStatus,
     AuthenticationType
 };
-use App\Models\{
-    Authentication,
-    LoginCredential
-};
+use App\Models\Authentication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -25,17 +22,15 @@ class AuthenticationController extends Controller
 {
     public function create(Request $request)
     {
-        return view('authentication.create', ['authentication_type' => AuthenticationType::USER_REGISTER]);
-    }
-
-    public function create_password(Request $request)
-    {
-        return view('authentication.create', ['authentication_type' => AuthenticationType::PASSWORD_RESET]);
-    }
-
-    public function create_email(Request $request)
-    {
-        return view('authentication.create', ['authentication_type' => AuthenticationType::EMAIL_RESET]);
+        $authentication_type = (int)$request->authentication_type;
+        
+        if (!in_array($authentication_type, AuthenticationType::getValues())) {
+            to_route('login_credential.create');
+        }
+        
+        return view('authentication.create', [
+            'authentication_type' => $authentication_type,
+        ]);
     }
 
     public function store(AuthenticationRequest $request)
@@ -55,7 +50,6 @@ class AuthenticationController extends Controller
                 'type' => $request->authentication_type
             ]);
         }catch(Exception $e){
-            dd('dadada');
             return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
 
@@ -68,15 +62,17 @@ class AuthenticationController extends Controller
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にパスワードの再設定をしてください。';
 
         }elseif((int)$request->authentication_type === AuthenticationType::EMAIL_RESET){
-            $authentication->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
+            $authentication->user_id = auth()->id();
             $authentication->save();
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
+        }else{
+            return to_route('login_credential.create')->withErrors(['reset_error' => '認証メールの送信に失敗しました。']);
         }
-        return to_route('authentications.complete')->with([
-            'is_sent_authentication_mail' => true,
-            'authentication_message' => $authentication_message
-        ]);
+        
+        $request->session()->flash('is_sent_authentication_mail', true);
+        $request->session()->flash('authentication_message', $authentication_message);
+        return to_route('authentications.complete');
     }
 
     public function complete(Request $request)
@@ -85,13 +81,9 @@ class AuthenticationController extends Controller
             return to_route('tasks.index');
         }
 
-        $request->session()->forget('is_sent_authentication_mail');
-        $authentication_message = $request->session()->get('authentication_message');
-        $request->session()->forget('authentication_message');
-                    
         return view('authentication.complete', [
             'is_succeeded' => true,
-            'authentication_message' => $authentication_message
+            'authentication_message' => $request->session()->get('authentication_message')
         ]);
     }
 }

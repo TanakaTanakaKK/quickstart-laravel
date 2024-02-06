@@ -57,8 +57,8 @@
                 コメント欄
             </div>
             <div class="card_body">
-                @if(isset($comments))
-                @foreach($comments as $comment)
+                @if($task->taskComments->isNotEmpty())
+                @foreach($task->taskComments as $comment)
                 <div class="align-middle form-group row my-2 mx-0">
                     <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label">
                         {{ $comment->user->name }}
@@ -69,7 +69,7 @@
                             <p class="my-1 mx-1">{{ $comment->comment }}</p>
                         </div>
                     </div>
-                    @if($comment->user->status === \App\Enums\UserStatus::ADMIN && $comment->user->id !== auth()->id())
+                    @if($comment->user->role === \App\Enums\UserRole::ADMIN && $comment->user->id !== auth()->id())
                     <div class="text-center align-middle form-group row my-2 mx-0">
                         <input type="hidden" name="user_id" value="{{ $task->user_id }}">
                         <div class="col-md-3">

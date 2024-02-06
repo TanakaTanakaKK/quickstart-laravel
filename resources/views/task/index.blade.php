@@ -35,15 +35,13 @@
                                 <th class="border-top-0 col-2 text-nowrap text-center">ユーザー名</th>
                                 <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
                                 <th class="border-top-0 col-3 text-nowrap text-center">期限</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
+                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
                                 @else
                                 <th class="border-top-0 col-1 text-nowrap text-center">画像</th>
                                 <th class="border-top-0 col-4 text-nowrap text-center">タスク名</th>
                                 <th class="border-top-0 col-1 text-nowrap text-center">ステータス</th>
                                 <th class="border-top-0 col-4 text-nowrap text-center">期限</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
-                                <th class="border-top-0 col-1">&nbsp;</th>
+                                <th class="border-top-0 col-1" colspan="2">&nbsp;</th>
                                 @endcan
                                 <th class="border-top-0 col-1">
                                     <a href="{{ route('task.create') }}" class="btn btn-primary text-nowrap">
@@ -52,18 +50,13 @@
                                 </th>
                             </thead>
                             <tbody>
-                                @if(count($tasks) === 0)
+                                @if($tasks->isEmpty())
                                     <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td colspan="2">&nbsp;</td>
                                         @can('isAdmin')
                                         <td>&nbsp;</td>
                                         @endcan
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td colspan="4">&nbsp;</td>
                                     </tr>
                                 @else
                                 @foreach($tasks as $task)

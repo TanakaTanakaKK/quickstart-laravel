@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class UserStatus extends Enum
+final class UserRole extends Enum
 {
     const GENERAL = 0;
     const ADMIN = 1;
