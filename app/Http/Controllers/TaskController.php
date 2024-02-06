@@ -112,40 +112,21 @@ class TaskController extends Controller
 
     public function storeCsv(TaskCsvFileRequest $request)
     {
-        $csv_file = explode("\n", file_get_contents($request->csv_file));
-        $succeeded_task_count = 0;
-        $failed_task_count = 0;
-        $failed_task_rows = [];
-        $file_name = $request->csv_file->getClientOriginalName();
-        
-        foreach($csv_file as $key => $data){
-            $data = explode(',', $data);
-
+        foreach($request->csv_array as $data){
             try{
                 Task::create([
                     'user_id' => auth()->id(),
-                    'name' => $data[0],
-                    'detail' => $data[1],
-                    'expired_at' => $data[2],
-                    'status' => TaskStatus::getValue($data[3])
+                    'name' => $data['name'],
+                    'detail' => $data['detail'],
+                    'expired_at' => $data['expired_at'],
+                    'status' => $data['status']
                 ]);
-                $succeeded_task_count ++;
-
             }catch(Exception $e){
-                $failed_task_count ++;
-                $failed_task_rows[] = ($key+1).'行目';
+                return to_route('task.create');
             }
         }
 
-        if($succeeded_task_count >= 1){
-            $request->session()->flash('task_message', $file_name.'から'.$succeeded_task_count.'件のタスクを登録しました。');
-        }
-
-        if($failed_task_count >= 1){
-            return to_route('task.index')->withErrors([
-                'csv_store_error' => $file_name.'内の'.$failed_task_count.'件のタスク('.implode(',', $failed_task_rows).')が登録に失敗しました。',
-            ]);
-        }
+        $request->session()->flash('task_message', $request->csv_file->getClientOriginalName().'からタスクを登録しました。');
 
         return to_route('task.index');
     }
