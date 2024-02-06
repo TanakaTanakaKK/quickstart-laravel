@@ -1,4 +1,3 @@
-
 @if(isset($is_succeeded))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>

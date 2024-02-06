@@ -148,7 +148,6 @@ class TaskController extends Controller
 
     public function edit(Request $request, Task $task)
     {
-        dd(auth()->user());
         if(!Gate::allows('isAdmin') && !auth()->user()->can('update', $task)){
             return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
         }
