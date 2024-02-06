@@ -25,7 +25,7 @@
                         </div>
                     </form>
                 </div>
-                    <div class="card-body px-3 py-0 overflow-auto text-right">
+                    <div class="card-body px-2 py-0 overflow-auto text-right">
                         <div class="mx-2">
                                     <form action="{{ route('task.index') }}" method="GET">
                                         @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
@@ -41,7 +41,7 @@
                                     </form>
                                 </div>
                     </div>
-                    <div class="card-body px-3 pt-0 overflow-auto">
+                    <div class="card-body px-2 pt-0 overflow-auto">
                         <table class="table table-striped task-table">
                             <thead>
                                 @can('isAdmin')
