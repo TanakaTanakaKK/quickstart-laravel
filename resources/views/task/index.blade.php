@@ -27,19 +27,19 @@
                 </div>
                     <div class="card-body px-2 py-0 overflow-auto text-right">
                         <div class="mx-2">
-                                    <form action="{{ route('task.index') }}" method="GET">
-                                        @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
-                                        <input type="hidden" name="expired" value="expired">
-                                        <button class="btn btn-danger text-nowrap px-3 mx-1">
-                                            <i class="fa-solid fa-eye-slash"></i> 期限切れタスクに切替
-                                        @else
-                                        <input type="hidden" name="active" value="active">
-                                        <button class="btn btn-primary text-nowrap px-3 mx-1">
-                                            <i class="fa-solid fa-eye"></i> 有効なタスクに切替
-                                        @endif
-                                        </button>
-                                    </form>
-                                </div>
+                            <form action="{{ route('task.index') }}" method="GET">
+                                @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
+                                <input type="hidden" name="expired" value="expired">
+                                <button class="btn btn-danger text-nowrap px-3 mx-1">
+                                    <i class="fa-solid fa-eye-slash"></i> 期限切れタスクに切替
+                                @else
+                                <input type="hidden" name="active" value="active">
+                                <button class="btn btn-primary text-nowrap px-3 mx-1">
+                                    <i class="fa-solid fa-eye"></i> 有効なタスクに切替
+                                @endif
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-body px-2 pt-0 overflow-auto">
                         <table class="table table-striped task-table">
