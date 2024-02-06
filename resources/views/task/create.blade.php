@@ -80,7 +80,7 @@
                     <div class="form-group">
                         <form action="{{ route('task.store_csv') }}" enctype="multipart/form-data" method="POST">
                             @csrf
-                            <div class="form-group row my-1 mx-0">
+                            <div class="form-group row my-1 mx-0" novalidate>
                                 <label for="csv_file" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">CSVファイル</label>
                                 <div class="input-group col-md-6">
                                     <span class="input-group-btn w-100">
@@ -88,6 +88,9 @@
                                             <p id="csv_name">CSVファイルを選択してください</p><input type="file" name="csv_file" class="d-none" id="csv_file"accept="text/csv"
                                             onchange=showCsvFileName()>
                                         </label>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
                                     </span>
                                 </div>
                             </div>

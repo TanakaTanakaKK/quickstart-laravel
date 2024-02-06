@@ -110,7 +110,7 @@ class TaskController extends Controller
         return to_route('task.index');
     }
 
-    public function store_csv(TaskCsvFileRequest $request)
+    public function storeCsv(TaskCsvFileRequest $request)
     {
         $csv_file = explode("\n", file_get_contents($request->csv_file));
         $succeeded_task_count = 0;
@@ -124,10 +124,10 @@ class TaskController extends Controller
             try{
                 Task::create([
                     'user_id' => auth()->id(),
-                    'name' => $data[CsvTaskColumn::NAME],
-                    'detail' => $data[CsvTaskColumn::DETAIL],
-                    'expired_at' => $data[CsvTaskColumn::EXPIRED_AT],
-                    'status' => TaskStatus::getValue($data[CsvTaskColumn::STATUS])
+                    'name' => $data[0],
+                    'detail' => $data[1],
+                    'expired_at' => $data[2],
+                    'status' => TaskStatus::getValue($data[3])
                 ]);
                 $succeeded_task_count ++;
 
