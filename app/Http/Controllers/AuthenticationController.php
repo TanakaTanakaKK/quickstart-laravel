@@ -67,6 +67,7 @@ class AuthenticationController extends Controller
         }elseif((int)$request->authentication_type === AuthenticationType::EMAIL_RESET){
             $authentication->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
             $authentication->save();
+            
             Mail::to($request->email)->send(new EmailResetMail($authentication_token));
             $authentication_message = $request->email.'宛に認証メールを送信しました。15分以内にリンクをクリックしてメールアドレスを変更してください。';
         }else{
