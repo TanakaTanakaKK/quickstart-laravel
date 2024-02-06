@@ -22,10 +22,6 @@ class LoginVerification
             return to_route('login_credential.create');
         }
         
-        if(!is_null($request->task) && $request->task->user_id !== auth()->id() && !Gate::allows('isAdmin')){
-            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
-        }
-        
         return $next($request);
     }    
 }

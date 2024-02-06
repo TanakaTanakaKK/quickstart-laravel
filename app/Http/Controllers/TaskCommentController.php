@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaskComment;
+use App\Models\{
+    Task,
+    TaskComment
+};
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskCommentRequest;
 use Gate;
@@ -13,7 +16,7 @@ class TaskCommentController extends Controller
     public function store(TaskCommentRequest $request)
     {
         if(!Gate::allows('isAdmin') && (int)$request->user_id !== auth()->id()){
-            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
+            return to_route('task.show', $request->task_id)->withErrors(['access_error' => 'アクセスが無効です。']);
         }
         
         try{
@@ -29,7 +32,7 @@ class TaskCommentController extends Controller
         return to_route('task.show', $request->task_id);
     }
 
-    public function destroy(Request $request, TaskComment $task_comment)
+    public function destroy(Request $request, Task $task, TaskComment $task_comment)
     {
         if(!Gate::allows('isAdmin') && (int)$request->user_id !== auth()->id()){
             return to_route('task.show', $task_comment->task_id)->withErrors(['access_error' => 'アクセスが無効です。']);
