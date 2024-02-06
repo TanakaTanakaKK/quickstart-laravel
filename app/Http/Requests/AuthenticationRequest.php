@@ -14,20 +14,13 @@ class AuthenticationRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-            $email_validation = match ((int)$this->authentication_type) {
-            AuthenticationType::EMAIL_RESET, AuthenticationType::USER_REGISTER => 'unique:users,email',
-            AuthenticationType::PASSWORD_RESET => 'exists:users,email',
-            default => ''
-            };
-            
-            return [
+    {     
+            $rules =  [
                 'email' => [
                     'required',
                     'email:filter',
                     'max:255',
-                    'string',
-                    $email_validation
+                    'string'
                 ],
                 'authentication_type' => [
                     'required',
@@ -35,6 +28,13 @@ class AuthenticationRequest extends FormRequest
                     new EnumValue(AuthenticationType::class, false)
                 ]
             ];
+            $rules['email'][] = match ((int)$this->authentication_type) {
+                AuthenticationType::USER_REGISTER => 'unique:users,email',
+                AuthenticationType::PASSWORD_RESET => 'exists:users,email',
+                default => ''
+            };
+
+            return $rules;
     }
 
     public function attributes(): array
