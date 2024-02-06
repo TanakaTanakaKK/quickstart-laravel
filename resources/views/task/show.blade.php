@@ -69,29 +69,26 @@
                             <p class="my-1 mx-1">{{ $comment->comment }}</p>
                         </div>
                     </div>
-                    @if($comment->user->role === \App\Enums\UserRole::ADMIN && $comment->user->id !== auth()->id())
-                    <div class="text-center align-middle form-group row my-2 mx-0">
-                        <input type="hidden" name="user_id" value="{{ $task->user_id }}">
-                        <div class="col-md-3">
-                            <div class="btn btn-secondary boder text-nowrap">
-                                <i class="fa fa-trash"></i>削除
+                    <div>
+                        <div class="text-center align-middle form-group row my-2 mx-0">
+                            <div class="col-md-3">
+                                @if($comment->user->role === \App\Enums\UserRole::ADMIN && $comment->user->id !== auth()->id())
+                                    <button type="submit" class="btn btn-danger boder text-nowrap" disabled>
+                                        <i class="fa fa-trash"></i>削除
+                                    </button>
+                                @else
+                                    <form action="{{ route('task_comment.destroy', $comment->id) }}" method="POST" class="px-0 py-0 mx-0 my-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="user_id" value="{{ $task->user_id }}">
+                                        <button type="submit" class="btn btn-danger boder text-nowrap">
+                                            <i class="fa fa-trash"></i>削除
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    @else
-                    <div>
-                        <form action="{{ route('task_comment.destroy', $comment->id) }}" class="align-middle form-group row my-2 mx-0" method="POST">
-                        @csrf
-                        @method('DELETE')
-                            <div class="text-center col-md-3">
-                                <input type="hidden" name="user_id" value="{{ $task->user_id }}">
-                                <button type="submit" class="btn btn-danger boder text-nowrap">
-                                    <i class="fa fa-trash"></i>削除
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    @endif
                 </div>
                 @endforeach
                 @endif
