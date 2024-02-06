@@ -8,7 +8,6 @@ use App\Enums\{
 };
 use App\Models\{
     Authentication,
-    LoginCredential,
     User
 };
 use Illuminate\Support\Facades\{
@@ -21,7 +20,6 @@ use App\Http\Requests\{
     EmailResetRequest,
     PasswordResetRequest,
     UserRequest,
-    UserUpdateRequest,
 };
 use Exception;
 use Imagick;
@@ -163,7 +161,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(UserUpdateRequest $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
         if(!is_null($request->image_file)){
             $image = new Imagick();
