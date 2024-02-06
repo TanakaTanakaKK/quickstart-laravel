@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Closure;
+use Gate;
 
 class LoginVerification
 {
