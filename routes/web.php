@@ -24,7 +24,7 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
     });
     Route::prefix('/task_comment')->group(function () {
         Route::post('/store', [TaskCommentController::class, 'store'])->name('task_comment.store');
-        Route::delete('/{task_comment}', [TaskCommentController::class, 'destroy'])->name('task_comment.destroy');
+        Route::delete('/{task}/{task_comment}', [TaskCommentController::class, 'destroy'])->name('task_comment.destroy');
     });
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('users.show');

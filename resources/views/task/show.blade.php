@@ -77,7 +77,7 @@
                                         <i class="fa fa-trash"></i>削除
                                     </button>
                                 @else
-                                    <form action="{{ route('task_comment.destroy', $comment->id) }}" method="POST" class="px-0 py-0 mx-0 my-0">
+                                    <form action="{{ route('task_comment.destroy', [$task, $comment]) }}" method="POST" class="px-0 py-0 mx-0 my-0">
                                         @csrf
                                         @method('DELETE')
                                         <input type="hidden" name="user_id" value="{{ $task->user_id }}">
