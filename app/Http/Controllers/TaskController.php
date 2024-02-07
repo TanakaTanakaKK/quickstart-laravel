@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{
-    Task
+    Task,
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -111,8 +111,9 @@ class TaskController extends Controller
         }
 
         return view('task.show', [
-            'task' => $task
+            'task' => $task->load('taskComments.user'),
         ]);
+        
     }
 
     public function edit(Request $request, Task $task)
