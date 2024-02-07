@@ -11,7 +11,6 @@ class Authentication extends Model
     use HasFactory;
     
     protected $fillable = [
-        'token',
         'email',
         'status',
         'expired_at',
