@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\{
     AuthenticationStatus,
     AuthenticationType,
+    UserRole,
 };
 use App\Models\{
     Authentication,
@@ -84,22 +85,23 @@ class UserController extends Controller
 
         try{
             $user_id = User::create([
-                    'thumbnail_image_path' => $thumbnail_image_path,
-                    'archive_image_path' => $archive_image_path,
-                    'email' => $authentication->email,
-                    'password' => Hash::make($request->password),
-                    'name' => $request->name,
-                    'kana_name' => $request->kana_name,
-                    'nickname' => $request->nickname,
-                    'gender' => $request->gender,
-                    'birthday' => $request->birthday,
-                    'phone_number' => str_replace('-', '', $request->phone_number),
-                    'postal_code' => str_replace('-', '', $request->postal_code),
-                    'prefecture' => $request->prefecture,
-                    'address' => $request->address,
-                    'block' => $request->block,
-                    'building' => $request->building
-                ])->id;
+                'thumbnail_image_path' => $thumbnail_image_path,
+                'archive_image_path' => $archive_image_path,
+                'email' => $authentication->email,
+                'password' => Hash::make($request->password),
+                'name' => $request->name,
+                'kana_name' => $request->kana_name,
+                'nickname' => $request->nickname,
+                'gender' => $request->gender,
+                'birthday' => $request->birthday,
+                'phone_number' => str_replace('-', '', $request->phone_number),
+                'postal_code' => str_replace('-', '', $request->postal_code),
+                'prefecture' => $request->prefecture,
+                'address' => $request->address,
+                'block' => $request->block,
+                'building' => $request->building,
+                'role' => UserRole::GENERAL 
+            ])->id;
         }catch(Exception $e){
             return to_route('authentications.create', AuthenticationType::USER_REGISTER)->withErrors(['register_error' => '会員登録に失敗しました。']);
         }
@@ -107,7 +109,8 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
         
-        return to_route('users.complete',$user_id)->with(['is_user_created' => true]);
+        $request->session()->flash('is_user_created', true);
+        return to_route('users.complete',$user_id);
     }
 
     public function show(Request $request, User $user)
@@ -213,7 +216,8 @@ class UserController extends Controller
         $user->building = $request->building;
         $user->save();
 
-        return to_route('users.complete', $user->id)->with(['is_updated_user_info' => true]);
+        $request->session()->flash('is_updated_user_info', true);
+        return to_route('users.complete', $user->id);
     }
 
     public function updateEmail(EmailResetRequest $request, User $user)
@@ -235,7 +239,8 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
 
-        return to_route('users.complete', $user->id)->with(['is_email_reset' => true]);
+        $request->session()->flash('is_email_reset', true);
+        return to_route('users.complete', $user->id);
     }
 
     public function updatePassword(PasswordResetRequest $request, User $user)
@@ -254,7 +259,8 @@ class UserController extends Controller
         $authentication->status = AuthenticationStatus::COMPLETED;
         $authentication->save();
 
-        return to_route('users.complete', $user->id)->with(['is_password_reset' => true]);
+        $request->session()->flash('is_password_reset', true);
+        return to_route('users.complete', $user->id);
     }
 
     public function complete(Request $request, User $user)
@@ -262,19 +268,15 @@ class UserController extends Controller
 
         if(!is_null($request->session()->get('is_user_created'))){
             $user_message = 'ユーザー登録が完了しました。';
-            $request->session()->forget('is_user_created');
 
         }elseif(!is_null($request->session()->get('is_password_reset'))){
             $user_message = 'パスワードを更新しました。';
-            $request->session()->forget('is_password_reset');
 
         }elseif(!is_null($request->session()->get('is_email_reset'))){
             $user_message = 'メールアドレスを更新しました。';
-            $request->session()->forget('is_email_reset');
 
         }elseif(!is_null($request->session()->get('is_updated_user_info'))){
             $user_message = 'プロフィールを更新しました。';
-            $request->session()->forget('is_updated_user_info');
 
         }else{
             return to_route('login_credential.create');

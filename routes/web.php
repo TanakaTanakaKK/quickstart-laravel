@@ -12,9 +12,15 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
     Route::get('/', function () {
         return to_route('login_credential.create');
     });
-    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-    Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::prefix('/task')->group(function () {
+        Route::get('', [TaskController::class, 'index'])->name('task.index');
+        Route::get('/create', [TaskController::class, 'create'])->name('task.create');
+        Route::post('/store', [TaskController::class, 'store'])->name('task.store');
+        Route::get('/show/{task}', [TaskController::class, 'show'])->name('task.show');
+        Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
+        Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
+        Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+    });
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
@@ -30,7 +36,6 @@ Route::prefix('/authentications')->group(function () {
     Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
     Route::get('/complete', [AuthenticationController::class, 'complete'])->name('authentications.complete');
 });
-
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
@@ -38,7 +43,6 @@ Route::prefix('/users')->group(function () {
     Route::patch('/{user}/password', [UserController::class, 'updatePassword'])->name('users.update_password');
     Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
 });
-
 Route::prefix('/login_credential')->group(function () {
     Route::get('/create', [LoginCredentialController::class, 'create'])->name('login_credential.create');
     Route::post('/store', [LoginCredentialController::class, 'store'])->name('login_credential.store');
