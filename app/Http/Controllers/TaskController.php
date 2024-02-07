@@ -116,7 +116,7 @@ class TaskController extends Controller
 
     public function storeCsv(TaskCsvFileRequest $request)
     {
-        foreach($request->csv_array as $data){
+        foreach($request->csv_items as $data){
             try{
                 Task::create([
                     'user_id' => auth()->id(),
