@@ -80,7 +80,7 @@ class UserRequest extends FormRequest
                 'string'
             ]];
             
-            if(is_null($this->user)){
+            if($this->route()->getName() === 'users.store'){
                 $rules['password'][] = [
                     'required',
                     'between:8,255',
