@@ -18,6 +18,7 @@ use App\Http\Requests\{
 use Exception;
 use Imagick;
 use Gate;
+use GuzzleHttp\Client;
 
 class TaskController extends Controller
 {
