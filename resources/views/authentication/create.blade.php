@@ -21,9 +21,7 @@
                                 <input type="hidden" name="authentication_type" value="{{ $authentication_type }}">
                                 @if((int)$authentication_type === \App\Enums\AuthenticationType::USER_REGISTER)
                                 <label for="email-form" class="col-form-label font-weight-bold">Eメールアドレス</label>
-                                @elseif((int)$authentication_type === \App\Enums\AuthenticationType::PASSWORD_RESET)
-                                <label for="email-form" class="col-form-label font-weight-bold">登録しているEメールアドレス</label>
-                                @elseif((int)$authentication_type === \App\Enums\AuthenticationType::EMAIL_RESET)
+                                @else
                                 <label for="email-form" class="col-form-label font-weight-bold">登録しているEメールアドレス</label>
                                 @endif
                                 <div class="form-group col-md-12 px-0">
