@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->timestamp('expired_at');
             $table->string('detail');
-            $table->string('thumbnail_image_path')->unique();
-            $table->string('archive_image_path')->unique();
+            $table->string('thumbnail_image_path')->unique()->nullable();
+            $table->string('archive_image_path')->unique()->nullable();
             $table->integer('status');
             $table->timestamps();
         });

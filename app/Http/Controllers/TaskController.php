@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\{
+    CsvTaskColumn,
+    TaskStatus
+};
 use App\Models\{
     Task,
 };
@@ -9,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\{
+    TaskCsvFileRequest,
     TaskRequest,
     TaskUpdateRequest,
     TaskSearchWordRequest
@@ -54,6 +59,7 @@ class TaskController extends Controller
         if(!is_null($request->session()->get('task_message'))){
             return to_route('task.index');
         }
+
         $image = new Imagick();
         $image->readImage($request->file('image_file'));
         $archive_extension = config('mimetypes')[$image->getImageMimetype()];
@@ -100,6 +106,27 @@ class TaskController extends Controller
         }
 
         $request->session()->flash('task_message', $request->name.'をTask Listに登録しました。');
+
+        return to_route('task.index');
+    }
+
+    public function storeCsv(TaskCsvFileRequest $request)
+    {
+        foreach($request->csv_items as $data){
+            try{
+                Task::create([
+                    'user_id' => auth()->id(),
+                    'name' => $data['name'],
+                    'detail' => $data['detail'],
+                    'expired_at' => $data['expired_at'],
+                    'status' => $data['status']
+                ]);
+            }catch(Exception $e){
+                return to_route('task.create');
+            }
+        }
+
+        $request->session()->flash('task_message', $request->csv_file->getClientOriginalName().'からタスクを登録しました。');
 
         return to_route('task.index');
     }
