@@ -53,7 +53,6 @@ class UserRequest extends FormRequest
                 'before:today',
                 'date'
             ],
-            
             'postal_code' => [
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
