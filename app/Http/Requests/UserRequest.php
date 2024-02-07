@@ -53,7 +53,6 @@ class UserRequest extends FormRequest
                 'before:today',
                 'date'
             ],
-            
             'postal_code' => [
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
@@ -80,7 +79,7 @@ class UserRequest extends FormRequest
                 'string'
             ]];
             
-            if(is_null($this->user)){
+            if($this->route()->getName() === 'users.store'){
                 $rules['password'][] = [
                     'required',
                     'between:8,255',
