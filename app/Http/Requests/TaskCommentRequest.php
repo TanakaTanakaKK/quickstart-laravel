@@ -11,7 +11,7 @@ class TaskCommentRequest extends FormRequest
         return [
             'comment' => [
                 'required',
-                'max:128',
+                'max:1000',
                 'string'
             ]
         ];
