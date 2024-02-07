@@ -30,10 +30,10 @@ class TaskController extends Controller
         })->when(!Gate::allows('isAdmin'), function($query) {
             return $query->where('user_id', auth()->id());
             
-        })->when(!is_null($request->query('expired')), function($query) use ($request){
+        })->when(!is_null($request->query('validity_time')) || $request->query('validity_time') === 'expired', function($query) use ($request){
             $request->session()->put('is_change_for_expired', true);
             return $query->where('expired_at', '<', now());
-        })->when(!is_null($request->query('active')), function($query) use ($request){
+        })->when(!is_null($request->query('active')) || $request->query('validity_time') === 'active', function($query) use ($request){
             $request->session()->put('is_change_for_expired', false);
             return $query->where('expired_at', '>', now());
         })

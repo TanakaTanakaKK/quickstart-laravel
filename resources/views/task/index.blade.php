@@ -29,11 +29,11 @@
                         <div class="mx-2">
                             <form action="{{ route('task.index') }}" method="GET">
                                 @if(is_null(session('is_change_for_expired')) || session('is_change_for_expired') == false)
-                                <input type="hidden" name="expired" value="expired">
+                                <input type="hidden" name="validity_time" value="expired">
                                 <button class="btn btn-danger text-nowrap px-3 mx-1">
                                     <i class="fa-solid fa-eye-slash"></i> 期限切れタスクに切替
                                 @else
-                                <input type="hidden" name="active" value="active">
+                                <input type="hidden" name="validity_time" value="active">
                                 <button class="btn btn-primary text-nowrap px-3 mx-1">
                                     <i class="fa-solid fa-eye"></i> 有効なタスクに切替
                                 @endif
