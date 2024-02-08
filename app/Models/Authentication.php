@@ -14,7 +14,8 @@ class Authentication extends Model
         'token',
         'email',
         'status',
-        'expired_at'
+        'expired_at',
+        'type'
     ];
 
     public function user()

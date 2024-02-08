@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Closure;
 use App\Models\LoginCredential;
 
 class LoginVerification
@@ -25,5 +25,6 @@ class LoginVerification
         $request->session()->put('login_credential_token', $request->session()->get('login_credential_token'));
 
         return $next($request);
-    }
+    }    
+    
 }

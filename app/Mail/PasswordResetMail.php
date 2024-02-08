@@ -6,29 +6,33 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\{
     Content,
-    Envelope,
+    Envelope
 };
 use Illuminate\Queue\SerializesModels;
 
-class SendTokenMail extends Mailable
+class PasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * Create a new message instance.
+     */
     public function __construct(public string $authentication_token)
     {
+        //
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '仮登録完了メール',
+            subject: 'パスワード再設定メール',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.authentication_mail',
+            view: 'emails.password_reset_mail',
         );
     }
 

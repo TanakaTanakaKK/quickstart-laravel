@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    TaskController,
-    UserController,
     AuthenticationController,
-    LoginCredentialController
+    LoginCredentialController,
+    TaskController,
+    UserController
 };
 
 Route::middleware(['auth.user'])->group(function () {
@@ -18,7 +18,7 @@ Route::middleware(['auth.user'])->group(function () {
 });
 
 Route::prefix('/authentications')->group(function () {
-    Route::get('/create', [AuthenticationController::class, 'create'])->name('authentications.create');
+    Route::get('/create/{authentication_type}', [AuthenticationController::class, 'create'])->name('authentications.create');
     Route::post('', [AuthenticationController::class, 'store'])->name('authentications.store');
     Route::get('/complete', [AuthenticationController::class, 'complete'])->name('authentications.complete');
 });
@@ -26,7 +26,9 @@ Route::prefix('/authentications')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
-    Route::get('/complete/{authentication_token}', [UserController::class, 'complete'])->name('users.complete');
+    Route::get('/{authentication_token}/password', [UserController::class, 'editPassword'])->name('users.edit_password');
+    Route::patch('/{user}', [UserController::class, 'updatePassword'])->name('users.update_password');
+    Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
 });
 
 Route::prefix('/login_credential')->group(function () {
