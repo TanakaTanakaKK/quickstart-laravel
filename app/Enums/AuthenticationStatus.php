@@ -13,7 +13,8 @@ final class AuthenticationStatus extends Enum
     {
         return match ($value) {
             self::MAIL_SENT => 'メール送信完了',
-            self::COMPLETED => '本登録完了'
+            self::COMPLETED => 'メール認証完了',
+            default => '不明'
         };
     }
 }

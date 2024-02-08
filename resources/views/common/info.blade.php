@@ -9,17 +9,18 @@
         </ul>
     </div>
 @endif
-@if(isset($successful) || isset($is_sent_authentication_email))
+@if(isset($is_succeeded))
     <div class="alert alert-success small pb-0">
         <strong>お知らせ</strong>
         <br><br>
-        @if(isset($is_sent_authentication_email))
+        @if(isset($authentication_message))
             <ul>
-                <li>認証メールを送信しました。15分以内に登録手続きをしてください。</li>
+                <li>{{ $authentication_message }}</li>
             </ul>
-        @else
+        @endif
+        @if(isset($user_message))
             <ul>
-                <li>{{ $successful }}</li>
+                <li>{{ $user_message }}</li>
             </ul>
         @endif
     </div>

@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Model
 {
@@ -36,7 +35,6 @@ class User extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'user_id', 'id');
+        return $this->hasMany(Task::class);
     }
-
 }

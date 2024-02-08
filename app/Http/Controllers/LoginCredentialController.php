@@ -22,6 +22,10 @@ class LoginCredentialController extends Controller
 
     public function store(LoginCredentialRequest $request)
     {
+        if(!is_null($request->session('login_credential_token'))){
+            $request->session()->forget('login_credential_token');
+        }
+
         $is_duplicated_login_credential_token = true;
         while($is_duplicated_login_credential_token){
             $login_credential_token = Str::random(rand(30, 50));
