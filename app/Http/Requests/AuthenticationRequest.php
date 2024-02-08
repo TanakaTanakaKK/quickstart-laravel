@@ -15,6 +15,7 @@ class AuthenticationRequest extends FormRequest
     {
         return [
             'email' => [
+                'required',
                 'email:filter',
                 'unique:users,email',
                 'max:255',
@@ -22,6 +23,7 @@ class AuthenticationRequest extends FormRequest
             ]
         ];
     }
+
     public function attributes(): array
     {
         return [

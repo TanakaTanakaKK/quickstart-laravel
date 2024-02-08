@@ -3,20 +3,28 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Laravel Quickstart - Basic</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"
-    type="text/css">
+    <script src="https://kit.fontawesome.com/96aa7a02df.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light border text-muted">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
-                Task List
-                </a>
+                @if(is_null(session('login_credential_token')))
                 <a class="navbar-brand p-0 text-muted" href="{{ route('authentications.create') }}">
                 会員登録
                 </a>
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.create') }}">
+                ログイン
+                </a>
+                @else
+                <a class="navbar-brand p-0 text-muted" href="{{ route('tasks.index') }}">
+                Task List
+                </a>
+                <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">
+                ログアウト
+                </a>
+                @endif
             </div>
         </div>
     </nav>
