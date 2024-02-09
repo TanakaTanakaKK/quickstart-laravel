@@ -32,25 +32,25 @@
                                     <label for="name" class="control-label">氏名
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="name" class="form-control border" id="name">
+                                    <input type="text" name="name" class="form-control border" id="name" value="{{ old('name') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="kana_name" class="control-label">氏名(カナ)
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="kana_name" class="form-control border" id="kana_name">
+                                    <input type="text" name="kana_name" class="form-control border" id="kana_name" value="{{ old('kana_name') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="nickname" class="control-label">ニックネーム
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="nickname" class="form-control border" id="nickname">
+                                    <input type="text" name="nickname" class="form-control border" id="nickname" value="{{ old('nickname') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="gender" class="control-label">性別
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <select name="gender" class="form-control border" id="gender">
+                                    <select name="gender" class="form-control border" id="gender" value="{{ old('gender') }}">
                                         <option value="" selected hidden>選択してください</option>
                                         @foreach(\App\Enums\Gender::asSelectArray() as $key => $gender)
                                             <option value="{{ $key }}">{{ $gender }}</option>
@@ -61,25 +61,25 @@
                                     <label for="birthday" class="control-label">生年月日
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="date" name="birthday" class="form-control border" id="birthday">
+                                    <input type="date" name="birthday" class="form-control border" id="birthday" value="{{ old('birthday') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="phonenumber" class="control-label">電話番号
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="phone_number" class="form-control border" id="phonenumber">
+                                    <input type="text" name="phone_number" class="form-control border" id="phonenumber" value="{{ old('phone_number') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="postal_code" class="control-label">郵便番号
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="tel" name="postal_code" class="form-control border" id="postal_code" oninput="searchPostal()">
+                                    <input type="tel" name="postal_code" class="form-control border" id="postal_code" oninput="searchPostal()" value="{{ old('postal_code') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="prefecture" class="control-label">都道府県
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <select name="prefecture" class="form-control border" id="prefecture">
+                                    <select name="prefecture" class="form-control border" id="prefecture" value="{{ old('prefecture') }}">
                                         <option selected hidden>選択してください</option>
                                         @foreach(\App\Enums\Prefecture::asSelectArray() as $key => $prefecture)
                                             <option value="{{ $key }}">{{ $prefecture }}</option>
@@ -90,17 +90,17 @@
                                     <label for="address" class="control-label">市区町村
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="address" class="form-control border" id="address">
+                                    <input type="text" name="address" class="form-control border" id="address" value="{{ old('address') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="block" class="control-label">番地
                                         <span class="badge text-danger">*</span>
                                     </label>
-                                    <input type="text" name="block" class="form-control border" id="block">
+                                    <input type="text" name="block" class="form-control border" id="block" value="{{ old('block') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="building" class="control-label">建物</label>
-                                    <input type="text" name="building" class="form-control border" id="building">
+                                    <input type="text" name="building" class="form-control border" id="building" value="{{ old('building') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="password" class="control-label">パスワード
