@@ -15,6 +15,14 @@ Route::middleware(['auth.user'])->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('/task', [TaskController::class, 'store'])->name('tasks.store');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::prefix('/users')->group(function () {
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::get('/{authentication_token}/edit_email', [UserController::class, 'editEmail'])->name('users.edit_email');
+        Route::patch('/{user}/email', [UserController::class, 'updateEmail'])->name('users.update_email');
+        Route::patch('/{user}', [UserController::class, 'update'])->name('users.update');
+    });
+    Route::get('authentications/create/email', [AuthenticationController::class, 'createEmail'])->name('authentications.create_email');
 });
 
 Route::prefix('/authentications')->group(function () {
@@ -26,8 +34,8 @@ Route::prefix('/authentications')->group(function () {
 Route::prefix('/users')->group(function () {
     Route::get('/create/{authentication_token}', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
-    Route::get('/{authentication_token}/password', [UserController::class, 'editPassword'])->name('users.edit_password');
-    Route::patch('/{user}', [UserController::class, 'updatePassword'])->name('users.update_password');
+    Route::get('/{authentication_token}/edit_password', [UserController::class, 'editPassword'])->name('users.edit_password');
+    Route::patch('/{user}/password', [UserController::class, 'updatePassword'])->name('users.update_password');
     Route::get('/complete/{user}', [UserController::class, 'complete'])->name('users.complete');
 });
 

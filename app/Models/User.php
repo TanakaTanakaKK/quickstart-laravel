@@ -33,6 +33,11 @@ class User extends Model
         return $this->hasOne(Authentication::class, 'email', 'email');
     }
 
+    public function loginCredentials(): HasMany
+    {
+        return $this->hasMany(LoginCredential::class);
+    }
+
     public function tasks()
     {
         return $this->hasMany(Task::class);

@@ -8,6 +8,8 @@
                     登録用メールアドレス
                     @elseif((int)$authentication_type === \App\Enums\AuthenticationType::PASSWORD_RESET)
                     パスワードリセット
+                    @elseif((int)$authentication_type === \App\Enums\AuthenticationType::EMAIL_RESET)
+                    メールアドレスの更新
                     @endif
                 </div>
                 <div class="card-body">
@@ -19,7 +21,7 @@
                                 <input type="hidden" name="authentication_type" value="{{ $authentication_type }}">
                                 @if((int)$authentication_type === \App\Enums\AuthenticationType::USER_REGISTER)
                                 <label for="email-form" class="col-form-label font-weight-bold">Eメールアドレス</label>
-                                @elseif((int)$authentication_type === \App\Enums\AuthenticationType::PASSWORD_RESET)
+                                @else
                                 <label for="email-form" class="col-form-label font-weight-bold">登録しているEメールアドレス</label>
                                 @endif
                                 <div class="form-group col-md-12 px-0">

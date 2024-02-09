@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('status');
             $table->timestamp('expired_at');
             $table->integer('type');
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
