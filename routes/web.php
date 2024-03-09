@@ -22,6 +22,7 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
         Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
         Route::post('/store/csv', [TaskController::class, 'storeCsv'])->name('task.store_csv');
+        Route::get('/export/csv', [TaskController::class, 'exportCsv'])->name('task.export_csv');
     });
     Route::prefix('/task_comment')->group(function () {
         Route::post('/store', [TaskCommentController::class, 'store'])->name('task_comment.store');

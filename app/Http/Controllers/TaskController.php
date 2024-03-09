@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\{
-    CsvTaskColumn,
-    TaskStatus
-};
+use App\Enums\TaskStatus;
 use App\Models\{
     Task,
 };
@@ -33,8 +30,15 @@ class TaskController extends Controller
         })->when(!Gate::allows('isAdmin'), function($query) {
             return $query->where('user_id', auth()->id());
             
-        })->orderBy('expired_at', 'asc')
-        ->get();
+        })->when(!is_null($request->query('validity_time')) || $request->query('validity_time') === 'expired', function($query) use ($request){
+            $request->session()->put('is_change_for_expired', true);
+            return $query->where('expired_at', '<', now());
+        })->when(!is_null($request->query('active')) || $request->query('validity_time') === 'active', function($query) use ($request){
+            $request->session()->put('is_change_for_expired', false);
+            return $query->where('expired_at', '>', now());
+        })
+        ->sortable()
+        ->paginate(10);
 
         if(!is_null($request->session()->get('task_message'))){
             return view('task.index', [
@@ -140,7 +144,6 @@ class TaskController extends Controller
         return view('task.show', [
             'task' => $task->load('taskComments.user'),
         ]);
-        
     }
 
     public function edit(Request $request, Task $task)
@@ -209,6 +212,58 @@ class TaskController extends Controller
         }
         
         return to_route('task.show', $task);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $tasks = Task::when(!Gate::allows('isAdmin'), function($query) {
+            return $query->where('user_id', auth()->id());
+            
+        })->get();
+
+        $response_headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=task.csv',
+            'Pragma' => 'no-cache',
+            'Expires' => 0,
+        ];
+
+        $callback = function() use ($tasks) {
+            
+            $resource = fopen('php://output', 'w');
+            
+            if(Gate::allows('isAdmin')){
+                $tasks->load('user');
+
+                fputcsv($resource, ['ユーザー名', 'タスク名', '内容', '期限', 'ステータス']);
+
+                foreach($tasks as $task) {
+                    $task->toArray();
+                    fputcsv($resource, [
+                        $task->user->name,
+                        $task->name, 
+                        $task->detail, 
+                        $task->expired_at,
+                        TaskStatus::getDescription($task->status)
+                    ]);
+                }
+            }else{
+                fputcsv($resource, ['タスク名', '内容', '期限', 'ステータス']);
+
+                foreach($tasks as $task) {
+                    $task->toArray();
+                    fputcsv($resource, [
+                        $task->name, 
+                        $task->detail, 
+                        $task->expired_at,
+                        TaskStatus::getDescription($task->status)
+                    ]);
+                }
+            }
+            fclose($resource);
+        };
+
+        return response()->stream($callback, 200, $response_headers);
     }
 
     public function destroy(Request $request, Task $task)

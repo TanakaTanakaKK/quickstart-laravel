@@ -79,7 +79,7 @@ class AuthenticationController extends Controller
     public function complete(Request $request)
     {
         if(is_null($request->session()->get('is_sent_authentication_mail'))){
-            return to_route('tasks.index');
+            return to_route('task.index');
         }
 
         return view('authentication.complete', [
