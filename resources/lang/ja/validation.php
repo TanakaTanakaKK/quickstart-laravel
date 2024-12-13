@@ -157,6 +157,5 @@ return [
     */
 
     'attributes' => [
-        'name' => 'タスク名'
     ],
 ];
