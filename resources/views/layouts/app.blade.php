@@ -57,7 +57,7 @@
                 <a class="navbar-brand p-0 text-muted" href="{{ route('task.index') }}">
                 Task List
                 </a>
-                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', session()->get('user_id')) }}">
+                <a class="navbar-brand p-0 text-muted" href="{{ route('users.show', auth()->user()) }}">
                 アカウント
                 </a> 
                 <a class="navbar-brand p-0 text-muted" href="{{ route('login_credential.destroy') }}">

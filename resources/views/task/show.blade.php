@@ -52,6 +52,65 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <div class="card-header py-2">
+                コメント欄
+            </div>
+            <div class="card_body">
+                @if($task->taskComments->isNotEmpty())
+                @foreach($task->taskComments as $comment)
+                <div class="align-middle form-group row my-2 mx-0">
+                    <label for="detail" class="col-md-3 text-md-right text-sm-left col-form-label">
+                        {{ $comment->user->name }}
+                        <br><small>{{ $comment->created_at }}</small>
+                    </label>
+                    <div class="align-middle col-md-6 py-2">
+                        <div class="border rounded pl-2">
+                            <p class="my-1 mx-1">{{ $comment->comment }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-center align-middle form-group row my-2 mx-0">
+                            <div class="col-md-3">
+                                @if($comment->user->role === \App\Enums\UserRole::ADMIN && $comment->user->id !== auth()->id())
+                                    <button type="submit" class="btn btn-danger boder text-nowrap" disabled>
+                                        <i class="fa fa-trash"></i>削除
+                                    </button>
+                                @else
+                                    <form action="{{ route('task_comment.destroy', [$task, $comment]) }}" method="POST" class="px-0 py-0 mx-0 my-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="user_id" value="{{ $task->user_id }}">
+                                        <button type="submit" class="btn btn-danger boder text-nowrap">
+                                            <i class="fa fa-trash"></i>削除
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                @endif
+            </div>
+            <div class="card_body">
+                <form action="{{ route('task_comment.store') }}" class="align-middle form-group row my-2 mx-0" method="POST">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $task->user_id }}">
+                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                    <label for="comment" class="col-md-3 text-md-right text-sm-left col-form-label font-weight-bold">コメント</label>
+                    <div class="col-md-6">
+                        <textarea name="comment" id="comment" class="form-control border" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="py-auto align-middle text-center col-md-3">
+                            <button type="submit" class="btn btn-primary boder text-nowrap">
+                                <i class="fa-solid fa-upload"></i>投稿
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

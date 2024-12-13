@@ -21,7 +21,7 @@ class TestUserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'email' => 'sample@example.com',
+            'email' => 'samplesample@example.com',
             'password' => Hash::make('kenta0604'),
             'name' => 'テストユーザー',
             'kana_name' => 'カンリシャ',
@@ -30,7 +30,7 @@ class TestUserSeeder extends Seeder
             'archive_image_path' => 'tesq',    
             'gender' => Gender::OTHER,
             'birthday' => Carbon::parse('2000-2-2'),
-            'phone_number' => '08099999999',
+            'phone_number' => '08019999999',
             'postal_code' => '0000000',
             'prefecture' => Prefecture::OSAKA,
             'address' => 'テスト',

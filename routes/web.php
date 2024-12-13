@@ -5,7 +5,8 @@ use App\Http\Controllers\{
     AuthenticationController,
     LoginCredentialController,
     TaskController,
-    UserController
+    TaskCommentController,
+    UserController,
 };
 
 Route::group(['middleware' => ['auth.user', 'weather']], function () {
@@ -20,6 +21,10 @@ Route::group(['middleware' => ['auth.user', 'weather']], function () {
         Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('task.edit');
         Route::patch('/update/{task}', [TaskController::class, 'update'])->name('task.update');
         Route::delete('/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+    });
+    Route::prefix('/task_comment')->group(function () {
+        Route::post('/store', [TaskCommentController::class, 'store'])->name('task_comment.store');
+        Route::delete('/{task}/{task_comment}', [TaskCommentController::class, 'destroy'])->name('task_comment.destroy');
     });
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
