@@ -8,7 +8,7 @@ use App\Http\Controllers\{
     UserController
 };
 
-Route::middleware(['auth.user'])->group(function () {
+Route::group(['middleware' => ['auth.user', 'weather']], function () {
     Route::get('/', function () {
         return to_route('login_credential.create');
     });
