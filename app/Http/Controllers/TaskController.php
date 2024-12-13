@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserRole;
 use App\Models\{
-    Task,
-    LoginCredential
+    Task
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,19 +15,18 @@ use App\Http\Requests\{
 };
 use Exception;
 use Imagick;
+use Gate;
 
 class TaskController extends Controller
 {
     public function index(TaskSearchWordRequest $request)
     {
-        $user = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user;
-        
         $tasks = Task::when(!is_null($request->query('search_word')), function($query) use($request) {
             return $query->where('name', 'LIKE', '%'.$request->query('search_word').'%')
                 ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%');
 
-        })->when($user->role !== UserRole::ADMIN, function($query) use($user) {
-            return $query->where('user_id', $user->id);
+        })->when(!Gate::allows('isAdmin'), function($query) {
+            return $query->where('user_id', auth()->id());
             
         })->orderBy('expired_at', 'asc')
         ->get();
@@ -91,7 +88,7 @@ class TaskController extends Controller
         try{
             Task::create([
                 'name' => $request->name,
-                'user_id' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'),
+                'user_id' => auth()->id(),
                 'expired_at' => $request->expired_at,
                 'detail' => $request->detail,
                 'thumbnail_image_path' => $thumbnail_image_path,
@@ -109,6 +106,10 @@ class TaskController extends Controller
 
     public function show(Request $request, Task $task)
     {
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('view', $task)){
+            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
+        }
+
         return view('task.show', [
             'task' => $task
         ]);
@@ -116,6 +117,10 @@ class TaskController extends Controller
 
     public function edit(Request $request, Task $task)
     {
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('update', $task)){
+            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
+        }
+
         return view('task.edit', [
             'task' => $task
         ]);
@@ -123,6 +128,10 @@ class TaskController extends Controller
 
     public function update(TaskUpdateRequest $request, Task $task)
     {
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('update', $task)){
+            return to_route('task.index')->withErrors(['access_error' => '不正なアクセスです。']);
+        }
+
         if(!is_null($request->image_file)){
             $image = new Imagick();
             $image->readImage($request->file('image_file'));
@@ -176,6 +185,10 @@ class TaskController extends Controller
 
     public function destroy(Request $request, Task $task)
     {
+        if(!Gate::allows('isAdmin') && !auth()->user()->can('delete', $task)){
+            return to_route('task.index')->withErrors(['access_error' => 'アクセスが無効です。']);
+        }
+
         $task->delete();
         return to_route('task.index');
     }
