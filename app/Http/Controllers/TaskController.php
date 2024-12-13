@@ -2,41 +2,181 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\{
     Task,
     LoginCredential
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\{
+    TaskRequest,
+    TaskUpdateRequest,
+    TaskSearchWordRequest
+};
+use Exception;
+use Imagick;
 
 class TaskController extends Controller
 {
-    public function index(Request $request)
+    public function index(TaskSearchWordRequest $request)
     {
-        $tasks = Task::where('user_id', LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'))
-            ->orderBy('created_at', 'asc')
-            ->get();
-        return view('task.tasks', [
+        $user = LoginCredential::where('token', $request->session()->get('login_credential_token'))->first()->user;
+        
+        $tasks = Task::when(!is_null($request->query('search_word')), function($query) use($request) {
+            return $query->where('name', 'LIKE', '%'.$request->query('search_word').'%')
+                ->orWhere('detail', 'LIKE', '%'.$request->query('search_word').'%');
+
+        })->when($user->role !== UserRole::ADMIN, function($query) use($user) {
+            return $query->where('user_id', $user->id);
+            
+        })->orderBy('expired_at', 'asc')
+        ->get();
+
+        if(!is_null($request->session()->get('task_message'))){
+            return view('task.index', [
+                'tasks' => $tasks,
+                'is_succeeded' => true,
+                'task_message' => $request->session()->get('task_message')
+            ]);
+        }
+
+        return view('task.index', [
             'tasks' => $tasks
         ]);
     }
 
-    public function store(Request $request)
+    public function create(Request $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
+        return view('task.create');
+    }
 
-        $task = new Task;
-        $task->name = $request->name;
-        $task->user_id = LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id');
-        $task->save();
+    public function store(TaskRequest $request)
+    {
+        if(!is_null($request->session()->get('task_message'))){
+            return to_route('task.index');
+        }
+        $image = new Imagick();
+        $image->readImage($request->file('image_file'));
+        $archive_extension = config('mimetypes')[$image->getImageMimetype()];
+
+        $is_duplicated_archive_image_path = true;
+        while($is_duplicated_archive_image_path){
+            $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
+            $is_duplicated_archive_image_path = Task::where('archive_image_path', $archive_image_path)->exists();
+        }
+
+        if(!is_null($image->getImageProperties("exif:*"))){
+            $image->stripImage();
+        }
+
+        Storage::put('public/task/archive_images/'.$archive_image_path, $image);
+
+        $is_duplicated_thumbnail_image_path = true;
+        while($is_duplicated_thumbnail_image_path){
+            $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+            $is_duplicated_thumbnail_image_path = Task::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+        }
+
+        if($archive_extension !== '.webp'){
+            $image->setImageFormat('webp');
+        } 
+        $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+
+        Storage::put('public/task/thumbnail_images/'.$thumbnail_image_path, $image);
+
+        $image->clear();
+
+        try{
+            Task::create([
+                'name' => $request->name,
+                'user_id' => LoginCredential::where('token', $request->session()->get('login_credential_token'))->value('user_id'),
+                'expired_at' => $request->expired_at,
+                'detail' => $request->detail,
+                'thumbnail_image_path' => $thumbnail_image_path,
+                'archive_image_path' => $archive_image_path,
+                'status' => $request->status
+            ]);
+        }catch(Exception $e){
+            return to_route('task.index')->withErrors(['task_error' => 'タスクの登録に失敗しました。']);
+        }
+
+        $request->session()->flash('task_message', $request->name.'をTask Listに登録しました。');
+
+        return to_route('task.index');
+    }
+
+    public function show(Request $request, Task $task)
+    {
+        return view('task.show', [
+            'task' => $task
+        ]);
+    }
+
+    public function edit(Request $request, Task $task)
+    {
+        return view('task.edit', [
+            'task' => $task
+        ]);
+    }
+
+    public function update(TaskUpdateRequest $request, Task $task)
+    {
+        if(!is_null($request->image_file)){
+            $image = new Imagick();
+            $image->readImage($request->file('image_file'));
+            $archive_extension = config('mimetypes')[$image->getImageMimetype()];
+    
+            $is_duplicated_archive_image_path = true;
+            while($is_duplicated_archive_image_path){
+                $archive_image_path = Str::random(rand(20, 50)).$archive_extension;
+                $is_duplicated_archive_image_path = Task::where('archive_image_path', $archive_image_path)->exists();
+            }
+    
+            if(!is_null($image->getImageProperties("exif:*"))){
+                $image->stripImage();
+            }
+    
+            Storage::put('public/task/archive_images/'.$archive_image_path, $image);
+            Storage::delete('public/task/archive_images/'.$task->archive_image_path);
+
+            $is_duplicated_thumbnail_image_path = true;
+            while($is_duplicated_thumbnail_image_path){
+                $thumbnail_image_path = Str::random(rand(20, 50)).'.webp';
+                $is_duplicated_thumbnail_image_path = Task::where('thumbnail_image_path', $thumbnail_image_path)->exists();
+            }
+    
+            if($archive_extension !== '.webp'){
+                $image->setImageFormat('webp');
+            } 
+            $image->resizeImage(200, 200, Imagick::FILTER_LANCZOS, 1);
+    
+            Storage::put('public/task/thumbnail_images/'.$thumbnail_image_path, $image);
+            Storage::delete('public/task/thumbnail_images/'.$task->thumbnail_image_path);
+
+            $image->clear();
+
+            $task->archive_image_path = $archive_image_path;
+            $task->thumbnail_image_path = $thumbnail_image_path;
+        }
+
+        try{
+            $task->name = $request->name;
+            $task->detail = $request->detail;
+            $task->expired_at = $request->expired_at;
+            $task->status = $request->status;
+            $task->save();
+        }catch(Exception $e){
+            return to_route('task.show', $task->id)->withErrors(['task_error' => 'タスクの更新に失敗しました。']);
+        }
         
-        return to_route('tasks.index');
+        return to_route('task.show', $task);
     }
 
     public function destroy(Request $request, Task $task)
     {
         $task->delete();
-        return to_route('tasks.index');
+        return to_route('task.index');
     }
 }

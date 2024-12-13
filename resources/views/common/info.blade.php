@@ -23,5 +23,10 @@
                 <li>{{ $user_message }}</li>
             </ul>
         @endif
+        @if(isset($task_message))
+            <ul>
+                <li>{{ $task_message }}</li>
+            </ul>
+        @endif
     </div>
 @endif
