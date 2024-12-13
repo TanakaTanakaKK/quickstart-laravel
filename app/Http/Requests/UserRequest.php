@@ -6,11 +6,18 @@ use App\Enums\{
     Prefecture,
     Gender
 };
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
 
 class UserRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'phone_number' => str_replace('-', '', $this->phone_number)
+        ]);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -18,7 +25,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => [
                 'required',
                 'regex:/^[ぁ-んァ-ヶ一-龠]+$/u',
@@ -46,12 +53,6 @@ class UserRequest extends FormRequest
                 'before:today',
                 'date'
             ],
-            'phone_number' => [
-                'required',
-                'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
-                'unique:users,phone_number',
-                'string'
-            ],
             'postal_code' => [
                 'required',
                 'regex:/^[0-9]{3}-?[0-9]{4}$/',
@@ -76,28 +77,54 @@ class UserRequest extends FormRequest
                 'nullable',
                 'max:128',
                 'string'
-            ],
-            'password' => [
-                'required',
-                'between:8,255',
-                'regex:/^[!-~]+$/',
-                'string',
-                'confirmed'
-            ],
-            'image_file' => [
-                'required',
-                'file',
-                'image',
-                'mimes:jpg,gif,png,webp',
-                'max:2048'
-            ]
-        ];
+            ]];
+            
+            if($this->route()->getName() === 'users.store'){
+                $rules['password'][] = [
+                    'required',
+                    'between:8,255',
+                    'regex:/^[!-~]+$/',
+                    'string',
+                    'confirmed'
+                ];
+                $rules['image_file'][] = [
+                    'required',
+                    'file',
+                    'image',
+                    'mimes:jpg,gif,png,webp',
+                    'max:2048'
+                ];
+                $rules['phone_number'][] = [
+                    'required',
+                    'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
+                    'string',
+                    'unique:users',
+                ];
+            }else{
+                $rules['image_file'][] = [
+                    'nullable',
+                    'file',
+                    'image',
+                    'mimes:jpg,gif,png,webp',
+                    'max:2048',
+                ];
+                $rules['phone_number'][] = [
+                    'required',
+                    'regex:/^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/',
+                    'string',
+                    'unique:users',
+                    Rule::unique('users')->ignore($this->user->id),
+                ];
+            }
+            return $rules;
+
     }
     public function attributes(): array
     {
         return [
             'name' => '氏名',
             'kana_name' => '氏名(カナ)',
+            'email' => 'メールアドレス',
             'nickname' => 'ニックネーム',
             'gender' => '性別',
             'birthday' => '誕生日',
