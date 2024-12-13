@@ -21,7 +21,7 @@
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <label class="btn btn-default border">
-                                                ファイルを選択<input type="file" name="image_file" class="d-none" id="image_file" onchange=showFileName()
+                                                ファイルを選択<input type="file" name="image_file" class="d-none" id="image_file" onchange=showImageFileName()
                                                 accept="image/png, image/jpeg, image/gif, image/webp">
                                             </label>
                                         </span>
