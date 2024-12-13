@@ -34,6 +34,10 @@ return [
     'open_weather' => [
         'key' => env('OPEN_WEATHER_API_KEY'),
         'url' => env('OPEN_WEATHER_URL'),
-    ]
+    ],
 
+    'chat_work' => [
+        'token' => env('CHAT_WORK_API_TOKEN'),
+        'url' => env('CHAT_WORK_URL')
+    ]
 ];
